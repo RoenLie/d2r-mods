@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"strict": true,
+		"allowImportingTsExtensions": true,
+		"types": ["../../types.d.ts"],
+		"noEmit": true
+	}
+}

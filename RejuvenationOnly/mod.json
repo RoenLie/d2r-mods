@@ -1,0 +1,7 @@
+{
+  "name": "RejuvenationOnly",
+  "description": "Replaces HP/MP potions with Rejuvs at x% drop rate.",
+  "author": "roen",
+  "version": "1.0.0",
+  "id": "rejuvenation_only_roen"
+}
