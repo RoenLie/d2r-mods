@@ -7,11 +7,8 @@ import { JunkSettings } from '../../Settings/Filter/JunkSettings';
 import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
-export class GoldComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {
 
-	constructor() {
-		super();
-	}
+export class GoldComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {
 
 	applyFilter(): void {
 		const color = this.getGoldAffixColor();

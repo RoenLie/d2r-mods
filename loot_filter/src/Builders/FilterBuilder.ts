@@ -1,4 +1,4 @@
-import { IItemWriter } from '../ItemWriters/Interfaces/IItemWriter';
+import { IItemWriter } from '../ItemWriters/IItemWriter';
 import { ItemModifiersWriter } from '../ItemWriters/ItemModifiersWriter';
 import { ItemNameAffixesWriter } from '../ItemWriters/ItemNameAffixesWriter';
 import { ItemNamesWriter } from '../ItemWriters/ItemNamesWriter';

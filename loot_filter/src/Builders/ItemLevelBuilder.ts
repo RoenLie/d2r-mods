@@ -1,6 +1,8 @@
 import { FileConstants } from '../Constants/FileConstants';
 import { CharmConstants } from '../Constants/Items/CharmConstants';
 import { JewelryConstants } from '../Constants/Items/JewelryConstants';
+import { CharmId } from '../Enums/CharmId';
+import { JewelryId } from '../Enums/JewelryId';
 import { EBigTooltipSetting } from '../Settings/Enums/EBigTooltipSetting';
 import { FilterSettings } from '../Settings/Filter/FilterSettings';
 import { ItemLevelSettings } from '../Settings/Filter/ItemLevelSettings';
@@ -51,7 +53,7 @@ export class ItemLevelBuilder implements IBuilder {
 			return;
 
 		if (JewelrySettings.facets.bigTooltip != EBigTooltipSetting.DISABLED)
-			this.miscExclusions.push(JewelryConstants.jewelId);
+			this.miscExclusions.push(JewelryId.JEWEL);
 		if (JewelrySettings.charms.bigTooltipUnique != EBigTooltipSetting.DISABLED)
 			CharmConstants.charmIds.forEach(charm => this.miscExclusions.push(charm));
 
@@ -59,11 +61,11 @@ export class ItemLevelBuilder implements IBuilder {
 		// TODO: add warning to charms BTT description
 	}
 
-	protected enableForWeapons() {
+	protected enableForWeapons(): void {
 		this.enableForWeaponsArmor(FileConstants.FILE_WEAPONS_PATH, this.weaponsExclusions);
 	}
 
-	protected enableForArmor() {
+	protected enableForArmor(): void {
 		this.enableForWeaponsArmor(FileConstants.FILE_ARMOR_PATH, []);
 	}
 
@@ -88,7 +90,7 @@ export class ItemLevelBuilder implements IBuilder {
 		// matching JewelryConstants.iLvlJewelry against the exclusions list makes the target list even smaller.
 		const misc = JewelryConstants.iLvlJewelry.filter(item => !this.miscExclusions.includes(item));
 		file.rows.forEach((row) => {
-			if (misc.includes(row.code))
+			if (misc.includes(row.code as JewelryId | CharmId))
 				row.ShowLevel = '1';
 		});
 

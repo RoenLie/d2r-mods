@@ -6,13 +6,10 @@ import { JewelrySettings } from '../../Settings/Filter/JewelrySettings';
 import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
+
 export class GemsComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {
 
 	protected readonly gems: Gem[] = GemConstants.gemExceptions;
-
-	constructor() {
-		super();
-	}
 
 	applyFilter(): void {
 		switch (JewelrySettings.gems.filter) {
@@ -28,12 +25,18 @@ export class GemsComposer extends ItemCollectionComposerBase implements IItemCol
 		}
 	}
 
-	protected hideGems() {
+	protected hideGems(): void {
 		this.collection.upsertMultipleHidden(this.gems.map<string>(gem => gem.key));
 	}
 
-	protected highlightGems(gems: Gem[]) {
-		this.collection.upsertMultipleIfHasHighlightOrBigTooltip(ItemEntry.fromGems(gems, JewelrySettings.gems.isHighlightEnabled, JewelrySettings.gems.bigTooltip));
+	protected highlightGems(gems: Gem[]): void {
+		this.collection.upsertMultipleIfHasHighlightOrBigTooltip(
+			ItemEntry.fromGems(
+				gems,
+				JewelrySettings.gems.isHighlightEnabled,
+				JewelrySettings.gems.bigTooltip,
+			),
+		);
 	}
 
 }

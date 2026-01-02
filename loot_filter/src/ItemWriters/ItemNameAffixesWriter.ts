@@ -5,7 +5,7 @@ import { GemsComposer } from '../ItemCollectionComposers/ItemNameAffixesComposer
 import { GoldComposer } from '../ItemCollectionComposers/ItemNameAffixesComposers/GoldComposer';
 import { ShortSupInferiorPrefixesComposer } from '../ItemCollectionComposers/ItemNameAffixesComposers/ShortSupInferiorPrefixesComposer';
 import { BaseItemWriter } from './BaseItemWriter';
-import { IItemWriter } from './Interfaces/IItemWriter';
+import { IItemWriter } from './IItemWriter';
 
 export class ItemNameAffixesWriter extends BaseItemWriter implements IItemWriter {
 

@@ -3,7 +3,7 @@ import { CustomFilterList } from '../CustomFilterList';
 import { CustomComposer } from '../ItemCollectionComposers/CustomComposer';
 import { ItemModifiersComposer } from '../ItemCollectionComposers/ItemModifiersComposer';
 import { BaseItemWriter } from './BaseItemWriter';
-import { IItemWriter } from './Interfaces/IItemWriter';
+import { IItemWriter } from './IItemWriter';
 
 
 export class ItemModifiersWriter extends BaseItemWriter implements IItemWriter {

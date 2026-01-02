@@ -4,7 +4,7 @@ import { IItemCollectionComposer } from '../ItemCollectionComposers/IItemCollect
 import { IItemEntry } from '../Models/ItemCollectionEntries/Interfaces/IItemEntry';
 import { ItemCollection } from '../Models/ItemCollectionEntries/ItemCollection';
 import { FilterSettings } from '../Settings/Filter/FilterSettings';
-import { IItemWriter } from './Interfaces/IItemWriter';
+import { IItemWriter } from './IItemWriter';
 
 /**
  * An abstract containing implementations for IWriter.

@@ -5,11 +5,8 @@ import { ShortSupInfPrefixesSettings } from '../../Settings/Filter/ShortSupInfPr
 import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
-export class ShortSupInferiorPrefixesComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {
 
-	constructor() {
-		super();
-	}
+export class ShortSupInferiorPrefixesComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {
 
 	applyFilter(): void {
 		if (!ShortSupInfPrefixesSettings.isEnabled)

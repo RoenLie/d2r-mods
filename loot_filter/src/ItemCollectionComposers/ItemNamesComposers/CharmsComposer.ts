@@ -1,6 +1,7 @@
 import { ColorConstants } from '../../Constants/Colors/ColorConstants';
 import { CharmConstants } from '../../Constants/Items/CharmConstants';
 import { SettingsConstants } from '../../Constants/SettingsConstants';
+import { CharmId } from '../../Enums/CharmId';
 import { DoubleHighlight } from '../../Models/Highlights/DoubleHighlight';
 import { EDoubleHighlightSetting } from '../../Models/Highlights/EDoubleHighlightSetting';
 import { iLvlItemEntry } from '../../Models/ItemCollectionEntries/iLvlItemEntry';
@@ -11,6 +12,7 @@ import { FilterSettings } from '../../Settings/Filter/FilterSettings';
 import { JewelrySettings } from '../../Settings/Filter/JewelrySettings';
 import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
+
 
 export class CharmsComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {
 
@@ -30,15 +32,15 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 		if (JewelrySettings.charms.highlightUnique !== SettingsConstants.disabled
       && JewelrySettings.charms.bigTooltipUnique != EBigTooltipSetting.DISABLED
 		) {
-
+			// TODO?
 		}
 	}
 
 	protected highlightUnidentifiedCharms(): void {
 		[
-			[ CharmConstants.charmSmallId, 'Small' ],
-			[ CharmConstants.charmLargeId, 'Large' ],
-			[ CharmConstants.charmGrandId, 'Grand' ],
+			[ CharmId.SMALL, 'Small' ],
+			[ CharmId.LARGE, 'Large' ],
+			[ CharmId.GRAND, 'Grand' ],
 		].forEach(([ key, size ]) => {
 			this.collection.upsert(new ItemEntry(key, `${ size } ${ ColorConstants.red }${ 'Charm' }${ ColorConstants.magic }`));
 		});
@@ -53,10 +55,12 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 			return;
 
 		[
-			CharmConstants.anniId,
-			CharmConstants.torchId,
-			CharmConstants.gheedsId,
-		].forEach(charm => this.collection.upsert(new iLvlItemEntry(charm, EiLvlDigits.Double, null, this.nameColor, highlight, bttSetting)));
+			CharmId.ANNIHILUS,
+			CharmId.TORCH,
+			CharmId.GHEEDS,
+		].forEach(charm => this.collection.upsert(
+			new iLvlItemEntry(charm, EiLvlDigits.Double, null, this.nameColor, highlight, bttSetting),
+		));
 	}
 
 	protected applySunderCharms(): void {
@@ -72,7 +76,11 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 	}
 
 	private highlightSunderCharmsDefault(bigTooltipSetting: EBigTooltipSetting): void {
-		const highlight = new DoubleHighlight(EDoubleHighlightSetting.LARGE, FilterSettings.defaultHighlightColor, JewelrySettings.charms.bigTooltipUnique);
+		const highlight = new DoubleHighlight(
+			EDoubleHighlightSetting.LARGE,
+			FilterSettings.defaultHighlightColor,
+			JewelrySettings.charms.bigTooltipUnique,
+		);
 
 		CharmConstants.sunderCharms.forEach(sunder => this.collection.upsert(
 			new iLvlItemEntry(sunder.id, EiLvlDigits.Double, null, this.nameColor, highlight, bigTooltipSetting),
@@ -81,7 +89,8 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 
 	private highlightSunderCharmsAlt(bigTooltipSetting: EBigTooltipSetting): void {
 		CharmConstants.sunderCharms.forEach(sunder => this.collection.upsert(
-			new iLvlItemEntry(sunder.id, EiLvlDigits.Double, null, this.nameColor, new DoubleHighlight(EDoubleHighlightSetting.LARGE, sunder.color, bigTooltipSetting), bigTooltipSetting),
+			new iLvlItemEntry(sunder.id, EiLvlDigits.Double, null, this.nameColor,
+				new DoubleHighlight(EDoubleHighlightSetting.LARGE, sunder.color, bigTooltipSetting), bigTooltipSetting),
 		));
 	}
 

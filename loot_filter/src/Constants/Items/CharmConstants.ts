@@ -1,54 +1,37 @@
+import { CharmId, SunderCharmId } from '../../Enums/CharmId';
 import { SunderCharm } from '../../Models/Items/SunderCharm';
 import { ColorConstants } from '../Colors/ColorConstants';
 
-
+/**
+ * Charm-related constants and collections.
+ *
+ * Provides arrays of charm IDs for iteration and sunder charm instances
+ * with their associated display colors.
+ */
 export abstract class CharmConstants {
 
-	static charmSmallId = 'cm1';
-	static charmLargeId = 'cm2';
-	static charmGrandId = 'cm3';
-
-	static anniId   = 'Annihilus';
-	static torchId  = 'Hellfire Torch';
-	static gheedsId = "Gheed's Fortune";
-
-	static sunderMagiId = 'Black Cleft';
-	static sunderPhysId = 'Bone Break';
-	static sunderColdId = 'Cold Rupture';
-	static sunderLiteId = 'Crack of the Heavens';
-	static sunderFireId = 'Flame Rift';
-	static sunderPoisId = 'Rotting Fissure';
-
-	static anniName   = this.anniId;
-	static torchName  = this.torchId;
-	static gheedsName = this.gheedsId;
-
-	static sunderMagiName = this.sunderMagiId;
-	static sunderPhysName = this.sunderPhysId;
-	static sunderColdName = this.sunderColdId;
-	static sunderLiteName = this.sunderLiteId;
-	static sunderFireName = this.sunderFireId;
-	static sunderPoisName = this.sunderPoisId;
-
-	static charmIds = [
-		this.charmSmallId,
-		this.charmLargeId,
-		this.charmGrandId,
+	/** Array of basic charm type IDs (small, large, grand) */
+	static charmIds: CharmId[] = [
+		CharmId.SMALL,
+		CharmId.LARGE,
+		CharmId.GRAND,
 	];
 
-	static uniqueLodCharmIds: string[] = [
-		this.anniId,
-		this.torchId,
-		this.gheedsId,
+	/** Array of unique LoD charm IDs */
+	static uniqueLodCharmIds: CharmId[] = [
+		CharmId.ANNIHILUS,
+		CharmId.TORCH,
+		CharmId.GHEEDS,
 	];
 
+	/** Sunder Charms with their display names and colors */
 	static sunderCharms: SunderCharm[] = [
-		new SunderCharm(this.sunderMagiId, this.sunderMagiName, ColorConstants.gray),
-		new SunderCharm(this.sunderPhysId, this.sunderPhysName, ColorConstants.white),
-		new SunderCharm(this.sunderColdId, this.sunderColdName, ColorConstants.lightBlue),
-		new SunderCharm(this.sunderLiteId, this.sunderLiteName, ColorConstants.yellow),
-		new SunderCharm(this.sunderFireId, this.sunderFireName, ColorConstants.red),
-		new SunderCharm(this.sunderPoisId, this.sunderPoisName, ColorConstants.green),
+		new SunderCharm(SunderCharmId.MAGIC, SunderCharmId.MAGIC, ColorConstants.gray),
+		new SunderCharm(SunderCharmId.PHYSICAL, SunderCharmId.PHYSICAL, ColorConstants.white),
+		new SunderCharm(SunderCharmId.COLD, SunderCharmId.COLD, ColorConstants.lightBlue),
+		new SunderCharm(SunderCharmId.LIGHTNING, SunderCharmId.LIGHTNING, ColorConstants.yellow),
+		new SunderCharm(SunderCharmId.FIRE, SunderCharmId.FIRE, ColorConstants.red),
+		new SunderCharm(SunderCharmId.POISON, SunderCharmId.POISON, ColorConstants.green),
 	];
 
 }

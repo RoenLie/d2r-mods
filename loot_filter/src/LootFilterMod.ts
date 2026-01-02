@@ -18,11 +18,10 @@ export class LootFilterMod {
 		this.buildAll();
 	}
 
-	protected checkVersion() {
+	protected checkVersion(): void {
 		const fullVersion = D2RMM.getFullVersion();
 		if (fullVersion == null)
 			throw new Error(this.requiredD2rmmVersion.getErrorMessage());
-
 
 		const currentD2rmmVersion = D2rmmVersion.fromArray(fullVersion);
 		if (!currentD2rmmVersion.isOrExceeds(this.requiredD2rmmVersion))

@@ -1,66 +1,72 @@
+import { QuestItemId, QuestWeaponId } from '../../Enums/QuestItemId';
 import { EiLvlDigits } from '../../Settings/Enums/EiLvlDigits';
 
-
+/**
+ * Quest item and weapon constants.
+ *
+ * Organizes quest-related items by act and provides special handling
+ * for items that need custom display configurations.
+ */
 export abstract class QuestConstants {
 
-	static readonly questItems: string[] = [
+	/** Standard quest items (non-weapons) */
+	static readonly questItems: QuestItemId[] = [
 		// Act 1
-		'bks', // Scroll of Inifuss
-		'bkd', // Scroll of Inifuss (deciphered)
+		QuestItemId.SCROLL_INIFUSS,
+		QuestItemId.SCROLL_INIFUSS_DECIPHERED,
 		// Act 2
-		'tr1', // Horadric Scroll
-		'vip', // Amulet of the Viper
+		QuestItemId.HORADRIC_SCROLL,
+		QuestItemId.AMULET_VIPER,
 		// Act 3
-		'j34', // A Jade Figurine
-		'g34', // The Golden Bird
-		'bbb', // Lam Esen's Tome
-		'qey', // Khalim's Eye
-		'qhr', // Khalim's Heart
-		'qbr', // Khalim's Brain
-		'mss', // Mephisto's Soulstone
+		QuestItemId.JADE_FIGURINE,
+		QuestItemId.GOLDEN_BIRD,
+		QuestItemId.LAM_ESEN_TOME,
+		QuestItemId.KHALIM_EYE,
+		QuestItemId.KHALIM_HEART,
+		QuestItemId.KHALIM_BRAIN,
+		QuestItemId.MEPHISTO_SOULSTONE,
 		// Act 4: none
-		// Act 5: see exceptions below [CSTM-QST2]
+		// Act 5: see exceptions below
 		// Extra
-		'LamTome', // Lam Esen's Tome
+		QuestItemId.LAM_ESEN_TOME_ALT,
 	];
 
-	// [CSTM-QST2]
-	static readonly questItemExceptionsAct23: string[] = [
-		// Act 5
-		'ass', // Book of Skill
-		'xyz', // Potion of Life
+	/** Quest items with special handling for Acts 2-3 */
+	static readonly questItemExceptionsAct23: QuestItemId[] = [
+		QuestItemId.BOOK_OF_SKILL,
+		QuestItemId.POTION_OF_LIFE,
 	];
 
-	// [CSTM-QST3] // TODO: correct search tags in codebase
-	static readonly questItemExceptionsAct5: string[] = [
-		// Act 5
-		'ice', // Malah's Potion
-		'tr2', // Scroll of Resistance
+	/** Quest items with special handling for Act 5 */
+	static readonly questItemExceptionsAct5: QuestItemId[] = [
+		QuestItemId.MALAH_POTION,
+		QuestItemId.SCROLL_RESISTANCE,
 	];
 
-	static readonly cube: 'box'; // Horadric Cube
+	/** Horadric Cube */
+	static readonly cube = QuestItemId.HORADRIC_CUBE;
 
-	static readonly questWeapons: { key: string; digits: EiLvlDigits; }[] = [
+	/** Quest weapons with their item level digit display configuration */
+	static readonly questWeapons: { key: QuestWeaponId | string; digits: EiLvlDigits; }[] = [
 		// Act 1
-		{ key: 'leg', digits: EiLvlDigits.Double }, // Wirt's Leg
-		{ key: 'hdm', digits: EiLvlDigits.Double }, // Horadric Malus
+		{ key: QuestWeaponId.WIRT_LEG, digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.HORADRIC_MALUS, digits: EiLvlDigits.Double },
 		// Act 2
-		{ key: 'msf', digits: EiLvlDigits.Double }, // Staff of Kings
-		{ key: 'hst', digits: EiLvlDigits.Single }, // Horadric Staff
+		{ key: QuestWeaponId.STAFF_OF_KINGS, digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.HORADRIC_STAFF, digits: EiLvlDigits.Single },
 		// Act 3
-		{ key: 'g33', digits: EiLvlDigits.Double }, // The Gidbinn
-		{ key: 'qf1', digits: EiLvlDigits.Double }, // Khalim's Flail
-		{ key: 'qf2', digits: EiLvlDigits.Single }, // Khalim's Will
+		{ key: QuestWeaponId.GIDBINN, digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.KHALIM_FLAIL, digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.KHALIM_WILL, digits: EiLvlDigits.Single },
 		// Act 4
-		{ key: 'hfh', digits: EiLvlDigits.Double }, // Hell Forge Hammer
-		// Act 5: see exceptions mentioned above [CSTM-QST2]
-		// Extra
-		{ key: 'Staff of Kings',      digits: EiLvlDigits.Double },
-		{ key: 'Amulet of the Viper', digits: EiLvlDigits.Double },
-		{ key: 'Horadric Staff',      digits: EiLvlDigits.Single },
-		{ key: 'KhalimFlail',         digits: EiLvlDigits.Double }, // Khalim's Flail
-		{ key: 'SuperKhalimFlail',    digits: EiLvlDigits.Single }, // Khalim's Will
-		{ key: 'Hell Forge Hammer',   digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.HELL_FORGE_HAMMER, digits: EiLvlDigits.Double },
+		// Alternate keys (for translated/alternate item names)
+		{ key: QuestWeaponId.STAFF_OF_KINGS_ALT, digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.AMULET_VIPER_ALT, digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.HORADRIC_STAFF_ALT, digits: EiLvlDigits.Single },
+		{ key: QuestWeaponId.KHALIM_FLAIL_ALT, digits: EiLvlDigits.Double },
+		{ key: QuestWeaponId.KHALIM_WILL_ALT, digits: EiLvlDigits.Single },
+		{ key: QuestWeaponId.HELL_FORGE_HAMMER_ALT, digits: EiLvlDigits.Double },
 	];
 
 }

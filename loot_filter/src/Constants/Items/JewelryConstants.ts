@@ -1,22 +1,22 @@
-import { CharmConstants } from './CharmConstants';
+import { CharmId } from '../../Enums/CharmId';
+import { JewelryId } from '../../Enums/JewelryId';
 
 
+/**
+ * Jewelry and charm constants.
+ *
+ * Defines items that can display item level (iLvl) in tooltips.
+ */
 export abstract class JewelryConstants {
 
-	static ringId = 'rin';
-	static amuletId = 'amu';
-	static jewelId = 'jew';
-
-	static iLvlJewelry: string[] = [
-		this.ringId,
-		this.amuletId,
-		this.jewelId,
-		// JewelryConstants.ringId,
-		// JewelryConstants.amuletId,
-		// JewelryConstants.jewelId,
-		CharmConstants.charmSmallId,
-		CharmConstants.charmLargeId,
-		CharmConstants.charmGrandId,
+	/** Items that should display item level when configured */
+	static iLvlJewelry: (JewelryId | CharmId)[] = [
+		JewelryId.RING,
+		JewelryId.AMULET,
+		JewelryId.JEWEL,
+		CharmId.SMALL,
+		CharmId.LARGE,
+		CharmId.GRAND,
 	];
 
 }
