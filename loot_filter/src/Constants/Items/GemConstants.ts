@@ -1,3 +1,5 @@
+import { GemId, GemQuality, GemType } from '../../Enums/GemId';
+import { D2Color } from '../../Models/Colors/D2Color';
 import { Gem } from '../../Models/Items/Gem';
 import { JewelrySettings } from '../../Settings/Filter/JewelrySettings';
 import { CharConstants } from '../CharConstants';
@@ -5,37 +7,32 @@ import { ColorConstants } from '../Colors/ColorConstants';
 import { SettingsConstants } from '../SettingsConstants';
 import { HighlightConstants } from './HighlightConstants';
 
-
+/**
+ * Gem-related constants and collections.
+ *
+ * Provides gem color mappings and organized collections of gems by quality tier.
+ */
 export abstract class GemConstants {
 
-	// TODO: public/protected properties
-	// TODO: translated gem quality names
-	static amethyst = 'Amethyst';
-	static diamond  = 'Diamond';
-	static emerald  = 'Emerald';
-	static ruby     = 'Ruby';
-	static sapphire = 'Sapphire';
-	static topaz    = 'Topaz';
-	static skull    = 'Skull';
+	/** Gem type color mappings */
+	static readonly gemColors: Record<GemType, D2Color> = {
+		[GemType.AMETHYST]: ColorConstants.purple,
+		[GemType.DIAMOND]:  ColorConstants.white,
+		[GemType.EMERALD]:  ColorConstants.green,
+		[GemType.RUBY]:     ColorConstants.red,
+		[GemType.SAPPHIRE]: ColorConstants.blue,
+		[GemType.TOPAZ]:    ColorConstants.yellow,
+		[GemType.SKULL]:    ColorConstants.gray,
+	};
 
-	static chipped  = 'Chipped';
-	static flawed   = 'Flawed';
-	static flawless = 'Flawless';
-	static perfect  = 'Perfect';
-
-	static amethystColor = ColorConstants.purple;
-	static diamondColor  = ColorConstants.white;
-	static emeraldColor  = ColorConstants.green;
-	static rubyColor     = ColorConstants.red;
-	static sapphireColor = ColorConstants.blue;
-	static topazColor    = ColorConstants.yellow;
-	static skullColor    = ColorConstants.gray;
-
+	/** Default gem name color */
 	static clrName = ColorConstants.white;
+	/** Default gem highlight character */
 	static highlight = CharConstants.o;
+	/** Default gem highlight padding */
 	static padding = HighlightConstants.padding.p1;
 
-	// indent for the pick up message if gem highlighting is enabled.
+	/** Returns indent for pick-up message based on gem filter settings */
 	static getPickUpMessageIndent(): string {
 		const setting = JewelrySettings.gems.filter;
 		if (setting === SettingsConstants.all || setting === 'flawless' || setting === 'perfect')
@@ -44,59 +41,61 @@ export abstract class GemConstants {
 		return CharConstants.empty;
 	}
 
-	// TODO:
-	// - use translated names for chipped/flawed/flawless/perfect
-	// - use selectable name for [translated]/common/regular/whatever gems
+	/** Chipped, Flawed, and Regular (Normal) gems */
 	static chippedFlawedRegularGems: Gem[] = [
-		new Gem('gcv', this.amethystColor, this.chipped), // Chipped Amethyst
-		new Gem('gcw', this.diamondColor,  this.chipped), // Chipped Diamond
-		new Gem('gcg', this.emeraldColor,  this.chipped), // Chipped Emerald
-		new Gem('gcr', this.rubyColor,     this.chipped), // Chipped Ruby
-		new Gem('gcb', this.sapphireColor, this.chipped), // Chipped Sapphire
-		new Gem('gcy', this.topazColor,    this.chipped), // Chipped Topaz
-		new Gem('skc', this.skullColor,    this.chipped), // Chipped Skull
-		new Gem('gfv', this.amethystColor, this.flawed), // Flawed Amethyst
-		new Gem('gfw', this.diamondColor,  this.flawed), // Flawed Diamond
-		new Gem('gfg', this.emeraldColor,  this.flawed), // Flawed Emerald
-		new Gem('gfr', this.rubyColor,     this.flawed), // Flawed Ruby
-		new Gem('gfb', this.sapphireColor, this.flawed), // Flawed Sapphire
-		new Gem('gfy', this.topazColor,    this.flawed), // Flawed Topaz
-		new Gem('skf', this.skullColor,    this.flawed), // Flawed Skull
-		new Gem('gsv', this.amethystColor, this.amethyst), // Amethyst
-		// For Ruby, Sapphire, Emerald and Diamond, see "gemExceptions" below.
-		new Gem('gsy', this.topazColor,    this.topaz), // Topaz
-		new Gem('sku', this.skullColor,    this.skull), // Skull
+		// Chipped
+		new Gem(GemId.CHIPPED_AMETHYST, this.gemColors[GemType.AMETHYST], GemQuality.CHIPPED),
+		new Gem(GemId.CHIPPED_DIAMOND, this.gemColors[GemType.DIAMOND], GemQuality.CHIPPED),
+		new Gem(GemId.CHIPPED_EMERALD, this.gemColors[GemType.EMERALD], GemQuality.CHIPPED),
+		new Gem(GemId.CHIPPED_RUBY, this.gemColors[GemType.RUBY], GemQuality.CHIPPED),
+		new Gem(GemId.CHIPPED_SAPPHIRE, this.gemColors[GemType.SAPPHIRE], GemQuality.CHIPPED),
+		new Gem(GemId.CHIPPED_TOPAZ, this.gemColors[GemType.TOPAZ], GemQuality.CHIPPED),
+		new Gem(GemId.CHIPPED_SKULL, this.gemColors[GemType.SKULL], GemQuality.CHIPPED),
+		// Flawed
+		new Gem(GemId.FLAWED_AMETHYST, this.gemColors[GemType.AMETHYST], GemQuality.FLAWED),
+		new Gem(GemId.FLAWED_DIAMOND, this.gemColors[GemType.DIAMOND], GemQuality.FLAWED),
+		new Gem(GemId.FLAWED_EMERALD, this.gemColors[GemType.EMERALD], GemQuality.FLAWED),
+		new Gem(GemId.FLAWED_RUBY, this.gemColors[GemType.RUBY], GemQuality.FLAWED),
+		new Gem(GemId.FLAWED_SAPPHIRE, this.gemColors[GemType.SAPPHIRE], GemQuality.FLAWED),
+		new Gem(GemId.FLAWED_TOPAZ, this.gemColors[GemType.TOPAZ], GemQuality.FLAWED),
+		new Gem(GemId.FLAWED_SKULL, this.gemColors[GemType.SKULL], GemQuality.FLAWED),
+		// Regular (some gems are in gemExceptions due to D2 file structure)
+		new Gem(GemId.AMETHYST, this.gemColors[GemType.AMETHYST], GemType.AMETHYST),
+		new Gem(GemId.TOPAZ, this.gemColors[GemType.TOPAZ], GemType.TOPAZ),
+		new Gem(GemId.SKULL, this.gemColors[GemType.SKULL], GemType.SKULL),
 	];
 
+	/** Flawless gems */
 	static flawlessGems: Gem[] = [
-		new Gem('gzv', this.amethystColor, this.flawless), // Flawless Amethyst
-		new Gem('glw', this.diamondColor,  this.flawless), // Flawless Diamond
-		new Gem('glg', this.emeraldColor,  this.flawless), // Flawless Emerald
-		new Gem('glr', this.rubyColor,     this.flawless), // Flawless Ruby
-		new Gem('glb', this.sapphireColor, this.flawless), // Flawless Sapphire
-		new Gem('gly', this.topazColor,    this.flawless), // Flawless Topaz
-		new Gem('skl', this.skullColor,    this.flawless), // Flawless Skull
+		new Gem(GemId.FLAWLESS_AMETHYST, this.gemColors[GemType.AMETHYST], GemQuality.FLAWLESS),
+		new Gem(GemId.FLAWLESS_DIAMOND, this.gemColors[GemType.DIAMOND], GemQuality.FLAWLESS),
+		new Gem(GemId.FLAWLESS_EMERALD, this.gemColors[GemType.EMERALD], GemQuality.FLAWLESS),
+		new Gem(GemId.FLAWLESS_RUBY, this.gemColors[GemType.RUBY], GemQuality.FLAWLESS),
+		new Gem(GemId.FLAWLESS_SAPPHIRE, this.gemColors[GemType.SAPPHIRE], GemQuality.FLAWLESS),
+		new Gem(GemId.FLAWLESS_TOPAZ, this.gemColors[GemType.TOPAZ], GemQuality.FLAWLESS),
+		new Gem(GemId.FLAWLESS_SKULL, this.gemColors[GemType.SKULL], GemQuality.FLAWLESS),
 	];
 
+	/** Perfect gems */
 	static perfectGems: Gem[] = [
-		new Gem('gpv', this.amethystColor, this.perfect),  // Perfect Amethyst
-		new Gem('gpw', this.diamondColor,  this.perfect),  // Perfect Diamond
-		new Gem('gpg', this.emeraldColor,  this.perfect),  // Perfect Emerald
-		new Gem('gpr', this.rubyColor,     this.perfect),  // Perfect Ruby
-		new Gem('gpb', this.sapphireColor, this.perfect),  // Perfect Sapphire
-		new Gem('gpy', this.topazColor,    this.perfect),  // Perfect Topaz
-		new Gem('skz', this.skullColor,    this.perfect),  // Perfect Skull
+		new Gem(GemId.PERFECT_AMETHYST, this.gemColors[GemType.AMETHYST], GemQuality.PERFECT),
+		new Gem(GemId.PERFECT_DIAMOND, this.gemColors[GemType.DIAMOND], GemQuality.PERFECT),
+		new Gem(GemId.PERFECT_EMERALD, this.gemColors[GemType.EMERALD], GemQuality.PERFECT),
+		new Gem(GemId.PERFECT_RUBY, this.gemColors[GemType.RUBY], GemQuality.PERFECT),
+		new Gem(GemId.PERFECT_SAPPHIRE, this.gemColors[GemType.SAPPHIRE], GemQuality.PERFECT),
+		new Gem(GemId.PERFECT_TOPAZ, this.gemColors[GemType.TOPAZ], GemQuality.PERFECT),
+		new Gem(GemId.PERFECT_SKULL, this.gemColors[GemType.SKULL], GemQuality.PERFECT),
 	];
 
 	/**
-   * These gem names are found in item-nameaffixes.json, probably because there's also affixes of the same name. They
-   * are however separate entries from the affixes, so no idea why the devs thought this makes sense.
-   */
+	 * Regular gems stored in item-nameaffixes.json (likely due to affix name conflicts).
+	 * These are separate from the gems above despite being the same quality tier.
+	 */
 	static gemExceptions: Gem[] = [
-		new Gem('gsw', GemConstants.diamondColor,  GemConstants.diamond),  // Diamond
-		new Gem('gsg', GemConstants.emeraldColor,  GemConstants.emerald),  // Emerald
-		new Gem('gsr', GemConstants.rubyColor,     GemConstants.ruby),     // Ruby
-		new Gem('gsb', GemConstants.sapphireColor, GemConstants.sapphire), // Sapphire
+		new Gem(GemId.DIAMOND, this.gemColors[GemType.DIAMOND], GemType.DIAMOND),
+		new Gem(GemId.EMERALD, this.gemColors[GemType.EMERALD], GemType.EMERALD),
+		new Gem(GemId.RUBY, this.gemColors[GemType.RUBY], GemType.RUBY),
+		new Gem(GemId.SAPPHIRE, this.gemColors[GemType.SAPPHIRE], GemType.SAPPHIRE),
 	];
 
 }
