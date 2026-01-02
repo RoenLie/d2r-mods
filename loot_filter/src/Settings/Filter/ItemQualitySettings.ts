@@ -3,7 +3,6 @@ import { SettingsConstants } from '../../Constants/SettingsConstants';
 import { EItemQuality } from '../Enums/EItemQuality';
 import { RawSettings } from '../RawSettings';
 
-
 export abstract class ItemQualitySettings {
 
 	static readonly isEnabled:             boolean = RawSettings.filter.statsAndModifiers.itemQuality.isEnabled;
@@ -23,18 +22,13 @@ export abstract class ItemQualitySettings {
 	static openChar:  string = this.getSingleQualityIndicatorOpenChar();
 	static closeChar: string = this.getSingleQualityIndicatorCloseChar();
 
-	// replace "custom n" to your preference. [CSTM-QTYS]
-	protected static customSingleNormalQualityIndicator:      string = '[custom n]';
-	// replace "custom x" to your preference. [CSTM-QTYS]
-	protected static customSingleExceptionalQualityIndicator: string = '[custom x]';
-	// replace "custom e" to your preference. [CSTM-QTYS]
-	protected static customSingleEliteQualityIndicator:       string = '[custom e]';
-	// replace "custom n" to your preference. [CSTM-QTYD]
-	protected static customDoubleNormalQualityIndicator:      string = '[custom n]';
-	// replace "custom x" to your preference. [CSTM-QTYD]
-	protected static customDoubleExceptionalQualityIndicator: string = '[custom x]';
-	// replace "custom e" to your preference. [CSTM-QTYD]
-	protected static customDoubleEliteQualityIndicator:       string = '[custom e]';
+	protected static customSingleNormalQualityIndicator:      string = '[custom n]'; // replace "custom n" to your preference. [CSTM-QTYS]
+	protected static customSingleExceptionalQualityIndicator: string = '[custom x]'; // replace "custom x" to your preference. [CSTM-QTYS]
+	protected static customSingleEliteQualityIndicator:       string = '[custom e]'; // replace "custom e" to your preference. [CSTM-QTYS]
+
+	protected static customDoubleNormalQualityIndicator:      string = '[custom n]'; // replace "custom n" to your preference. [CSTM-QTYD]
+	protected static customDoubleExceptionalQualityIndicator: string = '[custom x]'; // replace "custom x" to your preference. [CSTM-QTYD]
+	protected static customDoubleEliteQualityIndicator:       string = '[custom e]'; // replace "custom e" to your preference. [CSTM-QTYD]
 
 	private static createSingleQualityIndicator(itemQuality: EItemQuality): string {
 		if (this.styleSingle === SettingsConstants.custom) {
@@ -42,14 +36,14 @@ export abstract class ItemQualitySettings {
 				{ quality: EItemQuality.Normal,      indicator: this.customSingleNormalQualityIndicator },
 				{ quality: EItemQuality.Exceptional, indicator: this.customSingleExceptionalQualityIndicator },
 				{ quality: EItemQuality.Elite,       indicator: this.customSingleEliteQualityIndicator },
-			].find(q => q.quality === itemQuality)!.indicator;
+			].find(q => q.quality == itemQuality)!.indicator;
 		}
 
 		const indicator = [
 			{ quality: EItemQuality.Normal,      indicator: 'n' },
 			{ quality: EItemQuality.Exceptional, indicator: 'x' },
 			{ quality: EItemQuality.Elite,       indicator: 'e' },
-		].find(q => q.quality === itemQuality)!.indicator;
+		].find(q => q.quality == itemQuality)!.indicator;
 
 		if (this.styleSingle === 'uppercase')
 			return indicator.toUpperCase();
@@ -79,7 +73,7 @@ export abstract class ItemQualitySettings {
 				{ quality: EItemQuality.Normal,      indicator: this.customDoubleNormalQualityIndicator },
 				{ quality: EItemQuality.Exceptional, indicator: this.customDoubleExceptionalQualityIndicator },
 				{ quality: EItemQuality.Elite,       indicator: this.customDoubleEliteQualityIndicator },
-			].find(q => q.quality === itemQuality)!.indicator;
+			].find(q => q.quality == itemQuality)!.indicator;
 		}
 
 		return CharConstants.empty;
@@ -92,16 +86,17 @@ export abstract class ItemQualitySettings {
 		throw new Error('not implemented');
 
 		/**
-		 *  -name-
-		 *  =name=
-		 * -=name=-
-		 */
+     *  -name-
+     *  =name=
+     * -=name=-
+     */
 
 		/**
-		 *  ·name·
-		 *  :name:
-		 * ·:name:·
-		 */
+     *  ·name·
+     *  :name:
+     * ·:name:·
+     */
+
 		const indicator = CharConstants.empty;
 
 		switch (this.styleDouble) {
@@ -129,7 +124,7 @@ export abstract class ItemQualitySettings {
 			{ quality: EItemQuality.Normal,      indicator: 'n' },
 			{ quality: EItemQuality.Exceptional, indicator: 'x' },
 			{ quality: EItemQuality.Elite,       indicator: 'e' },
-		].find(q => q.quality === itemQuality)!.indicator;
+		].find(q => q.quality == itemQuality)!.indicator;
 	}
 
 }

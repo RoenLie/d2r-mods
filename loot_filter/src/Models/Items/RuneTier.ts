@@ -5,15 +5,77 @@ import { Rune } from './Rune';
 
 export class RuneTier {
 
-	readonly number:            number;
-	readonly runes:             Rune[];
-	readonly isVisible:         boolean;
-	readonly nameColor:         D2Color;
-	readonly numberColor:       D2Color;
-	readonly highlight:         IHighlight | null;
-	readonly bigTooltipSetting: EBigTooltipSetting;
-	readonly hasLightPillar:    boolean;
-	readonly dropSound:         string;
+	/**
+   * number
+   */
+	private readonly _number: number;
+	get number(): number {
+		return this._number;
+	}
+
+	/**
+   * runes
+   */
+	private readonly _runes: Rune[];
+	get runes(): Rune[] {
+		return this._runes;
+	}
+
+	/**
+   * is visible
+   */
+	private readonly _isVisible: boolean;
+	get isVisible(): boolean {
+		return this._isVisible;
+	}
+
+	/**
+   * name color
+   */
+	private readonly _nameColor: D2Color;
+	get nameColor(): D2Color {
+		return this._nameColor;
+	}
+
+	/**
+   * number color
+   */
+	private readonly _numberColor: D2Color;
+	get numberColor(): D2Color {
+		return this._numberColor;
+	}
+
+	/**
+   * highlight
+   */
+	private readonly _highlight: IHighlight | null;
+	get highlight(): IHighlight | null {
+		return this._highlight;
+	}
+
+	/**
+   * big tooltip setting
+   */
+	private readonly _bigTooltipSetting: EBigTooltipSetting;
+	get bigTooltipSetting(): EBigTooltipSetting {
+		return this._bigTooltipSetting;
+	}
+
+	/**
+   * has light pillar
+   */
+	private readonly _hasLightPillar: boolean;
+	get hasLightPillar(): boolean {
+		return this._hasLightPillar;
+	}
+
+	/**
+   * drop sound
+   */
+	private readonly _dropSound: string;
+	get dropSound(): string {
+		return this._dropSound;
+	}
 
 	constructor(
 		number: number,
@@ -26,15 +88,15 @@ export class RuneTier {
 		hasLightPillar: boolean,
 		dropSound: string,
 	) {
-		this.number = number;
-		this.runes = runes;
-		this.isVisible = isVisible;
-		this.nameColor = nameColor;
-		this.numberColor = numberColor;
-		this.highlight = highlight;
-		this.bigTooltipSetting = bigTooltipSetting;
-		this.hasLightPillar = hasLightPillar;
-		this.dropSound = dropSound;
+		this._number = number;
+		this._runes = runes;
+		this._isVisible = isVisible;
+		this._nameColor = nameColor,
+		this._numberColor = numberColor;
+		this._highlight = highlight;
+		this._bigTooltipSetting = bigTooltipSetting;
+		this._hasLightPillar = hasLightPillar;
+		this._dropSound = dropSound;
 	}
 
 	getKeys(): string[] {

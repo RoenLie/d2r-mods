@@ -1,7 +1,6 @@
 import { CharConstants } from '../../Constants/CharConstants';
 import { RawSettings } from '../RawSettings';
 
-
 export abstract class ItemLevelSettings {
 
 	static readonly isEnabled:               boolean = RawSettings.filter.statsAndModifiers.itemLevel.isEnabled;

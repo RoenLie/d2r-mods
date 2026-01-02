@@ -6,7 +6,7 @@ import { SettingsConstants } from '../Constants/SettingsConstants';
 import { JewelrySettings } from '../Settings/Filter/JewelrySettings';
 import { QuestEndgameSettings } from '../Settings/Filter/QuestEndgameSettings';
 import { LightPillarsSettings } from '../Settings/LightPillarsSettings';
-import { IBuilder } from './Interfaces/IBuilder';
+import { IBuilder } from './IBuilder';
 
 export class LightPillarBuilder implements IBuilder {
 
@@ -183,7 +183,7 @@ export class LightPillarBuilder implements IBuilder {
 		const file = D2RMM.readJson(`${ path }${ FileConstants.FILE_EXTENSION_JSON }`);
 		this.pushLightPillarToFile(file);
 		for (let i = 1; i <= 3; i++) {
-			const index = (i === 1) ? CharConstants.empty : `${ i }`;
+			const index = (i == 1) ? CharConstants.empty : `${ i }`;
 			D2RMM.writeJson(`${ path }${ index }${ FileConstants.FILE_EXTENSION_JSON }`, file);
 		}
 	}

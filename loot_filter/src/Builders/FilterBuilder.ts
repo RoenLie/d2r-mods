@@ -4,7 +4,7 @@ import { ItemNameAffixesWriter } from '../ItemWriters/ItemNameAffixesWriter';
 import { ItemNamesWriter } from '../ItemWriters/ItemNamesWriter';
 import { ItemRunesWriter } from '../ItemWriters/ItemRunesWriter';
 import { UiWriter } from '../ItemWriters/UiWriter';
-import { IBuilder } from './Interfaces/IBuilder';
+import { IBuilder } from './IBuilder';
 
 export class FilterBuilder implements IBuilder {
 

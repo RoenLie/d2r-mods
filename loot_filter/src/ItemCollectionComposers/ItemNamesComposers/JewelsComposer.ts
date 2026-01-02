@@ -19,7 +19,7 @@ export class JewelsComposer extends ItemCollectionComposerBase implements IItemC
 
 	applyFilter(): void {
 		if (JewelrySettings.facets.highlight === SettingsConstants.disabled
-      && JewelrySettings.facets.bigTooltip === EBigTooltipSetting.DISABLED)
+      && JewelrySettings.facets.bigTooltip == EBigTooltipSetting.DISABLED)
 			return;
 
 		this.collection.upsert(new iLvlItemEntry('Rainbow Facet', EiLvlDigits.Double, null, ColorConstants.unique, this.createFacetPattern(), JewelrySettings.facets.bigTooltip));

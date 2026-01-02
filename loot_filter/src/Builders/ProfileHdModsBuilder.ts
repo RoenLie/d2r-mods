@@ -4,7 +4,7 @@ import { SettingsConstants } from '../Constants/SettingsConstants';
 import { EtherealColorSettings } from '../Settings/Filter/EtherealColorSettings';
 import { JunkSettings } from '../Settings/Filter/JunkSettings';
 import { TooltipModsSettings } from '../Settings/TooltipModsSettings';
-import { IBuilder } from './Interfaces/IBuilder';
+import { IBuilder } from './IBuilder';
 
 export class ProfileHdModsBuilder implements IBuilder {
 

@@ -2,7 +2,6 @@ import { CharConstants } from '../../Constants/CharConstants';
 import { D2Color } from '../../Models/Colors/D2Color';
 import { RawSettings } from '../RawSettings';
 
-
 export class FilterSettings {
 
 	static readonly isEnabled:                 boolean = RawSettings.filter.isEnabled;

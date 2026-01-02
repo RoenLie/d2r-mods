@@ -7,30 +7,25 @@ import { IHighlight } from './Interfaces/IHighlight';
 
 export class DoubleHighlight extends DoubleHighlightBase implements IHighlight {
 
-	protected readonly setting: EDoubleHighlightSetting;
-
-	constructor(
-		hlSetting: EDoubleHighlightSetting,
-		color?: D2Color,
-		bttSetting: EBigTooltipSetting = EBigTooltipSetting.DISABLED,
-	) {
-		if (hlSetting === EDoubleHighlightSetting.DISABLED)
-			throw new Error('hlSetting can not be DISABLED.');
-
-		if (hlSetting === EDoubleHighlightSetting.EXTRA_EXTRA_LARGE && bttSetting !== EBigTooltipSetting.DISABLED)
-			hlSetting = EDoubleHighlightSetting.EXTRA_LARGE;
-
-		const settings = HighlightConstants.doubleHighlightSizes.find(size => size.setting === hlSetting)!;
-		super(settings.pattern, settings.padding, color);
-		this.setting = hlSetting;
+	private readonly _setting: EDoubleHighlightSetting;
+	protected get setting(): EDoubleHighlightSetting {
+		return this._setting;
 	}
 
-	static create(
-		hlSetting: EDoubleHighlightSetting,
-		color?: D2Color,
-		bttSetting?: EBigTooltipSetting,
-	): DoubleHighlight | null {
-		if (hlSetting === EDoubleHighlightSetting.DISABLED)
+	constructor(hlSetting: EDoubleHighlightSetting, color?: D2Color, bttSetting: EBigTooltipSetting = EBigTooltipSetting.DISABLED) {
+		if (hlSetting == EDoubleHighlightSetting.DISABLED)
+			throw new Error('hlSetting can not be DISABLED.');
+
+		if (hlSetting == EDoubleHighlightSetting.EXTRA_EXTRA_LARGE && bttSetting != EBigTooltipSetting.DISABLED)
+			hlSetting = EDoubleHighlightSetting.EXTRA_LARGE;
+
+		const settings = HighlightConstants.doubleHighlightSizes.find(size => size.setting == hlSetting)!;
+		super(settings.pattern, settings.padding, color);
+		this._setting = hlSetting;
+	}
+
+	static create(hlSetting: EDoubleHighlightSetting, color?: D2Color, bttSetting?: EBigTooltipSetting): DoubleHighlight | null {
+		if (hlSetting == EDoubleHighlightSetting.DISABLED)
 			return null;
 
 		return new DoubleHighlight(hlSetting, color, bttSetting ??= EBigTooltipSetting.DISABLED);

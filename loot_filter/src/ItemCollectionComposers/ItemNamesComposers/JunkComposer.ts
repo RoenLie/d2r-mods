@@ -108,7 +108,7 @@ export class JunkComposer extends ItemCollectionComposerBase implements IItemCol
 
 	// TODO: add option for highlight?
 	protected applyKeys(): void {
-		if (JunkSettings.keys === SettingsConstants.hide)
+		if (JunkSettings.keys == SettingsConstants.hide)
 			this.collection.upsertHidden('key');
 	}
 

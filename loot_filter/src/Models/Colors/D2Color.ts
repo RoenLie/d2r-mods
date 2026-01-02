@@ -3,25 +3,31 @@ import { ED2ColorCode } from './ED2ColorCode';
 
 export class D2Color {
 
-	readonly code: ED2ColorCode;
+	/**
+   * color code
+   */
+	private readonly _code: ED2ColorCode;
+	get code(): ED2ColorCode {
+		return this._code;
+	}
 
 	static readonly prefix = 'ÿc';
 
 	constructor(code: ED2ColorCode) {
-		if (code === ED2ColorCode.NONE || code === ED2ColorCode.DEFAULT)
+		if (code == ED2ColorCode.NONE || code == ED2ColorCode.DEFAULT)
 			throw new Error("EColorCode can't be NONE or DEFAULT.");
 
-		this.code = code;
+		this._code = code;
 	}
 
 	static create(code: ED2ColorCode, fallback?: ED2ColorCode): D2Color | null {
-		if (code === ED2ColorCode.NONE)
+		if (code == ED2ColorCode.NONE)
 			return null;
 
-		if (code === ED2ColorCode.DEFAULT) {
-			if (fallback === ED2ColorCode.DEFAULT)
+		if (code == ED2ColorCode.DEFAULT) {
+			if (fallback == ED2ColorCode.DEFAULT)
 				throw new Error("EColorCode can't be DEFAULT.");
-			if (fallback === ED2ColorCode.NONE)
+			if (fallback = ED2ColorCode.NONE)
 				return null;
 
 			return new D2Color(fallback ??= ED2ColorCode.WHITE);

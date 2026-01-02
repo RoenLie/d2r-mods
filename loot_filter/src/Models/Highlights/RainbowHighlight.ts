@@ -7,15 +7,29 @@ import { DoubleHighlightBase } from './DoubleHighlightBase';
 
 export class RainbowHighlight extends DoubleHighlightBase {
 
-	protected readonly patternsPadding = HighlightConstants.padding.p1;
-	protected readonly patternColors = [
-		ColorConstants.red,
-		ColorConstants.yellow,
-		ColorConstants.blue,
-		ColorConstants.green,
-	];
+	/**
+   * paddingPatterns: padding between individual patterns
+   */
+	private readonly _patternsPadding = HighlightConstants.padding.p1;
+	protected get patternsPadding() {
+		return this._patternsPadding;
+	}
 
-	protected readonly nameColor = ColorConstants.gold;
+	/**
+   * patternColors:
+   */
+	private readonly _patternColors = [ ColorConstants.red, ColorConstants.yellow, ColorConstants.blue, ColorConstants.green ];
+	protected get patternColors() {
+		return this._patternColors;
+	}
+
+	/**
+   * nameColor
+   */
+	private readonly _nameColor = ColorConstants.gold;
+	protected get nameColor() {
+		return this._nameColor;
+	}
 
 	// TODO
 	constructor(bigTooltipSetting?: EBigTooltipSetting) {
@@ -32,7 +46,7 @@ export class RainbowHighlight extends DoubleHighlightBase {
 		// all: clr/pattern/paddingPatterns
 		this.patternColors.forEach((clr, i) => {
 			// if last, use clrName+paddingName, else use paddingPatterns
-			const next = (i === this.patternColors.length - 1) ? `${ this.nameColor }${ this.padding }` : this.patternsPadding;
+			const next = (i == this.patternColors.length - 1) ? `${ this.nameColor }${ this.padding }` : this.patternsPadding;
 			prefix += `${ clr }${ this.pattern }${ next }`;
 		});
 
@@ -46,7 +60,7 @@ export class RainbowHighlight extends DoubleHighlightBase {
 		// rest:  paddingPatterns/clr/pattern
 		// end:   altClrName
 		this.patternColors.reverse().forEach((clr, i) => {
-			const next = (i === 0) ? this.padding : this.patternsPadding;
+			const next = (i == 0) ? this.padding : this.patternsPadding;
 			suffix += `${ next }${ clr }${ this.pattern }`;
 		});
 

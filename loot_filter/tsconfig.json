@@ -5,5 +5,8 @@
 		"allowImportingTsExtensions": true,
 		"types": ["../../types.d.ts"],
 		"noEmit": true
-	}
+	},
+	"include": [
+		"src/**/*.ts"
+	]
 }

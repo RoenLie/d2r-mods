@@ -1,6 +1,5 @@
 import { RawSettings } from '../RawSettings';
 
-
 export abstract class JunkSettings {
 
 	static readonly goldTooltipColors: string = RawSettings.filter.junk.goldTooltipColors;

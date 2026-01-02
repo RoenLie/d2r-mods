@@ -6,7 +6,6 @@ import { IHighlight } from '../../Models/Highlights/Interfaces/IHighlight';
 import { EBigTooltipSetting } from '../Enums/EBigTooltipSetting';
 import { RawSettings } from '../RawSettings';
 
-
 class RuneTierSetting {
 
 	readonly isVisible:   boolean;
@@ -25,10 +24,7 @@ class RuneTierSetting {
 	) {
 		const hlColor = D2Color.create(hlColorCode, RawSettings.filter.settings.defaultHighlightColor)!;
 		this.isVisible = isVisible;
-		this.highlight = hlSetting === EDoubleHighlightSetting.DISABLED
-			? null
-			: new DoubleHighlight(hlSetting, hlColor, bttSetting);
-
+		this.highlight = hlSetting == EDoubleHighlightSetting.DISABLED ? null : new DoubleHighlight(hlSetting, hlColor, bttSetting);
 		this.nameColor = D2Color.create(nameColorCode);
 		this.numberColor = D2Color.create(numberColorCode);
 		this.bigTooltip = bttSetting;

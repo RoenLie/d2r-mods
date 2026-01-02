@@ -1,6 +1,5 @@
 import { RawSettings } from '../RawSettings';
 
-
 export abstract class JewelrySettings {
 
 	static readonly gems = {

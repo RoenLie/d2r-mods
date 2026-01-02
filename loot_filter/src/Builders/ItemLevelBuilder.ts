@@ -6,8 +6,7 @@ import { FilterSettings } from '../Settings/Filter/FilterSettings';
 import { ItemLevelSettings } from '../Settings/Filter/ItemLevelSettings';
 import { JewelrySettings } from '../Settings/Filter/JewelrySettings';
 import { QuestEndgameSettings } from '../Settings/Filter/QuestEndgameSettings';
-import { IBuilder } from './Interfaces/IBuilder';
-
+import { IBuilder } from './IBuilder';
 
 export class ItemLevelBuilder implements IBuilder {
 
@@ -16,7 +15,7 @@ export class ItemLevelBuilder implements IBuilder {
 	protected readonly weaponsExclusions: string[] = [];
 	protected readonly miscExclusions:    string[] = [];
 
-	build() {
+	build(): void {
 		if (!FilterSettings.isEnabled || !ItemLevelSettings.isEnabled)
 			return;
 
@@ -31,7 +30,7 @@ export class ItemLevelBuilder implements IBuilder {
 	private setWeaponsExclusions(): void {
 		this.weaponsExclusions.push('tpot'); // always exclude throwing pots
 
-		if (!this.shouldHideOnBtt || QuestEndgameSettings.bigTooltips.questItems === EBigTooltipSetting.DISABLED)
+		if (!this.shouldHideOnBtt || QuestEndgameSettings.bigTooltips.questItems == EBigTooltipSetting.DISABLED)
 			return;
 
 		// exclude quest weapons with iLvls if Big Tooltips is enabled

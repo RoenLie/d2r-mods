@@ -30,7 +30,7 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 		if (JewelrySettings.charms.highlightUnique !== SettingsConstants.disabled
       && JewelrySettings.charms.bigTooltipUnique != EBigTooltipSetting.DISABLED
 		) {
-			// TODO: implement additional unique-charm handling
+
 		}
 	}
 
@@ -49,7 +49,7 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 		const highlight = JewelrySettings.charms.highlightUnique !== SettingsConstants.disabled
 			? DoubleHighlight.create(EDoubleHighlightSetting.LARGE, FilterSettings.defaultHighlightColor, bttSetting)
 			: null;
-		if (highlight === null && bttSetting === EBigTooltipSetting.DISABLED)
+		if (highlight == null && bttSetting == EBigTooltipSetting.DISABLED)
 			return;
 
 		[
@@ -62,7 +62,7 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 	protected applySunderCharms(): void {
 		const hlSetting = JewelrySettings.charms.highlightUnique;
 		const bttSetting = JewelrySettings.charms.bigTooltipUnique;
-		if (hlSetting === SettingsConstants.disabled && bttSetting === EBigTooltipSetting.DISABLED)
+		if (hlSetting === SettingsConstants.disabled && bttSetting == EBigTooltipSetting.DISABLED)
 			return;
 
 		if (hlSetting === 'hl-sa')

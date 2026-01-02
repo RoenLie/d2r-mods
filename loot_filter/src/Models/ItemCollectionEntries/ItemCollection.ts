@@ -50,7 +50,7 @@ export class ItemCollection {
 	}
 
 	upsertIfHasHighlightOrBigTooltip(entry: ItemEntry): void {
-		if (entry.highlight === null && entry.bigTooltip === null)
+		if (entry.highlight == null && entry.bigTooltip == null)
 			return;
 
 		this.upsert(entry);

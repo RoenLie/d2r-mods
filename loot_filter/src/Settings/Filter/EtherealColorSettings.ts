@@ -1,7 +1,6 @@
 import { D2rColor } from '../../Models/Colors/D2rColor';
 import { RawSettings } from '../RawSettings';
 
-
 export abstract class EtherealColorSettings {
 
 	static readonly isEnabled: boolean  = RawSettings.filter.statsAndModifiers.ethColor.isEnabled;

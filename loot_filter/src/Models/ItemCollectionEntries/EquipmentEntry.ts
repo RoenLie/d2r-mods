@@ -40,7 +40,7 @@ export class EquipmentEntry extends iLvlItemEntry implements IItemEntry {
 	}
 
 	protected applyQualityTag(displayName: string): string {
-		if (this._qualityTag === null)
+		if (this._qualityTag == null)
 			return displayName;
 
 		return this._qualityTag.apply(displayName);

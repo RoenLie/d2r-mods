@@ -3,14 +3,14 @@ import { FileConstants } from '../Constants/FileConstants';
 import { RuneConstants } from '../Constants/Items/RuneConstants';
 import { SoundEffectPair } from '../Models/SoundEffect';
 import { DropSoundsSettings } from '../Settings/DropSoundsSettings';
-import { IBuilder } from './Interfaces/IBuilder';
-
+import { IBuilder } from './IBuilder';
 
 export class DropSoundBuilder implements IBuilder {
 
 	build() {
 		if (!DropSoundsSettings.isEnabled)
 			return;
+
 
 		const soundsFile = D2RMM.readTsv(FileConstants.FILE_SOUNDS_PATH);
 
@@ -104,18 +104,12 @@ export class DropSoundBuilder implements IBuilder {
 	// - check if set dropSound is not default
 	// - create a new SD and HD dropsound pair in sounds.txt with the right settings
 	// - link the newly created dropsound to the right items
-	protected modifyDropSoundForItems(
-		itemsFilePath: string,
-		soundsFile: TSVData,
-		itemCodes: string[],
-		newNameSuffix: string,
-		dropSound: string,
-	): void {
+	protected modifyDropSoundForItems(itemsFilePath: string, soundsFile: TSVData, itemCodes: string[], newNameSuffix: string, dropSound: string) {
 		if (dropSound === 'default')
 			return;
 
-		const sound = DropSoundConstants.SOUND_EFFECTS[dropSound as keyof typeof DropSoundConstants.SOUND_EFFECTS];
-		const newSoundName = this.createNewDropSound(soundsFile, newNameSuffix, sound);
+
+		const newSoundName = this.createNewDropSound(soundsFile, newNameSuffix, DropSoundConstants.SOUND_EFFECTS[dropSound as keyof typeof DropSoundConstants.SOUND_EFFECTS]);
 		this.pushNewDropSoundToItems(itemsFilePath, itemCodes, newSoundName);
 	}
 
@@ -124,35 +118,14 @@ export class DropSoundBuilder implements IBuilder {
 		const soundNameSd = `${ DropSoundConstants.SOUND_PREFIX }${ soundNameSuffix }`;
 		const soundNameHd = `${ soundNameSd }_hd`;
 
-		this.pushSound(
-			soundsFile,
-			soundNameSd,
-			DropSoundConstants.SOUND_ITEM_RUNE,
-			DropSoundConstants.CHANNEL_ITEMS_SD,
-			sfxFileNames.sd,
-			soundNameHd,
-		);
-		this.pushSound(
-			soundsFile,
-			soundNameHd,
-			DropSoundConstants.SOUND_ITEM_RUNE,
-			DropSoundConstants.CHANNEL_ITEMS_HD,
-			sfxFileNames.hd,
-			DropSoundConstants.SOUND_NONE,
-		);
+		this.pushSound(soundsFile, soundNameSd, DropSoundConstants.SOUND_ITEM_RUNE, DropSoundConstants.CHANNEL_ITEMS_SD, sfxFileNames.sd, soundNameHd);
+		this.pushSound(soundsFile, soundNameHd, DropSoundConstants.SOUND_ITEM_RUNE, DropSoundConstants.CHANNEL_ITEMS_HD, sfxFileNames.hd, DropSoundConstants.SOUND_NONE);
 
 		return soundNameSd;
 	}
 
 	// create new entry in sounds.txt
-	protected pushSound(
-		soundsFile: TSVData,
-		soundName: string,
-		template: string,
-		sfxChannel: string,
-		sfxFileName: string,
-		sfxRedirect: string,
-	): void {
+	protected pushSound(soundsFile: TSVData, soundName: string, template: string, sfxChannel: string, sfxFileName: string, sfxRedirect: string) {
 		const newSound = { ...(soundsFile.rows.find((sound) => sound.Sound === template)) }; // create deep copy of template
 
 		newSound['Sound'] = soundName;

@@ -1,6 +1,6 @@
 import { DropSoundBuilder } from './Builders/DropSoundBuilder';
 import { FilterBuilder } from './Builders/FilterBuilder';
-import { IBuilder } from './Builders/Interfaces/IBuilder';
+import { IBuilder } from './Builders/IBuilder';
 import { ItemLevelBuilder } from './Builders/ItemLevelBuilder';
 import { LightPillarBuilder } from './Builders/LightPillarBuilder';
 import { ProfileHdModsBuilder } from './Builders/ProfileHdModsBuilder';
@@ -20,7 +20,7 @@ export class LootFilterMod {
 
 	protected checkVersion() {
 		const fullVersion = D2RMM.getFullVersion();
-		if (fullVersion === null)
+		if (fullVersion == null)
 			throw new Error(this.requiredD2rmmVersion.getErrorMessage());
 
 

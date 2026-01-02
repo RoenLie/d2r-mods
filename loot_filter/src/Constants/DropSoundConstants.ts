@@ -2,7 +2,6 @@ import { SoundEffectPair } from '../Models/SoundEffect';
 import { CharConstants } from './CharConstants';
 import { FileConstants } from './FileConstants';
 
-
 export abstract class DropSoundConstants {
 
 	// sound names

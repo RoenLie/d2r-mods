@@ -12,8 +12,9 @@ export class BigTooltip {
 	protected _pumIndent: string = CharConstants.empty;
 	protected _padding:   string = HighlightConstants.bttPadding;
 
+	private readonly _pickUpMessage: string = `${ this._pumIndent }${ HighlightConstants.bttPickUpMsg }`;
 	protected get pickUpMessage(): string {
-		return `${ this._pumIndent }${ HighlightConstants.bttPickUpMsg }`;
+		return this._pickUpMessage;
 	}
 
 	constructor(setting: EBigTooltipSetting) {
@@ -71,8 +72,8 @@ export class BigTooltip {
 	}
 
 	static hasPickUpMessage(setting?: EBigTooltipSetting): boolean {
-		return setting === EBigTooltipSetting.TWO_LINES_PICK_UP
-        || setting === EBigTooltipSetting.FOUR_LINES_PICK_UP;
+		return setting == EBigTooltipSetting.TWO_LINES_PICK_UP
+        || setting == EBigTooltipSetting.FOUR_LINES_PICK_UP;
 	}
 
 }
