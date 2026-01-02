@@ -43,7 +43,7 @@ export class iLvlItemEntry extends ItemEntry implements IItemEntry {
 		displayName = this.applyHighlightPattern(displayName);
 		displayName = this.applyIlvlIndent(displayName);
 		displayName = this.applyBigTooltip(displayName);
-		displayName = this.applyiLvlColor(displayName);
+		displayName = this.applyILvlColor(displayName);
 		displayName = this.removeRedundantColorCodes(displayName);
 
 		return displayName;
@@ -71,7 +71,7 @@ export class iLvlItemEntry extends ItemEntry implements IItemEntry {
 		}
 	}
 
-	protected applyiLvlColor(displayName: string): string {
+	protected applyILvlColor(displayName: string): string {
 		return `${ displayName }${ this.nameColor ?? CharConstants.empty }`;
 	}
 

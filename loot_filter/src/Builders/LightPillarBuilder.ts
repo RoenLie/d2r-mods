@@ -3,6 +3,7 @@ import { FileConstants } from '../Constants/FileConstants';
 import { RuneConstants } from '../Constants/Items/RuneConstants';
 import { LightPillarConstants } from '../Constants/LightPillarConstants';
 import { SettingsConstants } from '../Constants/SettingsConstants';
+import { GemQuality, GemType } from '../Enums/GemId';
 import { JewelrySettings } from '../Settings/Filter/JewelrySettings';
 import { QuestEndgameSettings } from '../Settings/Filter/QuestEndgameSettings';
 import { LightPillarsSettings } from '../Settings/LightPillarsSettings';
@@ -63,33 +64,47 @@ export class LightPillarBuilder implements IBuilder {
 
 		const gemQualities = this.getLightPillarGemQualities();
 
-		const gemTypes = [
-			'amethyst',
-			'diamond',
-			'emerald',
-			'ruby',
-			'saphire', // "saphire" is not a typo
-			'topaz',
-			'skull',
-		];
+		// Asset file names use lowercase gem types (and "saphire" is intentionally misspelled in D2R assets)
+		const gemTypeAssetNames: Record<GemType, string> = {
+			[GemType.AMETHYST]: 'amethyst',
+			[GemType.DIAMOND]:  'diamond',
+			[GemType.EMERALD]:  'emerald',
+			[GemType.RUBY]:     'ruby',
+			[GemType.SAPPHIRE]: 'saphire', // D2R asset typo - intentional
+			[GemType.TOPAZ]:    'topaz',
+			[GemType.SKULL]:    'skull',
+		};
+
 		gemQualities.forEach(quality => {
-			gemTypes.forEach(type => {
+			Object.values(gemTypeAssetNames).forEach(type => {
 				this.pushLightPillarToPath(LightPillarConstants.PATH_ITEMS_MISC_GEM, `${ quality }${ type }`);
 			});
 		});
 	}
 
 	private getLightPillarGemQualities(): string[] {
-		const gemQualities = [ 'perfect_' ];
+		// Map gem quality to asset file name prefix
+		const qualityPrefixes = {
+			[GemQuality.PERFECT]:  'perfect_',
+			[GemQuality.FLAWLESS]: 'flawless_',
+			[GemQuality.NORMAL]:   CharConstants.empty,
+			[GemQuality.FLAWED]:   'flawed_',
+			[GemQuality.CHIPPED]:  'chipped_',
+		};
+
+		const gemQualities = [ qualityPrefixes[GemQuality.PERFECT] ];
 		if (JewelrySettings.gems.filter === 'perfect' && this.shouldExcludeForHidden)
 			return gemQualities;
 
-		gemQualities.push('flawless_');
+		gemQualities.push(qualityPrefixes[GemQuality.FLAWLESS]);
 		if (JewelrySettings.gems.filter === 'flawless' && this.shouldExcludeForHidden)
 			return gemQualities;
 
-
-		return gemQualities.concat([ CharConstants.empty, 'flawed_', 'chipped_' ]);
+		return gemQualities.concat([
+			qualityPrefixes[GemQuality.NORMAL],
+			qualityPrefixes[GemQuality.FLAWED],
+			qualityPrefixes[GemQuality.CHIPPED],
+		]);
 	}
 
 	// charms

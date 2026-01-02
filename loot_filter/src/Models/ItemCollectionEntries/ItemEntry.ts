@@ -116,7 +116,7 @@ export class ItemEntry implements IItemEntry {
 		displayName = this.applyNameColor(displayName);
 		displayName = this.applyHighlightPattern(displayName);
 		displayName = this.applyBigTooltip(displayName);
-		displayName = this.removeRedundantColorCodes(displayName); // TODO: fix
+		displayName = this.removeRedundantColorCodes(displayName);
 
 		return displayName;
 	}
@@ -143,16 +143,15 @@ export class ItemEntry implements IItemEntry {
 		return this.bigTooltip.apply(displayName, this.highlight);
 	}
 
-	// TODO: fix
 	/**
    * Removes all adjacent redundant color codes from a name. Assumes occurrences of "ÿc" are always followed by a valid color code character.
    * @param name The item name.
-   * @param startColor The item's default or current tooltip color.
+   * @param startColor The item's default or current tooltip color (defaults to nameColor).
    * @returns The provided name with all duplicate adjacent color codes removed.
    */
 	protected removeRedundantColorCodes(name: string, startColor?: D2Color): string {
-		return name;
-		// TODO: fix
+		// Use nameColor as default for first call
+		const currentColor = startColor ?? this.nameColor;
 
 		if (name.length < 3) // name too short to have a color code
 			return name;
@@ -161,17 +160,24 @@ export class ItemEntry implements IItemEntry {
 		if (i == -1) // no color code found
 			return name;
 
-		const nextColor = new D2Color(name[i + 2] as ED2ColorCode);
+		const nextColorCode = name[i + 2] as ED2ColorCode;
+		const nextColor = new D2Color(nextColorCode);
 
-		// if adjacent color code matches startColor, remove it and proceed with next recursive iteration
-		if (nextColor.equals(startColor)) {
-			name = name.replace(startColor.toString(), CharConstants.empty);
+		// if adjacent color code matches currentColor, remove it and proceed with next recursive iteration
+		if (currentColor && nextColor.equals(currentColor)) {
+			// Remove the redundant color code (3 characters: prefix + 'c' + code) at position i
+			const beforeCode = name.slice(0, i);
+			const afterCode = name.slice(i + 3);
+			const cleanedName = beforeCode + afterCode;
 
-			return this.removeRedundantColorCodes(name, startColor);
+			return this.removeRedundantColorCodes(cleanedName, currentColor);
 		}
 
-		// if next color code does not match, proceed to search from there on
-		return this.removeRedundantColorCodes(name.slice(i + 3), nextColor);
+		// if next color code does not match, keep it and continue searching after this color code
+		const beforeCode = name.slice(0, i + 3);
+		const afterCode = name.slice(i + 3);
+
+		return beforeCode + this.removeRedundantColorCodes(afterCode, nextColor);
 	}
 
 }

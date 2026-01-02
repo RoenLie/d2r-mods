@@ -1,6 +1,8 @@
 import { DropSoundConstants } from '../Constants/DropSoundConstants';
 import { FileConstants } from '../Constants/FileConstants';
 import { RuneConstants } from '../Constants/Items/RuneConstants';
+import { EndgameItemId, EssenceId, PandemoniumKeyId, PandemoniumOrganId } from '../Enums/EndgameItemId';
+import { QuestItemId, QuestWeaponId } from '../Enums/QuestItemId';
 import { SoundEffectPair } from '../Models/SoundEffect';
 import { DropSoundsSettings } from '../Settings/DropSoundsSettings';
 import { IBuilder } from './IBuilder';
@@ -35,36 +37,36 @@ export class DropSoundBuilder implements IBuilder {
 		});
 	}
 
-	protected modifyDropSoundForQuestItems(soundsFile: TSVData) {
+	protected modifyDropSoundForQuestItems(soundsFile: TSVData): void {
 		const itemCodesWeapons = [
-			'leg', // Wirt's Leg
-			'hdm', // Horadric Malus
-			'hst', // Horadric Staff
-			'msf', // Staff of Kings
-			'g33', // The Gidbinn
-			'qf1', // Khalim's Flail
-			'qf2', // Khalim's Will
-			'hfh', // Hell Forge Hammer
+			QuestWeaponId.WIRT_LEG,
+			QuestWeaponId.HORADRIC_MALUS,
+			QuestWeaponId.HORADRIC_STAFF,
+			QuestWeaponId.STAFF_OF_KINGS,
+			QuestWeaponId.GIDBINN,
+			QuestWeaponId.KHALIM_FLAIL,
+			QuestWeaponId.KHALIM_WILL,
+			QuestWeaponId.HELL_FORGE_HAMMER,
 		];
 
 		const itemCodesMisc = [
-			'bks', // Scroll of Inifuss
-			'bkd', // Scroll of Inifuss (deciphered)
-			'tr1', // Horadric Scroll
-			'ass', // Book of Skill
+			QuestItemId.SCROLL_INIFUSS,
+			QuestItemId.SCROLL_INIFUSS_DECIPHERED,
+			QuestItemId.HORADRIC_SCROLL,
+			QuestItemId.BOOK_OF_SKILL,
 
-			// "box", // Horadric Cube // [CSTM_DSBOX]
-			'vip', // Amulet of the Viper
-			'j34', // A Jade Figurine
-			'g34', // The Golden Bird
-			'xyz', // Potion of Life
-			'bbb', // Lam Esen's Tome
-			'qey', // Khalim's Eye
-			'qhr', // Khalim's Heart
-			'qbr', // Khalim's Brain
-			'mss', // Mephisto's Soulstone
-			'ice', // Malah's Potion
-			'tr2', // Scroll of Resistance
+			// QuestItemId.HORADRIC_CUBE // [CSTM_DSBOX]
+			QuestItemId.AMULET_VIPER,
+			QuestItemId.JADE_FIGURINE,
+			QuestItemId.GOLDEN_BIRD,
+			QuestItemId.POTION_OF_LIFE,
+			QuestItemId.LAM_ESEN_TOME,
+			QuestItemId.KHALIM_EYE,
+			QuestItemId.KHALIM_HEART,
+			QuestItemId.KHALIM_BRAIN,
+			QuestItemId.MEPHISTO_SOULSTONE,
+			QuestItemId.MALAH_POTION,
+			QuestItemId.SCROLL_RESISTANCE,
 		];
 
 		const suffix = 'quest';
@@ -72,24 +74,47 @@ export class DropSoundBuilder implements IBuilder {
 		this.modifyDropSoundForWeapons(soundsFile, itemCodesWeapons, suffix, DropSoundsSettings.questEndgame.questItems);
 	}
 
-	protected modifyDropSoundForEssences(soundsFile: TSVData) {
-		this.modifyDropSoundForMiscItems(soundsFile, [ 'tes', 'ceh', 'bet', 'fed' ], 'essence', DropSoundsSettings.questEndgame.essences);
+	protected modifyDropSoundForEssences(soundsFile: TSVData): void {
+		this.modifyDropSoundForMiscItems(soundsFile, [
+			EssenceId.TWISTED,
+			EssenceId.CHARGED,
+			EssenceId.BURNING,
+			EssenceId.FESTERING,
+		], 'essence', DropSoundsSettings.questEndgame.essences);
 	}
 
-	protected modifyDropSoundForTokens(soundsFile: TSVData) {
-		this.modifyDropSoundForMiscItems(soundsFile, [ 'toa' ], 'token', DropSoundsSettings.questEndgame.tokens);
+	protected modifyDropSoundForTokens(soundsFile: TSVData): void {
+		this.modifyDropSoundForMiscItems(
+			soundsFile,
+			[ EndgameItemId.TOKEN ],
+			'token',
+			DropSoundsSettings.questEndgame.tokens,
+		);
 	}
 
-	protected modifyDropSoundForKeys(soundsFile: TSVData) {
-		this.modifyDropSoundForMiscItems(soundsFile, [ 'pk1', 'pk2', 'pk3' ], 'key', DropSoundsSettings.questEndgame.keys);
+	protected modifyDropSoundForKeys(soundsFile: TSVData): void {
+		this.modifyDropSoundForMiscItems(soundsFile, [
+			PandemoniumKeyId.TERROR,
+			PandemoniumKeyId.HATE,
+			PandemoniumKeyId.DESTRUCTION,
+		], 'key', DropSoundsSettings.questEndgame.keys);
 	}
 
-	protected modifyDropSoundForOrgans(soundsFile: TSVData) {
-		this.modifyDropSoundForMiscItems(soundsFile, [ 'eyz', 'brz', 'hrn' ], 'organ', DropSoundsSettings.questEndgame.organs);
+	protected modifyDropSoundForOrgans(soundsFile: TSVData): void {
+		this.modifyDropSoundForMiscItems(soundsFile, [
+			PandemoniumOrganId.HORN,
+			PandemoniumOrganId.EYE,
+			PandemoniumOrganId.BRAIN,
+		], 'organ', DropSoundsSettings.questEndgame.organs);
 	}
 
-	protected modifyDropSoundForStandardOfHeroes(soundsFile: TSVData) {
-		this.modifyDropSoundForMiscItems(soundsFile, [ 'std' ], 'flag', DropSoundsSettings.questEndgame.standard);
+	protected modifyDropSoundForStandardOfHeroes(soundsFile: TSVData): void {
+		this.modifyDropSoundForMiscItems(
+			soundsFile,
+			[ EndgameItemId.STANDARD ],
+			'flag',
+			DropSoundsSettings.questEndgame.standard,
+		);
 	}
 
 	protected modifyDropSoundForMiscItems(soundsFile: TSVData, itemCodes: string[], newNameSuffix: string, dropSound: string) {
