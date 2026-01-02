@@ -8,7 +8,7 @@ import { iLvlItemEntry } from '../../Models/ItemCollectionEntries/iLvlItemEntry'
 import { EBigTooltipSetting } from '../../Settings/Enums/EBigTooltipSetting';
 import { EiLvlDigits } from '../../Settings/Enums/EiLvlDigits';
 import { JewelrySettings } from '../../Settings/Filter/JewelrySettings';
-import { IItemCollectionComposer } from '../Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
 export class JewelsComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {

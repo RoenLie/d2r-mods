@@ -2,7 +2,7 @@ import { CharConstants } from '../../Constants/CharConstants';
 import { D2Color } from '../../Models/Colors/D2Color';
 import { ItemEntry } from '../../Models/ItemCollectionEntries/ItemEntry';
 import { ShortSupInfPrefixesSettings } from '../../Settings/Filter/ShortSupInfPrefixesSettings';
-import { IItemCollectionComposer } from '../Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
 export class ShortSupInferiorPrefixesComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {

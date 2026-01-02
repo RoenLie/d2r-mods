@@ -5,9 +5,13 @@ import { CharConstants } from '../CharConstants';
 import { ColorConstants } from '../Colors/ColorConstants';
 import { SettingsConstants } from '../SettingsConstants';
 
+
 export abstract class HighlightConstants {
 
-	static character:             string  = FilterSettings.highlightCharacter !== SettingsConstants.custom ? FilterSettings.highlightCharacter : '*'; // replace * with desired custom character [CSTM-HLCTR]
+	static character: string  = FilterSettings.highlightCharacter !== SettingsConstants.custom
+		? FilterSettings.highlightCharacter
+		: '*'; // replace * with desired custom character [CSTM-HLCTR]
+
 	static defaultHighlightColor: D2Color = FilterSettings.defaultHighlightColor; // todo: redundant?
 
 	static readonly padding = {

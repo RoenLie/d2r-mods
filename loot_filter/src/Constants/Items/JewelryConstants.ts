@@ -1,5 +1,6 @@
 import { CharmConstants } from './CharmConstants';
 
+
 export abstract class JewelryConstants {
 
 	static ringId = 'rin';

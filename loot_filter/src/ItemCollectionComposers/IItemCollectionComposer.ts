@@ -1,4 +1,5 @@
-import { ItemCollection } from '../../Models/ItemCollectionEntries/ItemCollection';
+import { ItemCollection } from '../Models/ItemCollectionEntries/ItemCollection';
+
 
 export interface IItemCollectionComposer {
 	getCollection(): ItemCollection;

@@ -1,5 +1,6 @@
 import { EiLvlDigits } from '../../Settings/Enums/EiLvlDigits';
 
+
 export abstract class QuestConstants {
 
 	static readonly questItems: string[] = [

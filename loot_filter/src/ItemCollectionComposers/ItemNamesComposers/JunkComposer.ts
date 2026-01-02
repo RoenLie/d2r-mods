@@ -7,7 +7,7 @@ import { IHighlight } from '../../Models/Highlights/Interfaces/IHighlight';
 import { SingleHighlight } from '../../Models/Highlights/SingleHighlight';
 import { ItemEntry } from '../../Models/ItemCollectionEntries/ItemEntry';
 import { JunkSettings } from '../../Settings/Filter/JunkSettings';
-import { IItemCollectionComposer } from '../Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
 export class JunkComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {

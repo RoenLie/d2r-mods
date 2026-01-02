@@ -1,6 +1,6 @@
 import { ItemCollection } from '../Models/ItemCollectionEntries/ItemCollection';
 import { FilterSettings } from '../Settings/Filter/FilterSettings';
-import { IItemCollectionComposer } from './Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from './IItemCollectionComposer';
 import { ItemCollectionComposerBase } from './ItemCollectionComposerBase';
 
 export class CustomComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {

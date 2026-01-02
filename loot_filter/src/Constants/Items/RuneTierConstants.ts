@@ -1,6 +1,8 @@
-import { RuneTier } from '../../Models/Items/RuneTier';
-import { RunesSettings } from '../../Settings/Filter/RunesSettings';
-import { RuneConstants } from './RuneConstants';
+/* eslint-disable @stylistic/max-len */
+//import { RuneTier } from '../../Models/Items/RuneTier';
+//import { RunesSettings } from '../../Settings/Filter/RunesSettings';
+//import { RuneConstants } from './RuneConstants';
+
 
 /** I consider the rune tiers to be:
  * - low:      1-15 (El-Hel)

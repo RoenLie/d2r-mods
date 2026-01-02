@@ -1,5 +1,5 @@
 import { ItemCollection } from '../Models/ItemCollectionEntries/ItemCollection';
-import { IItemCollectionComposer } from './Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from './IItemCollectionComposer';
 
 export abstract class ItemCollectionComposerBase implements IItemCollectionComposer {
 

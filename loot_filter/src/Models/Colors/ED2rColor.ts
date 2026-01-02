@@ -11,4 +11,5 @@ export enum ED2rColor {
 	RED             = 'Red',
 	VERY_LIGHT_GRAY = 'VeryLightGray',
 	WHITE           = 'White',
+	CURRENCY_GOLD    = 'CurrencyGold',
 }

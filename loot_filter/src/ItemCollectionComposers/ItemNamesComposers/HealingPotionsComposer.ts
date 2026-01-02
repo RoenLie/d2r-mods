@@ -6,7 +6,7 @@ import { D2Color } from '../../Models/Colors/D2Color';
 import { SingleHighlight } from '../../Models/Highlights/SingleHighlight';
 import { ItemEntry } from '../../Models/ItemCollectionEntries/ItemEntry';
 import { JunkSettings } from '../../Settings/Filter/JunkSettings';
-import { IItemCollectionComposer } from '../Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
 export class HealingPotionsComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {

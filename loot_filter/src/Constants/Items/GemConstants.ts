@@ -5,6 +5,7 @@ import { ColorConstants } from '../Colors/ColorConstants';
 import { SettingsConstants } from '../SettingsConstants';
 import { HighlightConstants } from './HighlightConstants';
 
+
 export abstract class GemConstants {
 
 	// TODO: public/protected properties

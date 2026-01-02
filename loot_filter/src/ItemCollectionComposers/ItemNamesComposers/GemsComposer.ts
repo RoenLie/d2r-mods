@@ -3,7 +3,7 @@ import { SettingsConstants } from '../../Constants/SettingsConstants';
 import { ItemEntry } from '../../Models/ItemCollectionEntries/ItemEntry';
 import { Gem } from '../../Models/Items/Gem';
 import { JewelrySettings } from '../../Settings/Filter/JewelrySettings';
-import { IItemCollectionComposer } from '../Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
 export class GemsComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {

@@ -1,6 +1,6 @@
 import { CharConstants } from '../Constants/CharConstants';
 import { FileConstants } from '../Constants/FileConstants';
-import { IItemCollectionComposer } from '../ItemCollectionComposers/Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../ItemCollectionComposers/IItemCollectionComposer';
 import { IItemEntry } from '../Models/ItemCollectionEntries/Interfaces/IItemEntry';
 import { ItemCollection } from '../Models/ItemCollectionEntries/ItemCollection';
 import { FilterSettings } from '../Settings/Filter/FilterSettings';

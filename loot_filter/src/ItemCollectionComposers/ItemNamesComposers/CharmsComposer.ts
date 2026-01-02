@@ -9,7 +9,7 @@ import { EBigTooltipSetting } from '../../Settings/Enums/EBigTooltipSetting';
 import { EiLvlDigits } from '../../Settings/Enums/EiLvlDigits';
 import { FilterSettings } from '../../Settings/Filter/FilterSettings';
 import { JewelrySettings } from '../../Settings/Filter/JewelrySettings';
-import { IItemCollectionComposer } from '../Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
 export class CharmsComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {

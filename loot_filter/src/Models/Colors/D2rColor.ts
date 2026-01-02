@@ -4,14 +4,11 @@ import { ED2rColor } from './ED2rColor';
 export class D2rColor {
 
 	constructor(code: ED2rColor) {
-		this._code = code;
+		this.code = code;
 	}
 
-	private readonly _name: string = '';
-	get name(): string { return this._name; }
-
-	private readonly _code: ED2rColor = ED2rColor.WHITE;
-	get code(): ED2rColor {  return this._code; }
+	readonly name: string = '';
+	readonly code: ED2rColor = ED2rColor.WHITE;
 
 	protected readonly prefix = '$FontColor';
 

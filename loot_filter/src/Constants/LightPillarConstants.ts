@@ -1,37 +1,45 @@
 export abstract class LightPillarConstants {
 
 	// item paths
-	static PATH_ITEMS = 'hd\\items\\';
-	static PATH_ITEMS_MISC = `${ this.PATH_ITEMS }misc\\`;
-	static PATH_ITEMS_WEAPON = `${ this.PATH_ITEMS }weapon\\`;
-	static PATH_ITEMS_MISC_BODY_PART = `${ this.PATH_ITEMS_MISC }body_part\\`;
-	static PATH_ITEMS_MISC_QUEST = `${ this.PATH_ITEMS_MISC }quest\\`;
-	static PATH_ITEMS_WEAPON_HAMMER = `${ this.PATH_ITEMS_WEAPON }hammer\\`;
-	static PATH_ITEMS_WEAPON_MACE = `${ this.PATH_ITEMS_WEAPON }mace\\`;
-	static PATH_ITEMS_WEAPON_STAFF = `${ this.PATH_ITEMS_WEAPON }staff\\`;
+	static readonly PATH_ITEMS = 'hd\\items\\';
+	static readonly PATH_ITEMS_MISC = `${ this.PATH_ITEMS }misc\\`;
+	static readonly PATH_ITEMS_WEAPON = `${ this.PATH_ITEMS }weapon\\`;
+	static readonly PATH_ITEMS_MISC_BODY_PART = `${ this.PATH_ITEMS_MISC }body_part\\`;
+	static readonly PATH_ITEMS_MISC_QUEST = `${ this.PATH_ITEMS_MISC }quest\\`;
+	static readonly PATH_ITEMS_MISC_SCROLL = `${ this.PATH_ITEMS_MISC }scroll\\`;
+	static readonly PATH_ITEMS_MISC_AMULET = `${ this.PATH_ITEMS_MISC }amulet\\`;
+	static readonly PATH_ITEMS_MISC_RING = `${ this.PATH_ITEMS_MISC }ring\\`;
+	static readonly PATH_ITEMS_MISC_RUNE = `${ this.PATH_ITEMS_MISC }rune\\`;
+	static readonly PATH_ITEMS_MISC_GEM = `${ this.PATH_ITEMS_MISC }gem\\`;
+	static readonly PATH_ITEMS_MISC_KEY = `${ this.PATH_ITEMS_MISC }key\\`;
+	static readonly PATH_ITEMS_WEAPON_HAMMER = `${ this.PATH_ITEMS_WEAPON }hammer\\`;
+	static readonly PATH_ITEMS_WEAPON_CLUB = `${ this.PATH_ITEMS_WEAPON }club\\`;
+	static readonly PATH_ITEMS_WEAPON_MACE = `${ this.PATH_ITEMS_WEAPON }mace\\`;
+	static readonly PATH_ITEMS_WEAPON_KNIFE = `${ this.PATH_ITEMS_WEAPON }knife\\`;
+	static readonly PATH_ITEMS_WEAPON_STAFF = `${ this.PATH_ITEMS_WEAPON }staff\\`;
 
 	// vfx paths
-	protected static PATH_VFX_BASE = 'data/hd/vfx/particles/overlays/';
-	protected static PATH_HORADRIC_LIGHT = `${ this.PATH_VFX_BASE }object/horadric_light/fx_horadric_light.particles`;
-	protected static PATH_PALADIN_FANATICISM = `${ this.PATH_VFX_BASE }paladin/aura_fanatic/aura_fanatic.particles`;
-	protected static PATH_VALKYRIE_START = `${ this.PATH_VFX_BASE }common/valkyriestart/valkriestart_overlay.particles`;
+	protected static readonly PATH_VFX_BASE = 'data/hd/vfx/particles/overlays/';
+	protected static readonly PATH_HORADRIC_LIGHT = `${ this.PATH_VFX_BASE }object/horadric_light/fx_horadric_light.particles`;
+	protected static readonly PATH_PALADIN_FANATICISM = `${ this.PATH_VFX_BASE }paladin/aura_fanatic/aura_fanatic.particles`;
+	protected static readonly PATH_VALKYRIE_START = `${ this.PATH_VFX_BASE }common/valkyriestart/valkriestart_overlay.particles`;
 
 	// vfx names
-	protected static DEFINITION_COMPONENT_TRANSFORM = 'TransformDefinitionComponent';
-	protected static DEFINITION_COMPONENT_VFX = 'VfxDefinitionComponent';
-	protected static NAME_TRANSFORM1 = 'component_transform1';
-	protected static NAME_VFX_STOLEN = 'entity_vfx_filthyStolenMod';
-	protected static NAME_VFX_ROOT = 'entity_root_VfxDefinition';
+	protected static readonly DEFINITION_COMPONENT_TRANSFORM = 'TransformDefinitionComponent';
+	protected static readonly DEFINITION_COMPONENT_VFX = 'VfxDefinitionComponent';
+	protected static readonly NAME_TRANSFORM1 = 'component_transform1';
+	protected static readonly NAME_VFX_STOLEN = 'entity_vfx_filthyStolenMod';
+	protected static readonly NAME_VFX_ROOT = 'entity_root_VfxDefinition';
 
 	// vfx params
-	protected static TYPE_ENTITY = 'Entity';
-	protected static NAME_DROPLIGHT = 'droplight';
-	protected static NAME_ENTITY_ROOT = 'entity_root';
-	protected static ID_DROPLIGHT = 9999996974;
-	protected static ID_ENTITY_ROOT = 1079187010;
+	protected static readonly TYPE_ENTITY = 'Entity';
+	protected static readonly NAME_DROPLIGHT = 'droplight';
+	protected static readonly NAME_ENTITY_ROOT = 'entity_root';
+	protected static readonly ID_DROPLIGHT = 9999996974;
+	protected static readonly ID_ENTITY_ROOT = 1079187010;
 
 	// vfx light pillar
-	static LIGHT_PILLAR_COMPONENT = {
+	static readonly LIGHT_PILLAR_COMPONENT = {
 		particle: {
 			path: this.PATH_HORADRIC_LIGHT,
 		},
@@ -91,7 +99,7 @@ export abstract class LightPillarConstants {
 					},
 				],
 			},
-		],
+		] as JSONData[],
 	};
 
 }

@@ -3,7 +3,7 @@ import { QuestConstants } from '../Constants/Items/QuestConstants';
 import { IHighlight } from '../Models/Highlights/Interfaces/IHighlight';
 import { ItemEntry } from '../Models/ItemCollectionEntries/ItemEntry';
 import { QuestEndgameSettings } from '../Settings/Filter/QuestEndgameSettings';
-import { IItemCollectionComposer } from './Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from './IItemCollectionComposer';
 import { ItemCollectionComposerBase } from './ItemCollectionComposerBase';
 
 // TODO: add inheritance for QuestEndgameItemsComposer, UiComposer and ItemModifiersComposer to remove duplicate code

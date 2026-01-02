@@ -4,11 +4,10 @@ import { DropSoundsSettings } from '../../Settings/DropSoundsSettings';
 import { RunesSettings } from '../../Settings/Filter/RunesSettings';
 import { LightPillarsSettings } from '../../Settings/LightPillarsSettings';
 
+
 export abstract class RuneConstants {
 
-	/**
-   * Runes El (1) up to Dol (14), except Ral (8).
-   */
+	/** Runes El (1) up to Dol (14), except Ral (8). */
 	static lowRunes: Rune[] = [
 		new Rune(1, 'El'),
 		new Rune(2, 'Eld'),
@@ -25,9 +24,7 @@ export abstract class RuneConstants {
 		new Rune(14, 'Dol'),
 	];
 
-	/**
-   * Runes Ral (8) and Hel (15) up to Fal (19).
-   */
+	/**  Runes Ral (8) and Hel (15) up to Fal (19). */
 	static lowMidRunes: Rune[] = [
 		new Rune(8, 'Ral'),
 		new Rune(15, 'Hel'),
@@ -37,9 +34,7 @@ export abstract class RuneConstants {
 		new Rune(19, 'Fal'),
 	];
 
-	/**
-   * Runes Lem (20) up to Gul (25).
-   */
+	/**  Runes Lem (20) up to Gul (25). */
 	static midRunes: Rune[] = [
 		new Rune(20, 'Lem'),
 		new Rune(21, 'Pul'),
@@ -49,9 +44,7 @@ export abstract class RuneConstants {
 		new Rune(25, 'Gul'),
 	];
 
-	/**
-   * Runes Vex (26) up to Zod (33).
-   */
+	/** Runes Vex (26) up to Zod (33). */
 	static highRunes: Rune[] = [
 		new Rune(26, 'Vex'),
 		new Rune(27, 'Ohm'),
@@ -72,10 +65,50 @@ export abstract class RuneConstants {
    * I have however moved Ral (8), Hel (15) and Lem (20) a tier up because of their usefulness.
    */
 	static tiers = [
-		new RuneTier(1, this.lowRunes,    RunesSettings.low.isVisible,    RunesSettings.low.nameColor,    RunesSettings.low.numberColor,    RunesSettings.low.highlight,    RunesSettings.low.bigTooltip,    LightPillarsSettings.runes.isLowEnabled,    DropSoundsSettings.runes.low),
-		new RuneTier(2, this.lowMidRunes, RunesSettings.lowMid.isVisible, RunesSettings.lowMid.nameColor, RunesSettings.lowMid.numberColor, RunesSettings.lowMid.highlight, RunesSettings.lowMid.bigTooltip, LightPillarsSettings.runes.isLowMidEnabled, DropSoundsSettings.runes.lowMid),
-		new RuneTier(3, this.midRunes,    RunesSettings.mid.isVisible,    RunesSettings.mid.nameColor,    RunesSettings.mid.numberColor,    RunesSettings.mid.highlight,    RunesSettings.mid.bigTooltip,    LightPillarsSettings.runes.isMidEnabled,    DropSoundsSettings.runes.mid),
-		new RuneTier(4, this.highRunes,   RunesSettings.high.isVisible,   RunesSettings.high.nameColor,   RunesSettings.high.numberColor,   RunesSettings.high.highlight,   RunesSettings.high.bigTooltip,   LightPillarsSettings.runes.isHighEnabled,   DropSoundsSettings.runes.high),
+		new RuneTier(
+			1,
+			this.lowRunes,
+			RunesSettings.low.isVisible,
+			RunesSettings.low.nameColor,
+			RunesSettings.low.numberColor,
+			RunesSettings.low.highlight,
+			RunesSettings.low.bigTooltip,
+			LightPillarsSettings.runes.isLowEnabled,
+			DropSoundsSettings.runes.low,
+		),
+		new RuneTier(
+			2,
+			this.lowMidRunes,
+			RunesSettings.lowMid.isVisible,
+			RunesSettings.lowMid.nameColor,
+			RunesSettings.lowMid.numberColor,
+			RunesSettings.lowMid.highlight,
+			RunesSettings.lowMid.bigTooltip,
+			LightPillarsSettings.runes.isLowMidEnabled,
+			DropSoundsSettings.runes.lowMid,
+		),
+		new RuneTier(
+			3,
+			this.midRunes,
+			RunesSettings.mid.isVisible,
+			RunesSettings.mid.nameColor,
+			RunesSettings.mid.numberColor,
+			RunesSettings.mid.highlight,
+			RunesSettings.mid.bigTooltip,
+			LightPillarsSettings.runes.isMidEnabled,
+			DropSoundsSettings.runes.mid,
+		),
+		new RuneTier(
+			4,
+			this.highRunes,
+			RunesSettings.high.isVisible,
+			RunesSettings.high.nameColor,
+			RunesSettings.high.numberColor,
+			RunesSettings.high.highlight,
+			RunesSettings.high.bigTooltip,
+			LightPillarsSettings.runes.isHighEnabled,
+			DropSoundsSettings.runes.high,
+		),
 	];
 
 	static translatedAffixes: string[] = [

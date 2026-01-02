@@ -1,5 +1,6 @@
 import { ColorConstants } from '../Colors/ColorConstants';
 
+
 export abstract class EndgameConstants {
 
 	static clrName = ColorConstants.orange;

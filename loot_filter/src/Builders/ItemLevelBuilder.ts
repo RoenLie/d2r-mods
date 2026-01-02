@@ -67,7 +67,7 @@ export class ItemLevelBuilder implements IBuilder {
 		this.enableForWeaponsArmor(FileConstants.FILE_ARMOR_PATH, []);
 	}
 
-	protected enableForWeaponsArmor(path: string, exclusions: string[]) {
+	protected enableForWeaponsArmor(path: string, exclusions: string[]): void {
 		const file = D2RMM.readTsv(path);
 
 		// in these files, all entries need ShowLevel to be set to 1, except those in the exclusions list.
@@ -81,7 +81,7 @@ export class ItemLevelBuilder implements IBuilder {
 		D2RMM.writeTsv(path, file);
 	}
 
-	protected enableForMiscItems() {
+	protected enableForMiscItems(): void {
 		const file = D2RMM.readTsv(FileConstants.FILE_MISC_PATH);
 
 		// in this file, we only want the entries matching JewelryConstants.iLvlJewelry to have their ShowLevel be set to 1.

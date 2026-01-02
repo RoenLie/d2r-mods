@@ -4,7 +4,7 @@ import { SettingsConstants } from '../../Constants/SettingsConstants';
 import { D2Color } from '../../Models/Colors/D2Color';
 import { ItemEntry } from '../../Models/ItemCollectionEntries/ItemEntry';
 import { JunkSettings } from '../../Settings/Filter/JunkSettings';
-import { IItemCollectionComposer } from '../Interfaces/IItemCollectionComposer';
+import { IItemCollectionComposer } from '../IItemCollectionComposer';
 import { ItemCollectionComposerBase } from '../ItemCollectionComposerBase';
 
 export class GoldComposer extends ItemCollectionComposerBase implements IItemCollectionComposer {
