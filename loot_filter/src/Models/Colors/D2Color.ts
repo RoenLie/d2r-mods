@@ -3,13 +3,7 @@ import { ED2ColorCode } from './ED2ColorCode';
 
 export class D2Color {
 
-	/**
-   * color code
-   */
-	private readonly _code: ED2ColorCode;
-	get code(): ED2ColorCode {
-		return this._code;
-	}
+	readonly code: ED2ColorCode;
 
 	static readonly prefix = 'ÿc';
 
@@ -17,7 +11,7 @@ export class D2Color {
 		if (code === ED2ColorCode.NONE || code === ED2ColorCode.DEFAULT)
 			throw new Error("EColorCode can't be NONE or DEFAULT.");
 
-		this._code = code;
+		this.code = code;
 	}
 
 	static create(code: ED2ColorCode, fallback?: ED2ColorCode): D2Color | null {

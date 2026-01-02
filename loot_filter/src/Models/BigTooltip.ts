@@ -12,9 +12,8 @@ export class BigTooltip {
 	protected _pumIndent: string = CharConstants.empty;
 	protected _padding:   string = HighlightConstants.bttPadding;
 
-	private readonly _pickUpMessage: string = `${ this._pumIndent }${ HighlightConstants.bttPickUpMsg }`;
 	protected get pickUpMessage(): string {
-		return this._pickUpMessage;
+		return `${ this._pumIndent }${ HighlightConstants.bttPickUpMsg }`;
 	}
 
 	constructor(setting: EBigTooltipSetting) {

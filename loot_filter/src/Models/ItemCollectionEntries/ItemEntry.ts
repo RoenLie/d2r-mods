@@ -4,21 +4,15 @@ import { EBigTooltipSetting } from '../../Settings/Enums/EBigTooltipSetting';
 import { FilterSettings } from '../../Settings/Filter/FilterSettings';
 import { BigTooltip } from '../BigTooltip';
 import { D2Color } from '../Colors/D2Color';
-import { ED2ColorCode } from '../Colors/ED2ColorCode';
 import { IHighlight } from '../Highlights/Interfaces/IHighlight';
 import { SingleHighlight } from '../Highlights/SingleHighlight';
 import { Gem } from '../Items/Gem';
 import { IItemEntry } from './Interfaces/IItemEntry';
 
+
 export class ItemEntry implements IItemEntry {
 
-	/**
-   * Key / item code
-   */
-	private readonly _key: string;
-	get key(): string {
-		return this._key;
-	}
+	readonly key: string;
 
 	/**
    * Visibility
@@ -32,21 +26,8 @@ export class ItemEntry implements IItemEntry {
 		this._isVisible = value;
 	}
 
-	/**
-   * Name color
-   */
-	private readonly _nameColor: D2Color | null;
-	protected get nameColor(): D2Color | null {
-		return this._nameColor;
-	}
-
-	/**
-   * Name replacement. Leave empty to use vanilla translated name.
-   */
-	private readonly _newName: string | null;
-	protected get newName(): string | null {
-		return this._newName;
-	}
+	protected readonly nameColor: D2Color | null;
+	protected readonly newName:   string | null;
 
 	/**
    * Highlight pattern
@@ -79,11 +60,13 @@ export class ItemEntry implements IItemEntry {
 		highlight?: IHighlight | null,
 		bigTooltipSetting?: EBigTooltipSetting | null,
 	) {
-		this._key = key;
-		this._newName = newName ??= null;
-		this._nameColor = nameColor ??= null;
+		this.key = key;
+		this.newName = newName ??= null;
+		this.nameColor = nameColor ??= null;
 		this._highlight = highlight ??= null;
-		this._bigTooltip = (bigTooltipSetting != undefined && bigTooltipSetting != EBigTooltipSetting.DISABLED) ? new BigTooltip(bigTooltipSetting) : null;
+		this._bigTooltip = (bigTooltipSetting != undefined && bigTooltipSetting != EBigTooltipSetting.DISABLED)
+			? new BigTooltip(bigTooltipSetting)
+			: null;
 	}
 
 	static createArray(items: [string, string][]): ItemEntry[] {
@@ -121,11 +104,11 @@ export class ItemEntry implements IItemEntry {
 		return displayName;
 	}
 
-	protected applyNewName(translatedName: string) {
+	protected applyNewName(translatedName: string): string {
 		return (this.newName === null || this.newName === CharConstants.empty) ? translatedName : this.newName;
 	}
 
-	protected applyNameColor(displayName: string) {
+	protected applyNameColor(displayName: string): string {
 		return `${ this.nameColor ?? CharConstants.empty }${ displayName }`;
 	}
 
@@ -153,25 +136,24 @@ export class ItemEntry implements IItemEntry {
 	protected removeRedundantColorCodes(name: string, startColor?: D2Color): string {
 		return name;
 		// TODO: fix
+		//if (name.length < 3) // name too short to have a color code
+		//	return name;
 
-		if (name.length < 3) // name too short to have a color code
-			return name;
+		//const i = name.indexOf(D2Color.prefix);
+		//if (i === -1) // no color code found
+		//	return name;
 
-		const i = name.indexOf(D2Color.prefix);
-		if (i === -1) // no color code found
-			return name;
+		//const nextColor = new D2Color(name[i + 2] as ED2ColorCode);
 
-		const nextColor = new D2Color(name[i + 2] as ED2ColorCode);
+		//// if adjacent color code matches startColor, remove it and proceed with next recursive iteration
+		//if (nextColor.equals(startColor)) {
+		//	name = name.replace(startColor.toString(), CharConstants.empty);
 
-		// if adjacent color code matches startColor, remove it and proceed with next recursive iteration
-		if (nextColor.equals(startColor)) {
-			name = name.replace(startColor.toString(), CharConstants.empty);
+		//	return this.removeRedundantColorCodes(name, startColor);
+		//}
 
-			return this.removeRedundantColorCodes(name, startColor);
-		}
-
-		// if next color code does not match, proceed to search from there on
-		return this.removeRedundantColorCodes(name.slice(i + 3), nextColor);
+		//// if next color code does not match, proceed to search from there on
+		//return this.removeRedundantColorCodes(name.slice(i + 3), nextColor);
 	}
 
 }

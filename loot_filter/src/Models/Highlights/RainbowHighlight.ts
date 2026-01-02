@@ -7,29 +7,15 @@ import { DoubleHighlightBase } from './DoubleHighlightBase';
 
 export class RainbowHighlight extends DoubleHighlightBase {
 
-	/**
-   * paddingPatterns: padding between individual patterns
-   */
-	private readonly _patternsPadding = HighlightConstants.padding.p1;
-	protected get patternsPadding() {
-		return this._patternsPadding;
-	}
+	protected readonly patternsPadding = HighlightConstants.padding.p1;
+	protected readonly patternColors = [
+		ColorConstants.red,
+		ColorConstants.yellow,
+		ColorConstants.blue,
+		ColorConstants.green,
+	];
 
-	/**
-   * patternColors:
-   */
-	private readonly _patternColors = [ ColorConstants.red, ColorConstants.yellow, ColorConstants.blue, ColorConstants.green ];
-	protected get patternColors() {
-		return this._patternColors;
-	}
-
-	/**
-   * nameColor
-   */
-	private readonly _nameColor = ColorConstants.gold;
-	protected get nameColor() {
-		return this._nameColor;
-	}
+	protected readonly nameColor = ColorConstants.gold;
 
 	// TODO
 	constructor(bigTooltipSetting?: EBigTooltipSetting) {

@@ -7,12 +7,13 @@ import { IHighlight } from './Interfaces/IHighlight';
 
 export class DoubleHighlight extends DoubleHighlightBase implements IHighlight {
 
-	private readonly _setting: EDoubleHighlightSetting;
-	protected get setting(): EDoubleHighlightSetting {
-		return this._setting;
-	}
+	protected readonly setting: EDoubleHighlightSetting;
 
-	constructor(hlSetting: EDoubleHighlightSetting, color?: D2Color, bttSetting: EBigTooltipSetting = EBigTooltipSetting.DISABLED) {
+	constructor(
+		hlSetting: EDoubleHighlightSetting,
+		color?: D2Color,
+		bttSetting: EBigTooltipSetting = EBigTooltipSetting.DISABLED,
+	) {
 		if (hlSetting === EDoubleHighlightSetting.DISABLED)
 			throw new Error('hlSetting can not be DISABLED.');
 
@@ -21,10 +22,14 @@ export class DoubleHighlight extends DoubleHighlightBase implements IHighlight {
 
 		const settings = HighlightConstants.doubleHighlightSizes.find(size => size.setting === hlSetting)!;
 		super(settings.pattern, settings.padding, color);
-		this._setting = hlSetting;
+		this.setting = hlSetting;
 	}
 
-	static create(hlSetting: EDoubleHighlightSetting, color?: D2Color, bttSetting?: EBigTooltipSetting): DoubleHighlight | null {
+	static create(
+		hlSetting: EDoubleHighlightSetting,
+		color?: D2Color,
+		bttSetting?: EBigTooltipSetting,
+	): DoubleHighlight | null {
 		if (hlSetting === EDoubleHighlightSetting.DISABLED)
 			return null;
 

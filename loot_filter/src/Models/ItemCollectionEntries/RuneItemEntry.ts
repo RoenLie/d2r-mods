@@ -10,21 +10,8 @@ import { ItemEntry } from './ItemEntry';
 
 export class RuneItemEntry extends ItemEntry implements IItemEntry {
 
-	/**
-   * rune
-   */
-	private readonly _rune: Rune;
-	protected get rune(): Rune {
-		return this._rune;
-	}
-
-	/**
-   * number color
-   */
-	private readonly _numberColor: D2Color | null;
-	protected get numberColor(): D2Color | null {
-		return this._numberColor;
-	}
+	protected readonly rune:         Rune;
+	protected readonly numberColor?: D2Color | null;
 
 	constructor(
 		rune: Rune,
@@ -34,8 +21,8 @@ export class RuneItemEntry extends ItemEntry implements IItemEntry {
 		bigToolipSetting?: EBigTooltipSetting | null,
 	) {
 		super(rune.key, CharConstants.empty, nameColor, highlight, bigToolipSetting);
-		this._rune = rune;
-		this._numberColor = numberColor;
+		this.rune = rune;
+		this.numberColor = numberColor;
 	}
 
 	// tier 1 no highlight, orange name
@@ -46,7 +33,8 @@ export class RuneItemEntry extends ItemEntry implements IItemEntry {
 		let displayName = this.removeRuneAffix(localizedName);
 		displayName = this.applyNameColor(displayName);
 		displayName = this.addRuneNumber(displayName);
-		displayName = this.applyHighlightPattern(displayName); // TODO: create EDoubleHighlightPattern with values none/small/large/xl/rainbow
+		// TODO: create EDoubleHighlightPattern with values none/small/large/xl/rainbow
+		displayName = this.applyHighlightPattern(displayName);
 		displayName = this.applyBigTooltip(displayName);
 		displayName = this.removeRedundantColorCodes(displayName);
 

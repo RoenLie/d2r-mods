@@ -30,7 +30,7 @@ export class CharmsComposer extends ItemCollectionComposerBase implements IItemC
 		if (JewelrySettings.charms.highlightUnique !== SettingsConstants.disabled
       && JewelrySettings.charms.bigTooltipUnique != EBigTooltipSetting.DISABLED
 		) {
-
+			// TODO: implement additional unique-charm handling
 		}
 	}
 
