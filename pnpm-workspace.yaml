@@ -1,2 +1,5 @@
 packages:
-  - ''
+  - 'd2r-loot-filter'
+
+publicHoistPattern:
+  - '*eslint*'
