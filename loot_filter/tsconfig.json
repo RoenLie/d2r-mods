@@ -1,12 +1,20 @@
 {
 	"compilerOptions": {
 		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
 		"strict": true,
 		"allowImportingTsExtensions": true,
-		"types": ["../../types.d.ts"],
+		"types": [
+			"../../types.d.ts",
+			"node"
+		],
 		"noEmit": true
 	},
 	"include": [
-		"src/**/*.ts"
+		"src/**/*.ts",
+		"src_v2/**/*.ts",
+		"mod.ts",
+		"generate_mod_json.ts"
 	]
 }

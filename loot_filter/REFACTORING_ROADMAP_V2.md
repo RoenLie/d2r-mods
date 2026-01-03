@@ -1,5 +1,11 @@
 # 🗺️ Refactoring Roadmap: D2R Loot Filter Mod V2
 
+> **📊 Current Progress:** 50% Complete - [View Detailed Progress](V2_PROGRESS.md)  
+> **🎯 Phase 1:** ✅ Complete (Effects migrated)  
+> **🎯 Phase 2:** ⏳ Pending (Filters not started)
+
+---
+
 ## Current Architecture Issues
 
 **The Problem**: The code uses an over-engineered OOP pattern with excessive abstraction layers:
