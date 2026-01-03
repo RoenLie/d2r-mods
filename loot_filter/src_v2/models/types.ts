@@ -52,8 +52,9 @@ export interface ItemEntry {
 	bigTooltip?:   boolean;
 }
 
-// Quest item IDs
+// Quest item IDs (codes from D2R game files)
 export const QuestItemIds = {
+	// Quest Weapons
 	WIRT_LEG:           'leg',
 	HORADRIC_MALUS:     'hdm',
 	STAFF_OF_KINGS:     'msf',
@@ -62,25 +63,26 @@ export const QuestItemIds = {
 	KHALIM_FLAIL:       'qf1',
 	KHALIM_WILL:        'qf2',
 	HELL_FORGE_HAMMER:  'hfh',
+	// Quest Items (non-weapon)
 	SCROLL_INIFUSS:     'bks',
 	HORADRIC_CUBE:      'box',
 	AMULET_VIPER:       'vip',
 	JADE_FIGURINE:      'j34',
 	GOLDEN_BIRD:        'g34',
-	POTION_OF_LIFE:     'bkd',
-	LAM_ESEN_TOME:      'tr1',
-	KHALIM_EYE:         'eyz',
-	KHALIM_HEART:       'hrt',
-	KHALIM_BRAIN:       'bbb',
-	MEPHISTO_SOULSTONE: 'msf',
-	MALAH_POTION:       'xyz',
-	SCROLL_RESISTANCE:  'ass',
+	POTION_OF_LIFE:     'xyz',  // Fixed: was 'bkd' (that's Scroll of Inifuss deciphered)
+	LAM_ESEN_TOME:      'bbb',  // Fixed: was 'tr1' (that's Horadric Scroll)
+	KHALIM_EYE:         'qey',  // Fixed: was 'eyz' (generic Eye organ)
+	KHALIM_HEART:       'qhr',  // Fixed: was 'hrt' (generic Heart organ)
+	KHALIM_BRAIN:       'qbr',  // Fixed: was 'bbb' (that's Lam Esen's Tome)
+	MEPHISTO_SOULSTONE: 'mss',  // Fixed: was 'msf' (that's Staff of Kings!)
+	MALAH_POTION:       'ice',  // Fixed: was 'xyz' (that's Potion of Life)
+	SCROLL_RESISTANCE:  'tr2',  // Fixed: was 'ass' (that's Book of Skill)
 } as const;
 
-// Endgame item IDs
+// Endgame item IDs (codes from D2R game files)
 export const EndgameItemIds = {
 	TOKEN:             'toa',
-	STANDARD:          'flag',
+	STANDARD:          'std',  // Fixed: was 'flag'
 	ESSENCE_TWISTED:   'tes',
 	ESSENCE_CHARGED:   'ceh',
 	ESSENCE_BURNING:   'bet',
@@ -95,14 +97,17 @@ export const EndgameItemIds = {
 
 // File paths
 export const FilePaths = {
+	// Excel TSV files
 	SOUNDS:            'global\\excel\\sounds.txt',
 	WEAPONS:           'global\\excel\\weapons.txt',
 	ARMOR:             'global\\excel\\armor.txt',
 	MISC:              'global\\excel\\misc.txt',
-	ITEM_NAMES:        'global\\excel\\item-names.json',
-	ITEM_NAME_AFFIXES: 'global\\excel\\item-nameaffixes.json',
-	ITEM_RUNES:        'global\\excel\\item-runes.json',
-	ITEM_MODIFIERS:    'global\\excel\\item-modifiers.json',
-	UI:                'global\\ui\\layouts\\_profilehd.json',
-	PROFILE_HD:        'hd\\global\\ui\\layouts\\_profilehd.json',
+	// Localized JSON string files
+	ITEM_NAMES:        'local\\lng\\strings\\item-names.json',
+	ITEM_NAME_AFFIXES: 'local\\lng\\strings\\item-nameaffixes.json',
+	ITEM_RUNES:        'local\\lng\\strings\\item-runes.json',
+	ITEM_MODIFIERS:    'local\\lng\\strings\\item-modifiers.json',
+	UI:                'local\\lng\\strings\\ui.json',
+	// UI layouts
+	PROFILE_HD:        'global\\ui\\layouts\\_profilehd.json',
 } as const;

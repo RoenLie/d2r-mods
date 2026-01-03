@@ -1,4 +1,4 @@
-import { readItemNames, writeItemNames } from '../io/game_files';
+import { readItemNames, readUi, writeItemNames, writeUi } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
 
 /**
@@ -13,6 +13,9 @@ import type { FilterConfig } from '../io/mod_config';
  * - Pandemonium keys (Terror, Hate, Destruction)
  * - Pandemonium organs (Horn, Eye, Brain)
  * - Standard of Heroes
+ *
+ * Note: Some quest items (Book of Skill, Potion of Life) have their strings
+ * in ui.json instead of item-names.json and require special handling.
  */
 
 export function applyQuestEndgameFilter(config: FilterConfig): void {
@@ -23,6 +26,9 @@ export function applyQuestEndgameFilter(config: FilterConfig): void {
 	applyQuestItemsToData(itemNames, config.questEndgame);
 	applyEndgameItemsToData(itemNames, config.questEndgame);
 	writeItemNames(itemNames);
+
+	// Handle quest item exceptions that are in ui.json
+	applyQuestItemExceptions(config.questEndgame);
 }
 
 // ============================================================================
@@ -229,4 +235,60 @@ function applyHighlightToItems(
 			entry['    ÿc1*'] = ''; // XL red highlight
 		}
 	});
+}
+
+// ============================================================================
+// Quest Item Exceptions (items with strings in ui.json)
+// ============================================================================
+
+// These quest items have their display names in ui.json instead of item-names.json
+// They need special handling to apply highlights
+const QUEST_ITEM_EXCEPTIONS = [
+	'BookofSkill',   // Book of Skill (Act 2) - key is the UI string key, not item code
+	'PotionofLife',  // Potion of Life (Act 3)
+];
+
+/**
+ * Apply quest highlights to items in ui.json
+ * Some quest items (Book of Skill, Potion of Life) have their strings in ui.json
+ */
+function applyQuestItemExceptions(
+	questConfig: FilterConfig['questEndgame'],
+): void {
+	if (questConfig.questHighlight === 'disabled')
+		return;
+
+	const uiStrings = readUi();
+
+	Object.keys(uiStrings).forEach(index => {
+		const entry = (uiStrings as any)[index];
+		if (typeof entry !== 'object' || Array.isArray(entry))
+			return;
+
+		const key = entry.Key as string;
+		if (!QUEST_ITEM_EXCEPTIONS.includes(key))
+			return;
+
+		// Get the original name
+		const originalName = entry.enUS || '';
+		if (!originalName)
+			return;
+
+		// Apply orange color and highlight based on mode
+		// Using ÿc8 (orange) for quest item names
+		let highlightedName = `ÿc8${ originalName }`;
+
+		// Add highlight pattern
+		if (questConfig.questHighlight === 'small')
+			highlightedName = `ÿc1*  ${ highlightedName }`;
+		else if (questConfig.questHighlight === 'large')
+			highlightedName = `ÿc1*  ${ highlightedName }  ÿc1*`;
+		else if (questConfig.questHighlight === 'xl')
+			highlightedName = `ÿc1* ÿc1*  ${ highlightedName }  ÿc1* ÿc1*`;
+
+
+		entry.enUS = highlightedName;
+	});
+
+	writeUi(uiStrings);
 }

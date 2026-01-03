@@ -29,9 +29,10 @@ const QUEST_WEAPONS = [
 
 // Jewelry/charm codes that should show iLvl
 const ILVL_MISC_ITEMS = [
-	// Rings & Amulets
+	// Rings & Amulets & Jewels
 	'rin', // Ring
 	'amu', // Amulet
+	'jew', // Jewel (socketable gem) - was missing!
 
 	// Charms
 	'cm1', // Small Charm

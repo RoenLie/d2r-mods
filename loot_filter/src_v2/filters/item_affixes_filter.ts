@@ -45,16 +45,16 @@ export function applyItemAffixesFilter(config: FilterConfig): void {
  * This shortens them to:
  * - plusminus: + for Superior, - for Inferior
  * - supinf: Sup for Superior, Inf for Inferior
+ *
+ * If style is not 'plusminus' or 'supinf', no changes are applied
+ * (keeps original vanilla names like "Superior", "Low Quality", etc.)
  */
 function applySuperiorInferiorPrefixes(
 	affixes: JSONData,
 	affixConfig: FilterConfig['itemAffixes'],
 ): void {
-	const superiorKey = 'Hiquality';
-	const inferiorKeys = [ 'Damaged', 'Cracked', 'Low Quality', 'Crude' ];
-
-	let superiorPrefix = '';
-	let inferiorPrefix = '';
+	let superiorPrefix: string | null = null;
+	let inferiorPrefix: string | null = null;
 
 	if (affixConfig.style === 'plusminus') {
 		superiorPrefix = '+';
@@ -65,6 +65,15 @@ function applySuperiorInferiorPrefixes(
 		inferiorPrefix = 'Inf';
 	}
 
+	// If style doesn't result in actual prefixes, don't modify anything
+	// This preserves the original vanilla names like "Superior", "Low Quality", etc.
+	if (superiorPrefix === null || inferiorPrefix === null)
+		return;
+
+
+	const superiorKey = 'Hiquality';
+	const inferiorKeys = [ 'Damaged', 'Cracked', 'Low Quality', 'Crude' ];
+
 	// Apply Superior prefix
 	const superiorKey_numeric = Object.keys(affixes).find(
 		key => (affixes as any)[key].Key === superiorKey,
@@ -74,7 +83,8 @@ function applySuperiorInferiorPrefixes(
 
 
 	// Apply Inferior prefix with optional color
-	const inferiorColor = affixConfig.inferiorColor || '';
+	// Convert 'none' to empty string - 'none' means no color
+	const inferiorColor = (affixConfig.inferiorColor === 'none' || !affixConfig.inferiorColor) ? '' : affixConfig.inferiorColor;
 	const fullInferiorPrefix = inferiorColor + inferiorPrefix;
 
 	for (const inferiorKey of inferiorKeys) {

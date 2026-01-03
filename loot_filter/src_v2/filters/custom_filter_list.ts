@@ -9,7 +9,7 @@
  * The custom names will be applied to the appropriate game files (item-names, item-runes, item-nameaffixes, item-modifiers, ui).
  */
 
-import { readItemModifiers, readItemNameAffixes, readItemNames, readItemRunes, readProfileHd, writeItemModifiers, writeItemNameAffixes, writeItemNames, writeItemRunes, writeProfileHd } from '../io/game_files';
+import { readItemModifiers, readItemNameAffixes, readItemNames, readItemRunes, readUi, writeItemModifiers, writeItemNameAffixes, writeItemNames, writeItemRunes, writeUi } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
 
 /**
@@ -24,21 +24,21 @@ export function applyCustomFilterList(config: FilterConfig): void {
 	const itemRunes = readItemRunes();
 	const itemNameAffixes = readItemNameAffixes();
 	const itemModifiers = readItemModifiers();
-	const profileHd = readProfileHd();
+	const uiStrings = readUi();
 
 	// Apply custom names to each file
 	applyCustomNames(itemNames, getItemNamesCustomList());
 	applyCustomNames(itemRunes, getItemRunesCustomList());
 	applyCustomNames(itemNameAffixes, getItemNameAffixesCustomList());
 	applyCustomModifiers(itemModifiers, getItemModifiersCustomList());
-	applyCustomUi(profileHd, getUiCustomList());
+	applyCustomUi(uiStrings, getUiCustomList());
 
 	// Save all modified files
 	writeItemNames(itemNames);
 	writeItemRunes(itemRunes);
 	writeItemNameAffixes(itemNameAffixes);
 	writeItemModifiers(itemModifiers);
-	writeProfileHd(profileHd);
+	writeUi(uiStrings);
 }
 
 /**
@@ -63,19 +63,16 @@ function applyCustomModifiers(data: JSONData, customList: [string, string][]): v
 }
 
 /**
- * Apply custom names to ui.json (profilehd)
+ * Apply custom names to ui.json (localized strings file)
  */
-function applyCustomUi(profileHd: any, customList: [string, string][]): void {
+function applyCustomUi(uiStrings: any, customList: [string, string][]): void {
 	for (const [ key, newName ] of customList) {
-		// UI strings are stored differently - find and replace in the strings array
-		const stringsArray = profileHd.StringTables?.[0]?.Strings;
-		if (!stringsArray)
-			continue;
-
-		for (const entry of stringsArray) {
-			if (entry.Key === key)
-				entry.enUS = newName;
-		}
+		// UI strings use standard item-names structure with Key/enUS
+		const numericKey = Object.keys(uiStrings).find(
+			k => (uiStrings as any)[k].Key === key,
+		);
+		if (numericKey)
+			(uiStrings as any)[numericKey].enUS = newName;
 	}
 }
 

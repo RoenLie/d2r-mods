@@ -30,10 +30,17 @@ const PATHS = {
 	get staff() { return `${ this.weapon }staff\\`; },
 };
 
-// Light pillar component to inject into items
+// VFX paths
+const VFX_PATHS = {
+	HORADRIC_LIGHT:     'data/hd/vfx/particles/overlays/object/horadric_light/fx_horadric_light.particles',
+	PALADIN_FANATICISM: 'data/hd/vfx/particles/overlays/paladin/aura_fanatic/aura_fanatic.particles',
+	VALKYRIE_START:     'data/hd/vfx/particles/overlays/common/valkyriestart/valkriestart_overlay.particles',
+};
+
+// Light pillar component to inject into items (matches old code structure)
 const LIGHT_PILLAR_COMPONENT = {
 	particle: {
-		path: 'data/hd/vfx/particles/overlays/object/horadric_light/fx_horadric_light.particles',
+		path: VFX_PATHS.HORADRIC_LIGHT,
 	},
 	entities: [
 		{
@@ -42,14 +49,18 @@ const LIGHT_PILLAR_COMPONENT = {
 			id:         9999996974,
 			components: [
 				{
-					__type:      'TransformDefinitionComponent',
-					name:        'component_transform1',
-					translation: [ 0, 0, 10 ],
+					type:                'TransformDefinitionComponent',
+					name:                'component_transform1',
+					position:            { x: 0, y: 0, z: 0 },
+					orientation:         { x: 0, y: 0, z: 0, w: 1 },
+					scale:               { x: 1, y: 1, z: 1 },
+					inheritOnlyPosition: false,
 				},
 				{
-					__type:   'VfxDefinitionComponent',
-					name:     'entity_vfx_filthyStolenMod',
-					filename: 'data/hd/vfx/particles/overlays/object/horadric_light/fx_horadric_light.particles',
+					type:              'VfxDefinitionComponent',
+					name:              'entity_vfx_filthyStolenMod',
+					filename:          VFX_PATHS.HORADRIC_LIGHT,
+					hardKillOnDestroy: false,
 				},
 			],
 		},
@@ -59,8 +70,31 @@ const LIGHT_PILLAR_COMPONENT = {
 			id:         1079187010,
 			components: [
 				{
-					__type: 'VfxDefinitionComponent',
-					name:   'entity_root_VfxDefinition',
+					type:              'VfxDefinitionComponent',
+					name:              'entity_root_VfxDefinition',
+					filename:          VFX_PATHS.PALADIN_FANATICISM,
+					hardKillOnDestroy: false,
+				},
+			],
+		},
+		{
+			type:       'Entity',
+			name:       'droplight',
+			id:         9999996974,
+			components: [
+				{
+					type:                'TransformDefinitionComponent',
+					name:                'component_transform1',
+					position:            { x: 0, y: 0, z: 0 },
+					orientation:         { x: 0, y: 0, z: 0, w: 1 },
+					scale:               { x: 1, y: 1, z: 1 },
+					inheritOnlyPosition: false,
+				},
+				{
+					type:              'VfxDefinitionComponent',
+					name:              'entity_vfx_filthyStolenMod',
+					filename:          VFX_PATHS.VALKYRIE_START,
+					hardKillOnDestroy: false,
 				},
 			],
 		},
@@ -98,7 +132,7 @@ function addLightPillarToItem(itemData: JSONData): JSONData {
 
 	// Add entities
 	if (Array.isArray(itemData.entities))
-		itemData.entities = itemData.entities.concat(LIGHT_PILLAR_COMPONENT.entities as JSONData);
+		itemData.entities = itemData.entities.concat(LIGHT_PILLAR_COMPONENT.entities as any);
 
 	// Add particle dependency
 	if (itemData.dependencies && typeof itemData.dependencies === 'object') {

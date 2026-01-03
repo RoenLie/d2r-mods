@@ -79,6 +79,15 @@ export function writeProfileHd(data: JSONData): void {
 	D2RMM.writeJson(FilePaths.PROFILE_HD, data);
 }
 
+// UI strings (local\lng\strings\ui.json)
+export function readUi(): JSONData {
+	return D2RMM.readJson(FilePaths.UI);
+}
+
+export function writeUi(data: JSONData): void {
+	D2RMM.writeJson(FilePaths.UI, data);
+}
+
 // Utility for copying files
 export function copyFile(src: string, dest: string): void {
 	D2RMM.copyFile(src, dest, true);
