@@ -1,9 +1,0 @@
-=== DIFFERENCE IN item-modifiers.json ===
-
-Position: 113842
-
-=== OLD ===
-"Aby aktywować właściwości, trzymaj przedmiot w ekwipunku","esMX":"Conservar en el Inventario para obtener la bonificación","jaJP":"所持品に入れることでボーナスが得られる","ptBR":"Manter no Inventário para ganhar bônus","ruRU":"Дает бонус при хранении в инвентаре","zhCN":"放在物品栏里以享受加成"},{"id":20439,"Key":"ice","enUS":"\n     ÿc1**********  **********     ÿc4Malah's Potion     ÿc1**********  **********     \n","zhTW":"\n     ÿc1**********  **********     ÿc4瑪拉的藥水     ÿc1**********  **********     \n","deDE":"\n     ÿc1**********  **********     ÿc4Malahs Elixier     ÿc1**********  **********     \n","esES":"\n    
-
-=== NEW ===
-"Aby aktywować właściwości, trzymaj przedmiot w ekwipunku","esMX":"Conservar en el Inventario para obtener la bonificación","jaJP":"所持品に入れることでボーナスが得られる","ptBR":"Manter no Inventário para ganhar bônus","ruRU":"Дает бонус при хранении в инвентаре","zhCN":"放在物品栏里以享受加成"},{"id":20439,"Key":"ice","enUS":"Malah's Potion","zhTW":"瑪拉的藥水","deDE":"Malahs Elixier","esES":"Poción de Malah","frFR":"Potion de Malah","itIT":"Pozione di Malah","koKR":"말라의 물약","plPL":"Mikstura Malah","esMX":"Poción de Malah","jaJP":"マラーのポーション","ptBR":"Poção de Malah","ruRU":"Зелье Маллы","zhCN":"马拉的药水"},{"id":21205,"Key":"ModSt

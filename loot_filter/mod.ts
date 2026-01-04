@@ -1,5 +1,5 @@
-import { LootFilterMod } from './src/LootFilterMod';
-import { main as mainV2 } from './src_v2/main';
+import { main as mainV2 } from './src/main';
+import { LootFilterMod } from './src_old/LootFilterMod';
 
 // Feature toggle: set to true to use the new V2 implementation
 // Set to false to use the legacy V1 implementation

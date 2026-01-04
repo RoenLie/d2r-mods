@@ -102,7 +102,7 @@ lines.push('}');
 const generatedTypes = lines.join('\n');
 
 // Write TypeScript types
-const typesPath = './src_v2/generated_types.ts';
+const typesPath = './src/generated_types.ts';
 writeFileSync(typesPath, generatedTypes);
 
 console.log('✅ TypeScript types generated!');

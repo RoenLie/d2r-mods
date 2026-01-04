@@ -2839,7 +2839,7 @@
 						{
 							"id": "StatsModifiersItemQualitySection",
 							"type": "section",
-							"name": "Show Equipment Quality [BROKEN]",
+							"name": "Show Equipment Quality",
 							"defaultExpanded": true,
 							"children": [
 								{
@@ -2847,7 +2847,7 @@
 									"type": "checkbox",
 									"name": "Enable",
 									"description": "Enable showing the Equipment Quality tag in equipment tooltips.",
-									"defaultValue": false
+									"defaultValue": true
 								},
 								{
 									"id": "ItemQualityPlacement",
@@ -2911,6 +2911,72 @@
 									]
 								},
 								{
+									"id": "ItemQualityCustomNormal",
+									"type": "text",
+									"name": "Custom Normal",
+									"description": "Custom indicator for Normal quality items. [CSTM-QTYS]",
+									"defaultValue": "[N]",
+									"visible": [
+										"and",
+										[
+											"value",
+											"IsShowItemQualityEnabled"
+										],
+										[
+											"eq",
+											[
+												"value",
+												"ItemQualityStyleSingle"
+											],
+											"custom"
+										]
+									]
+								},
+								{
+									"id": "ItemQualityCustomExceptional",
+									"type": "text",
+									"name": "Custom Exceptional",
+									"description": "Custom indicator for Exceptional quality items. [CSTM-QTYS]",
+									"defaultValue": "[X]",
+									"visible": [
+										"and",
+										[
+											"value",
+											"IsShowItemQualityEnabled"
+										],
+										[
+											"eq",
+											[
+												"value",
+												"ItemQualityStyleSingle"
+											],
+											"custom"
+										]
+									]
+								},
+								{
+									"id": "ItemQualityCustomElite",
+									"type": "text",
+									"name": "Custom Elite",
+									"description": "Custom indicator for Elite quality items. [CSTM-QTYS]",
+									"defaultValue": "[E]",
+									"visible": [
+										"and",
+										[
+											"value",
+											"IsShowItemQualityEnabled"
+										],
+										[
+											"eq",
+											[
+												"value",
+												"ItemQualityStyleSingle"
+											],
+											"custom"
+										]
+									]
+								},
+								{
 									"id": "ItemQualityBrackets",
 									"type": "select",
 									"name": "Bracket Style",
@@ -2943,6 +3009,14 @@
 										{
 											"value": "round",
 											"label": "Round"
+										},
+										{
+											"value": "curly",
+											"label": "Curly"
+										},
+										{
+											"value": "angle",
+											"label": "Angle"
 										}
 									]
 								},

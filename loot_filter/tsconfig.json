@@ -7,6 +7,7 @@
 		"allowImportingTsExtensions": true,
 		"types": [
 			"../../types.d.ts",
+			"../d2r-types/index.d.ts",
 			"node"
 		],
 		"noEmit": true
