@@ -1,10 +1,3 @@
-import { COLOR } from '../constants/colors';
-import { readItemModifiers, readItemNames, readUi, writeItemModifiers, writeItemNames, writeUi } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
-import { applyBigTooltip } from '../utils/big_tooltip';
-import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
-
-
 /**
  * Quest and Endgame Items Filter
  *
@@ -21,6 +14,14 @@ import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils'
  * Note: Some quest items (Book of Skill, Potion of Life) have their strings
  * in ui.json instead of item-names.json and require special handling.
  */
+
+import { COLOR } from '../constants/colors';
+import { EndgameItemIds, QuestItemIds, QuestItemIdsAlt } from '../constants/item_ids';
+import { readItemModifiers, readItemNames, readUi, writeItemModifiers, writeItemNames, writeUi } from '../io/game_files';
+import type { FilterConfig } from '../io/mod_config';
+import { applyBigTooltip } from '../utils/big_tooltip';
+import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
+
 
 export function applyQuestEndgameFilter(config: FilterConfig): void {
 	if (!config.enabled)
@@ -41,82 +42,68 @@ export function applyQuestEndgameFilter(config: FilterConfig): void {
 }
 
 
-// ============================================================================
-// Quest Items and Weapons
-// ============================================================================
-
-// Quest items (non-weapons)
-const QUEST_ITEMS = {
-	// Act 1
-	SCROLL_OF_INIFUSS:            'bks',
-	SCROLL_OF_INIFUSS_DECIPHERED: 'bkd',
-	// Act 2
-	HORADRIC_SCROLL:              'tr1',
-	TOP_OF_HORADRIC_STAFF:        'vip',
-	// Act 3
-	JADE_FIGURINE:                'j34',
-	GOLDEN_BIRD:                  'g34',
-	LAM_ESENS_TOME:               'bbb',
-	LAM_ESENS_TOME_ALT:           'LamTome',
-	KHALIMS_EYE:                  'qey',
-	KHALIMS_HEART:                'qhr',
-	KHALIMS_BRAIN:                'qbr',
-	MEPHISTOS_SOULSTONE:          'mss',
-	// Act 5 (Book of Skill and Potion of Life are in ui.json, not here)
-} as const;
+// Quest items (non-weapons) - using imported constants from item_ids.ts
+const QUEST_ITEMS: Set<string> = new Set([
+	QuestItemIds.SCROLL_INIFUSS,
+	QuestItemIds.SCROLL_INIFUSS_DECIPHERED,
+	QuestItemIds.HORADRIC_SCROLL,
+	QuestItemIds.AMULET_VIPER,
+	QuestItemIds.JADE_FIGURINE,
+	QuestItemIds.GOLDEN_BIRD,
+	QuestItemIds.LAM_ESEN_TOME,
+	QuestItemIdsAlt.LAM_ESEN_TOME,
+	QuestItemIds.KHALIM_EYE,
+	QuestItemIds.KHALIM_HEART,
+	QuestItemIds.KHALIM_BRAIN,
+	QuestItemIds.MEPHISTO_SOULSTONE,
+]);
 
 // Act 5 quest items that are in item-modifiers.json (special handling)
-const QUEST_ITEMS_MODIFIERS = [
-	'ice', // Malah's Potion
-	'tr2', // Scroll of Resistance
-];
+const QUEST_ITEMS_MODIFIERS: Set<string> = new Set([
+	QuestItemIds.MALAH_POTION,
+	QuestItemIds.SCROLL_RESISTANCE,
+]);
 
 // Quest weapons (these show item level and need trailing color code)
-const QUEST_WEAPONS = {
-	// Act 1
-	WIRTS_LEG:             'leg',
-	HORADRIC_MALUS:        'hdm',
-	// Act 2
-	AMULET_OF_THE_VIPER:   'Amulet of the Viper',
-	STAFF_OF_KINGS:        'msf',
-	STAFF_OF_KINGS_ALT:    'Staff of Kings',
-	HORADRIC_STAFF:        'hst',
-	HORADRIC_STAFF_ALT:    'Horadric Staff',
-	// Act 3
-	THE_GIDBINN:           'g33',
-	KHALIMS_FLAIL:         'qf1',
-	KHALIMS_FLAIL_ALT:     'KhalimFlail',
-	KHALIMS_WILL:          'qf2',
-	KHALIMS_WILL_ALT:      'SuperKhalimFlail',
-	// Act 4
-	HELL_FORGE_HAMMER:     'hfh',
-	HELL_FORGE_HAMMER_ALT: 'Hell Forge Hammer',
-} as const;
-
-const HORADRIC_CUBE = 'box';
+const QUEST_WEAPONS: Set<string> = new Set([
+	QuestItemIds.WIRTS_LEG,
+	QuestItemIds.HORADRIC_MALUS,
+	QuestItemIdsAlt.AMULET_VIPER,
+	QuestItemIds.STAFF_OF_KINGS,
+	QuestItemIdsAlt.STAFF_OF_KINGS,
+	QuestItemIds.HORADRIC_STAFF,
+	QuestItemIdsAlt.HORADRIC_STAFF,
+	QuestItemIds.GIDBINN,
+	QuestItemIds.KHALIM_FLAIL,
+	QuestItemIdsAlt.KHALIM_FLAIL,
+	QuestItemIds.KHALIM_WILL,
+	QuestItemIdsAlt.KHALIM_WILL,
+	QuestItemIds.HELL_FORGE_HAMMER,
+	QuestItemIdsAlt.HELL_FORGE_HAMMER,
+]);
 
 
 function applyQuestItemsToData(
-	itemNames: FileTypes.ItemNames.File,
+	itemNames: FileTypes.ItemNames.File | FileTypes.ItemModifiers.File,
 	questConfig: FilterConfig['questEndgame'],
-	itemCodes: string[] | null = null,
+	itemCodes?: Set<string>,
 ): void {
-	const allQuestItems = itemCodes ?? [
-		...Object.values(QUEST_ITEMS),
-		...Object.values(QUEST_WEAPONS),
-	];
+	const allQuestItems = itemCodes ?? new Set([
+		...QUEST_ITEMS,
+		...QUEST_WEAPONS,
+	]);
 
 	// Add Horadric Cube if enabled
 	if (questConfig.cubeHighlight)
-		allQuestItems.push(HORADRIC_CUBE);
+		allQuestItems.add(QuestItemIds.HORADRIC_CUBE);
 
-	itemNames.forEach(entry => {
-		const key = entry.Key as typeof QUEST_WEAPONS[keyof typeof QUEST_WEAPONS];
-		if (!allQuestItems.includes(key))
-			return;
+	for (const entry of itemNames) {
+		const key = entry.Key;
+		if (!allQuestItems.has(key))
+			continue;
 
 		// Quest weapons need trailing color code for iLvl display alignment
-		const isQuestWeapon = Object.values(QUEST_WEAPONS).includes(key);
+		const isQuestWeapon = QUEST_WEAPONS.has(key);
 
 		// Apply transformations to all languages
 		transformAllLanguages(entry, originalName => {
@@ -139,7 +126,7 @@ function applyQuestItemsToData(
 
 			return displayName;
 		});
-	});
+	}
 }
 
 /**
@@ -189,37 +176,26 @@ function getHighlightPattern(mode: string): { prefix: string; suffix: string; } 
 	}
 }
 
-// ============================================================================
-// Endgame Items
-// ============================================================================
 
 // Essences (for Token of Absolution)
-const ESSENCES = [
-	'tes', // Twisted Essence of Suffering
-	'ceh', // Charged Essence of Hatred
-	'bet', // Burning Essence of Terror
-	'fed', // Festering Essence of Destruction
-];
+const ESSENCES: Set<string> = new Set([
+	EndgameItemIds.ESSENCE_TWISTED,
+	EndgameItemIds.ESSENCE_CHARGED,
+	EndgameItemIds.ESSENCE_BURNING,
+	EndgameItemIds.ESSENCE_FESTERING,
+]);
 
-// Standard of Heroes
-const STANDARD_OF_HEROES = 'std';
+const PANDEMONIUM_KEYS: Set<string> = new Set([
+	EndgameItemIds.KEY_TERROR,
+	EndgameItemIds.KEY_HATE,
+	EndgameItemIds.KEY_DESTRUCTION,
+]);
 
-// Token of Absolution (crafted from 4 essences)
-const TOKEN_OF_ABSOLUTION = 'toa';
-
-// Pandemonium Keys
-const PANDEMONIUM_KEYS = [
-	'pk1', // Key of Terror
-	'pk2', // Key of Hate
-	'pk3', // Key of Destruction
-];
-
-// Pandemonium Organs
-const PANDEMONIUM_ORGANS = [
-	'dhn', // Diablo's Horn
-	'bey', // Baal's Eye
-	'mbr', // Mephisto's Brain
-];
+const PANDEMONIUM_ORGANS: Set<string> = new Set([
+	EndgameItemIds.ORGAN_HORN,
+	EndgameItemIds.ORGAN_EYE,
+	EndgameItemIds.ORGAN_BRAIN,
+]);
 
 function applyEndgameItemsToData(
 	itemNames: FileTypes.ItemNames.File,
@@ -240,12 +216,12 @@ function applyEndgameItemsToData(
 
 	// Handle Standard of Heroes
 	if (!endgameConfig.showStandard) {
-		hideItems(itemNames, [ STANDARD_OF_HEROES ]);
+		hideItems(itemNames, new Set([ EndgameItemIds.STANDARD ]));
 	}
 	else {
 		applyEndgameItemFormat(
 			itemNames,
-			[ STANDARD_OF_HEROES ],
+			new Set([ EndgameItemIds.STANDARD ]),
 			endgameConfig.standardHighlight,
 			endgameConfig.bigTooltips.standard,
 		);
@@ -254,7 +230,7 @@ function applyEndgameItemsToData(
 	// Handle Token of Absolution
 	applyEndgameItemFormat(
 		itemNames,
-		[ TOKEN_OF_ABSOLUTION ],
+		new Set([ EndgameItemIds.TOKEN ]),
 		endgameConfig.tokenHighlight,
 		endgameConfig.bigTooltips.tokens,
 	);
@@ -281,13 +257,13 @@ function applyEndgameItemsToData(
  */
 function applyEndgameItemFormat(
 	itemNames: FileTypes.ItemNames.File,
-	itemCodes: string[],
+	itemCodes: Set<string>,
 	highlightMode: string,
 	bigTooltipMode: string,
 ): void {
 	itemNames.forEach(entry => {
 		const key = entry.Key;
-		if (!itemCodes.includes(key))
+		if (!itemCodes.has(key))
 			return;
 
 		// Apply transformations to all languages
@@ -315,10 +291,11 @@ function applyEndgameItemFormat(
 /**
  * Hide items by setting their name to empty spaces
  */
-function hideItems(itemNames: FileTypes.ItemNames.File, itemCodes: string[]): void {
+function hideItems(itemNames: FileTypes.ItemNames.File, itemCodes: Set<string> | string[]): void {
+	const codesSet = itemCodes instanceof Set ? itemCodes : new Set(itemCodes);
 	itemNames.forEach(entry => {
 		const key = entry.Key;
-		if (!itemCodes.includes(key))
+		if (!codesSet.has(key))
 			return;
 
 		// Hide by setting all language entries to spaces
@@ -326,42 +303,37 @@ function hideItems(itemNames: FileTypes.ItemNames.File, itemCodes: string[]): vo
 	});
 }
 
-// ============================================================================
-// Quest Item Exceptions (items with strings in ui.json)
-// ============================================================================
 
 // These quest items have their display names in ui.json instead of item-names.json
 // They need special handling to apply highlights
 // Note: These use item CODES as keys in ui.json, not text strings
-const QUEST_ITEM_EXCEPTIONS = [
-	'ass',  // Book of Skill (Act 2)
-	'xyz',  // Potion of Life (Act 3)
-];
+const QUEST_ITEM_EXCEPTIONS: Set<string> = new Set([
+	QuestItemIds.BOOK_OF_SKILL,
+	QuestItemIds.POTION_OF_LIFE,
+]);
 
 /**
  * Apply quest highlights to items in ui.json
  * Some quest items (Book of Skill, Potion of Life) have their strings in ui.json
  */
-function applyQuestItemExceptions(
-	questConfig: FilterConfig['questEndgame'],
-): void {
+function applyQuestItemExceptions(questConfig: FilterConfig['questEndgame']): void {
 	const uiStrings = readUi();
 
-	uiStrings.forEach(entry => {
+	for (const entry of uiStrings) {
 		const key = entry.Key;
-		if (!QUEST_ITEM_EXCEPTIONS.includes(key))
+		if (!QUEST_ITEM_EXCEPTIONS.has(key))
 			return;
 
 		// Apply transformations to all languages
 		transformAllLanguages(entry, originalName => {
 			// Step 1: Apply gold color
-			let displayName = `${ COLOR.GOLD }${ originalName }`;
+			let displayName = COLOR.GOLD + originalName;
 
 			// Step 2: Apply highlight pattern if enabled
 			if (questConfig.questHighlight !== '0') {
-				const highlightPattern = getHighlightPattern(questConfig.questHighlight);
-				if (highlightPattern)
-					displayName = `${ highlightPattern.prefix }${ displayName }${ highlightPattern.suffix }`;
+				const highlight = getHighlightPattern(questConfig.questHighlight);
+				if (highlight)
+					displayName = highlight.prefix + displayName + highlight.suffix;
 			}
 
 			// Step 3: Apply Big Tooltip if enabled
@@ -369,7 +341,7 @@ function applyQuestItemExceptions(
 
 			return displayName;
 		});
-	});
+	}
 
 	writeUi(uiStrings);
 }

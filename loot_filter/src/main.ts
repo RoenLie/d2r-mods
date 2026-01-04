@@ -24,7 +24,8 @@ import { applyQuestEndgameFilter } from './filters/quest_endgame_filter';
 import { applyRuneFilter } from './filters/rune_filter';
 import { applyScrollsKeysFilter } from './filters/scrolls_keys_filter';
 import { loadConfig } from './io/mod_config';
-import { verifyD2RMMVersion } from './utils/verify_version.ts';
+import { verifyD2RMMVersion } from './utils/verify_version';
+
 
 /**
  * Main execution function.
@@ -43,7 +44,7 @@ export function main(): void {
 
 	//// Apply effects
 	applyDropSounds(config.dropSounds);
-	applyLightPillars(config.lightPillars);
+	applyLightPillars(config.lightPillars, config.filter);
 	applyItemLevels(config.itemLevel);
 	applyProfileHd(config.profileHd);
 

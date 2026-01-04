@@ -28,6 +28,17 @@ export const QuestItemIds = {
 	SCROLL_RESISTANCE:         'tr2',
 } as const;
 
+// Alternative quest item IDs (used in some game files)
+export const QuestItemIdsAlt = {
+	LAM_ESEN_TOME:     'LamTome',
+	AMULET_VIPER:      'Amulet of the Viper',
+	STAFF_OF_KINGS:    'Staff of Kings',
+	HORADRIC_STAFF:    'Horadric Staff',
+	KHALIM_FLAIL:      'KhalimFlail',
+	KHALIM_WILL:       'SuperKhalimFlail',
+	HELL_FORGE_HAMMER: 'Hell Forge Hammer',
+} as const;
+
 // Endgame item IDs (codes from D2R game files)
 export const EndgameItemIds = {
 	TOKEN:             'toa',

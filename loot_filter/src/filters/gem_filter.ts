@@ -5,129 +5,61 @@
  * Handles both item-names.json (most gems) and item-nameaffixes.json (some regular gems).
  */
 
-import { COLOR, GEM_COLOR } from '../constants/colors.ts';
+import { COLOR } from '../constants/colors';
+import { GemCodes, GemCodeToColor, GemExceptions } from '../constants/gems';
 import { readItemNameAffixes, readItemNames, writeItemNameAffixes, writeItemNames } from '../io/game_files';
 import { FilterConfig } from '../io/mod_config';
 import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
-// ============================================================================
-// Constants
-// ============================================================================
-
-// Gem item codes by quality
-const GEM_CODES = {
-	chipped: [
-		'gcv', // Chipped Amethyst
-		'gcw', // Chipped Diamond
-		'gcg', // Chipped Emerald
-		'gcr', // Chipped Ruby
-		'gcb', // Chipped Sapphire
-		'gcy', // Chipped Topaz
-		'skc', // Chipped Skull
-	],
-	flawed: [
-		'gfv', // Flawed Amethyst
-		'gfw', // Flawed Diamond
-		'gfg', // Flawed Emerald
-		'gfr', // Flawed Ruby
-		'gfb', // Flawed Sapphire
-		'gfy', // Flawed Topaz
-		'skf', // Flawed Skull
-	],
-	normal: [
-		'gsv', // Amethyst
-		'gsy', // Topaz
-		'sku', // Skull
-		// Regular gems that are in item-nameaffixes.json (due to naming conflicts)
-		'gsw', // Diamond
-		'gsg', // Emerald
-		'gsr', // Ruby
-		'gsb', // Sapphire
-	],
-	flawless: [
-		'gzv', // Flawless Amethyst
-		'glw', // Flawless Diamond
-		'glg', // Flawless Emerald
-		'glr', // Flawless Ruby
-		'glb', // Flawless Sapphire
-		'gly', // Flawless Topaz
-		'skl', // Flawless Skull
-	],
-	perfect: [
-		'gpv', // Perfect Amethyst
-		'gpw', // Perfect Diamond
-		'gpg', // Perfect Emerald
-		'gpr', // Perfect Ruby
-		'gpb', // Perfect Sapphire
-		'gpy', // Perfect Topaz
-		'skz', // Perfect Skull
-	],
-};
-
-// Regular gems in item-nameaffixes.json (due to naming conflicts)
-const GEM_EXCEPTIONS = [
-	'gsw', // Diamond
-	'gsg', // Emerald
-	'gsr', // Ruby
-	'gsb', // Sapphire
-];
-
-// Map gem codes to their colors
-const GEM_CODE_TO_COLOR: Record<string, string> = {
-	// Amethyst
-	'gcv': GEM_COLOR.AMETHYST,
-	'gfv': GEM_COLOR.AMETHYST,
-	'gsv': GEM_COLOR.AMETHYST,
-	'gzv': GEM_COLOR.AMETHYST,
-	'gpv': GEM_COLOR.AMETHYST,
-	// Diamond
-	'gcw': GEM_COLOR.DIAMOND,
-	'gfw': GEM_COLOR.DIAMOND,
-	'gsw': GEM_COLOR.DIAMOND,
-	'glw': GEM_COLOR.DIAMOND,
-	'gpw': GEM_COLOR.DIAMOND,
-	// Emerald
-	'gcg': GEM_COLOR.EMERALD,
-	'gfg': GEM_COLOR.EMERALD,
-	'gsg': GEM_COLOR.EMERALD,
-	'glg': GEM_COLOR.EMERALD,
-	'gpg': GEM_COLOR.EMERALD,
-	// Ruby
-	'gcr': GEM_COLOR.RUBY,
-	'gfr': GEM_COLOR.RUBY,
-	'gsr': GEM_COLOR.RUBY,
-	'glr': GEM_COLOR.RUBY,
-	'gpr': GEM_COLOR.RUBY,
-	// Sapphire
-	'gcb': GEM_COLOR.SAPPHIRE,
-	'gfb': GEM_COLOR.SAPPHIRE,
-	'gsb': GEM_COLOR.SAPPHIRE,
-	'glb': GEM_COLOR.SAPPHIRE,
-	'gpb': GEM_COLOR.SAPPHIRE,
-	// Topaz
-	'gcy': GEM_COLOR.TOPAZ,
-	'gfy': GEM_COLOR.TOPAZ,
-	'gsy': GEM_COLOR.TOPAZ,
-	'gly': GEM_COLOR.TOPAZ,
-	'gpy': GEM_COLOR.TOPAZ,
-	// Skull
-	'skc': GEM_COLOR.SKULL,
-	'skf': GEM_COLOR.SKULL,
-	'sku': GEM_COLOR.SKULL,
-	'skl': GEM_COLOR.SKULL,
-	'skz': GEM_COLOR.SKULL,
-};
 
 // Highlight character
 const HIGHLIGHT_CHAR = 'o';
 const HIGHLIGHT_PADDING = ' ';
 
 // Hidden item name (spaces to maintain tooltip width)
-const HIDDEN_NAME = '                    '; // 20 spaces
+const HIDDEN_NAME = ' '.repeat(20);
 
-// ============================================================================
-// Pure Functions
-// ============================================================================
+
+/**
+ * Apply gem filtering.
+ *
+ * Flow:
+ * 1. Determine which gems to show/hide based on mode
+ * 2. Load item-names.json (most gems)
+ * 3. Load item-nameaffixes.json (gem exceptions)
+ * 4. Apply filtering and highlighting
+ * 5. Save modified data
+ */
+export function applyGemFilter(config: FilterConfig): void {
+	if (!config.enabled)
+		return;
+
+	const visibleGems = getVisibleGems(config.gems.mode);
+	const hiddenGems = getHiddenGems(config.gems.mode);
+
+	// Apply to item-names.json (most gems)
+	const itemNames = readItemNames();
+	const modifiedItemNames = applyGemFilterToData(
+		itemNames,
+		visibleGems,
+		hiddenGems,
+		config.gems.enableHighlight,
+	);
+
+	writeItemNames(modifiedItemNames);
+
+	// Apply to item-nameaffixes.json (gem exceptions: diamond, emerald, ruby, sapphire)
+	const itemNameAffixes = readItemNameAffixes();
+	const modifiedAffixes = applyGemFilterToData(
+		itemNameAffixes,
+		GemExceptions.filter(code => visibleGems.includes(code)),
+		GemExceptions.filter(code => hiddenGems.includes(code)),
+		config.gems.enableHighlight,
+	);
+
+	writeItemNameAffixes(modifiedAffixes);
+}
+
 
 /**
  * Strip redundant color codes from a display name.
@@ -160,7 +92,7 @@ function stripRedundantColors(name: string): string {
  * Apply highlight pattern to a gem name
  */
 function applyHighlight(name: string, gemCode: string): string {
-	const highlightColor = GEM_CODE_TO_COLOR[gemCode] || COLOR.WHITE;
+	const highlightColor = GemCodeToColor[gemCode] || COLOR.WHITE;
 	const nameColor = COLOR.WHITE;
 
 	// Pattern: {highlightColor}{o}{space}{nameColor}{name}
@@ -184,19 +116,19 @@ function getVisibleGems(mode: FilterConfig['gems']['mode']): string[] {
 	switch (mode) {
 	case 'all':
 		return [
-			...GEM_CODES.chipped,
-			...GEM_CODES.flawed,
-			...GEM_CODES.normal,
-			...GEM_CODES.flawless,
-			...GEM_CODES.perfect,
+			...GemCodes.chipped,
+			...GemCodes.flawed,
+			...GemCodes.normal,
+			...GemCodes.flawless,
+			...GemCodes.perfect,
 		];
 	case 'flawless':
 		return [
-			...GEM_CODES.flawless,
-			...GEM_CODES.perfect,
+			...GemCodes.flawless,
+			...GemCodes.perfect,
 		];
 	case 'perfect':
-		return GEM_CODES.perfect;
+		return [ ...GemCodes.perfect ];
 	case 'hide':
 		return [];
 	}
@@ -211,24 +143,24 @@ function getHiddenGems(mode: FilterConfig['gems']['mode']): string[] {
 		return [];
 	case 'flawless':
 		return [
-			...GEM_CODES.chipped,
-			...GEM_CODES.flawed,
-			...GEM_CODES.normal,
+			...GemCodes.chipped,
+			...GemCodes.flawed,
+			...GemCodes.normal,
 		];
 	case 'perfect':
 		return [
-			...GEM_CODES.chipped,
-			...GEM_CODES.flawed,
-			...GEM_CODES.normal,
-			...GEM_CODES.flawless,
+			...GemCodes.chipped,
+			...GemCodes.flawed,
+			...GemCodes.normal,
+			...GemCodes.flawless,
 		];
 	case 'hide':
 		return [
-			...GEM_CODES.chipped,
-			...GEM_CODES.flawed,
-			...GEM_CODES.normal,
-			...GEM_CODES.flawless,
-			...GEM_CODES.perfect,
+			...GemCodes.chipped,
+			...GemCodes.flawed,
+			...GemCodes.normal,
+			...GemCodes.flawless,
+			...GemCodes.perfect,
 		];
 	}
 }
@@ -256,46 +188,4 @@ function applyGemFilterToData(
 	}
 
 	return data;
-}
-
-// ============================================================================
-// Main Entry Point
-// ============================================================================
-
-/**
- * Apply gem filtering.
- *
- * Flow:
- * 1. Determine which gems to show/hide based on mode
- * 2. Load item-names.json (most gems)
- * 3. Load item-nameaffixes.json (gem exceptions)
- * 4. Apply filtering and highlighting
- * 5. Save modified data
- */
-export function applyGemFilter(config: FilterConfig): void {
-	if (!config.enabled)
-		return;
-
-	const visibleGems = getVisibleGems(config.gems.mode);
-	const hiddenGems = getHiddenGems(config.gems.mode);
-
-	// Apply to item-names.json (most gems)
-	const itemNames = readItemNames();
-	const modifiedItemNames = applyGemFilterToData(
-		itemNames,
-		visibleGems,
-		hiddenGems,
-		config.gems.enableHighlight,
-	);
-	writeItemNames(modifiedItemNames);
-
-	// Apply to item-nameaffixes.json (gem exceptions: diamond, emerald, ruby, sapphire)
-	const itemNameAffixes = readItemNameAffixes();
-	const modifiedAffixes = applyGemFilterToData(
-		itemNameAffixes,
-		GEM_EXCEPTIONS.filter(code => visibleGems.includes(code)),
-		GEM_EXCEPTIONS.filter(code => hiddenGems.includes(code)),
-		config.gems.enableHighlight,
-	);
-	writeItemNameAffixes(modifiedAffixes);
 }

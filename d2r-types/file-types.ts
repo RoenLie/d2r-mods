@@ -1799,5 +1799,38 @@ declare global {
 
 			type File = TSVData<Keys>;
 		}
+
+		namespace HDItem {
+			interface Dependency {
+				path: string;
+			}
+
+			interface Dependencies {
+				particles:     Dependency[];
+				models:        Dependency[];
+				skeletons:     Dependency[];
+				animations:    Dependency[];
+				textures:      Dependency[];
+				physics:       Dependency[];
+				json:          Dependency[];
+				variantdata:   Dependency[];
+				objecteffects: Dependency[];
+				other:         Dependency[];
+			}
+
+			interface Entity {
+				type:       string;
+				name:       string;
+				id:         number;
+				components: any[];
+			}
+
+			interface File {
+				dependencies: Dependencies;
+				type:         string;
+				name:         string;
+				entities:     Entity[];
+			}
+		}
 	}
 }

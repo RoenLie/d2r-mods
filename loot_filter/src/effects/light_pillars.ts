@@ -5,40 +5,16 @@
  * Works by modifying item JSON files to include particle effects.
  */
 
-import { LightPillarsConfig } from '../io/mod_config';
+import { HIGH_RUNES, LOW_MID_RUNES, LOW_RUNES, MID_RUNES } from '../constants/runes';
+import { HD_ITEM_PATHS, readHdItem, VFX_PATHS, writeHdItem } from '../io/game_files';
+import type { FilterConfig, LightPillarsConfig } from '../io/mod_config';
 
-// ============================================================================
-// Constants
-// ============================================================================
-
-const BASE_PATH = 'hd\\items\\';
-const PATHS = {
-	misc:   `${ BASE_PATH }misc\\`,
-	weapon: `${ BASE_PATH }weapon\\`,
-	get bodyPart() { return `${ this.misc }body_part\\`; },
-	get quest() { return `${ this.misc }quest\\`; },
-	get scroll() { return `${ this.misc }scroll\\`; },
-	get amulet() { return `${ this.misc }amulet\\`; },
-	get ring() { return `${ this.misc }ring\\`; },
-	get rune() { return `${ this.misc }rune\\`; },
-	get gem() { return `${ this.misc }gem\\`; },
-	get key() { return `${ this.misc }key\\`; },
-	get hammer() { return `${ this.weapon }hammer\\`; },
-	get club() { return `${ this.weapon }club\\`; },
-	get mace() { return `${ this.weapon }mace\\`; },
-	get knife() { return `${ this.weapon }knife\\`; },
-	get staff() { return `${ this.weapon }staff\\`; },
-};
-
-// VFX paths
-const VFX_PATHS = {
-	HORADRIC_LIGHT:     'data/hd/vfx/particles/overlays/object/horadric_light/fx_horadric_light.particles',
-	PALADIN_FANATICISM: 'data/hd/vfx/particles/overlays/paladin/aura_fanatic/aura_fanatic.particles',
-	VALKYRIE_START:     'data/hd/vfx/particles/overlays/common/valkyriestart/valkriestart_overlay.particles',
-};
 
 // Light pillar component to inject into items (matches old code structure)
-const LIGHT_PILLAR_COMPONENT = {
+const LIGHT_PILLAR_COMPONENT: {
+	particle: FileTypes.HDItem.Dependency;
+	entities: FileTypes.HDItem.Entity[];
+} = {
 	particle: {
 		path: VFX_PATHS.HORADRIC_LIGHT,
 	},
@@ -101,14 +77,6 @@ const LIGHT_PILLAR_COMPONENT = {
 	],
 };
 
-// Rune names (lowercase for file paths)
-const RUNES = {
-	low:    [ 'el', 'eld', 'tir', 'nef', 'eth', 'ith', 'tal', 'ort', 'thul', 'amn', 'sol', 'shael', 'dol' ],
-	lowMid: [ 'ral', 'hel', 'io', 'lum', 'ko', 'fal' ],
-	mid:    [ 'lem', 'pul', 'um', 'mal', 'ist', 'gul' ],
-	high:   [ 'vex', 'ohm', 'lo', 'sur', 'ber', 'jah', 'cham', 'zod' ],
-};
-
 // Gem types (note: sapphire is intentionally misspelled "saphire" in D2R assets)
 const GEM_TYPES = [ 'amethyst', 'diamond', 'emerald', 'ruby', 'saphire', 'topaz', 'skull' ];
 const GEM_QUALITIES = {
@@ -119,26 +87,41 @@ const GEM_QUALITIES = {
 	perfect:  'perfect_',
 };
 
-// ============================================================================
-// Pure Functions
-// ============================================================================
+
+/**
+ * Apply all light pillar modifications.
+ *
+ * Clear, linear flow showing exactly what gets modified:
+ * 1. Check if enabled
+ * 2. Apply to each category based on configuration
+ */
+export function applyLightPillars(config: LightPillarsConfig, filterConfig: FilterConfig): void {
+	if (!config.enabled)
+		return;
+
+	applyToRunes(config);
+	applyToJewelry(config);
+	applyToGemsAndJewels(config, filterConfig);
+	applyToCharms(config);
+	applyToQuestItems(config);
+	applyToEssences(config);
+	applyToToken(config);
+	applyToKeys(config);
+	applyToOrgans(config);
+	applyToStandard(config);
+}
+
 
 /**
  * Add light pillar component to an item's JSON data
  */
-function addLightPillarToItem(itemData: JSONData): JSONData {
-	if (typeof itemData !== 'object' || itemData === null || Array.isArray(itemData))
-		return itemData;
+function addLightPillarToItem(itemData: FileTypes.HDItem.File): FileTypes.HDItem.File {
+	itemData.entities ??= [];
+	itemData.entities.push(...LIGHT_PILLAR_COMPONENT.entities);
 
-	// Add entities
-	if (Array.isArray(itemData.entities))
-		itemData.entities = itemData.entities.concat(LIGHT_PILLAR_COMPONENT.entities as any);
-
-	// Add particle dependency
-	if (itemData.dependencies && typeof itemData.dependencies === 'object') {
-		if ('particles' in itemData.dependencies && Array.isArray(itemData.dependencies.particles))
-			itemData.dependencies.particles.push(LIGHT_PILLAR_COMPONENT.particle);
-	}
+	itemData.dependencies ??= {} as FileTypes.HDItem.Dependencies;
+	itemData.dependencies.particles ??= [];
+	itemData.dependencies.particles.push(LIGHT_PILLAR_COMPONENT.particle);
 
 	return itemData;
 }
@@ -148,9 +131,9 @@ function addLightPillarToItem(itemData: JSONData): JSONData {
  */
 function applyToFile(path: string, filename: string): void {
 	const fullPath = `${ path }${ filename }.json`;
-	const itemData = D2RMM.readJson(fullPath);
+	const itemData = readHdItem(fullPath);
 	const modified = addLightPillarToItem(itemData);
-	D2RMM.writeJson(fullPath, modified);
+	writeHdItem(fullPath, modified);
 }
 
 /**
@@ -160,29 +143,25 @@ function applyToFiles(path: string, filenames: string[]): void {
 	filenames.forEach(filename => applyToFile(path, filename));
 }
 
-// ============================================================================
-// Feature Functions
-// ============================================================================
 
 /**
  * Apply light pillars to runes based on tier configuration
  */
 function applyToRunes(config: LightPillarsConfig): void {
 	const tiers = [
-		{ enabled: config.runes.low, runes: RUNES.low },
-		{ enabled: config.runes.lowMid, runes: RUNES.lowMid },
-		{ enabled: config.runes.mid, runes: RUNES.mid },
-		{ enabled: config.runes.high, runes: RUNES.high },
+		{ enabled: config.runes.low,    runes: LOW_RUNES },
+		{ enabled: config.runes.lowMid, runes: LOW_MID_RUNES },
+		{ enabled: config.runes.mid,    runes: MID_RUNES },
+		{ enabled: config.runes.high,   runes: HIGH_RUNES },
 	];
 
-	tiers.forEach(({ enabled, runes }) => {
+	for (const { enabled, runes } of tiers) {
 		if (!enabled)
-			return;
+			continue;
 
-		runes.forEach(runeName => {
-			applyToFile(PATHS.rune, `${ runeName }_rune`);
-		});
-	});
+		for (const { name } of runes)
+			applyToFile(HD_ITEM_PATHS.RUNE, `${ name.toLowerCase() }_rune`);
+	}
 }
 
 /**
@@ -190,37 +169,67 @@ function applyToRunes(config: LightPillarsConfig): void {
  */
 function applyToJewelry(config: LightPillarsConfig): void {
 	if (config.jewelry.rings)
-		applyToFile(PATHS.ring, 'ring');
-
+		applyToFile(HD_ITEM_PATHS.RING, 'ring');
 
 	if (config.jewelry.amulets)
-		applyToFile(PATHS.amulet, 'amulet');
+		applyToFile(HD_ITEM_PATHS.AMULET, 'amulet');
 }
 
 /**
  * Apply light pillars to gems and jewels
  */
-function applyToGemsAndJewels(config: LightPillarsConfig): void {
+function applyToGemsAndJewels(config: LightPillarsConfig, filterConfig: FilterConfig): void {
 	if (!config.jewelry.gemsJewels)
 		return;
 
-	// Determine which gem qualities to apply based on configuration
-	// For now, we'll apply to all qualities - in full implementation,
-	// this would check filter settings to exclude hidden gems
-	// TODO, fix
-	const qualities = [
-		GEM_QUALITIES.perfect,
-		GEM_QUALITIES.flawless,
+	// Don't apply light pillars if gems are completely hidden
+	const shouldExcludeForHidden
+		=  config.excludeForHidden
+		&& filterConfig.gems.mode === 'hide';
+
+	if (shouldExcludeForHidden)
+		return;
+
+	// Determine which gem qualities to apply based on filter settings
+	const qualities = getGemQualitiesForLightPillars(
+		filterConfig.gems.mode,
+		config.excludeForHidden,
+	);
+
+	for (const quality of qualities) {
+		for (const type of GEM_TYPES)
+			applyToFile(HD_ITEM_PATHS.GEM, `${ quality }${ type }`);
+	}
+}
+
+/**
+ * Get gem quality prefixes based on filter mode
+ */
+function getGemQualitiesForLightPillars(
+	gemMode: FilterConfig['gems']['mode'],
+	excludeForHidden: boolean,
+): string[] {
+	const qualities = [ GEM_QUALITIES.perfect ];
+
+	// If filtering to perfect only, return just perfect
+	if (gemMode === 'perfect' && excludeForHidden)
+		return qualities;
+
+	// Add flawless
+	qualities.push(GEM_QUALITIES.flawless);
+
+	// If filtering to flawless+, return perfect and flawless
+	if (gemMode === 'flawless' && excludeForHidden)
+		return qualities;
+
+	// Otherwise include all qualities
+	qualities.push(
 		GEM_QUALITIES.normal,
 		GEM_QUALITIES.flawed,
 		GEM_QUALITIES.chipped,
-	];
+	);
 
-	qualities.forEach(quality => {
-		GEM_TYPES.forEach(type => {
-			applyToFile(PATHS.gem, `${ quality }${ type }`);
-		});
-	});
+	return qualities;
 }
 
 /**
@@ -231,13 +240,12 @@ function applyToCharms(config: LightPillarsConfig): void {
 		return;
 
 	const charmSizes = [ 'small', 'medium', 'large' ];
-	charmSizes.forEach(size => {
-		applyToFile(`${ PATHS.misc }charm\\`, `charm_${ size }`);
-	});
+	for (const size of charmSizes)
+		applyToFile(HD_ITEM_PATHS.CHARM, `charm_${ size }`);
 
 	// Special case: Mephisto's Soul Stone (if quest items are disabled)
 	if (!config.questEndgame.questItems)
-		applyToFile(PATHS.quest, 'mephisto_soul_stone');
+		applyToFile(HD_ITEM_PATHS.QUEST, 'mephisto_soul_stone');
 }
 
 /**
@@ -247,51 +255,49 @@ function applyToQuestItems(config: LightPillarsConfig): void {
 	if (!config.questEndgame.questItems && !config.questEndgame.questWeapons)
 		return;
 
-
 	const questItems: [string, string][] = [];
 
 	if (config.questEndgame.questItems) {
 		questItems.push(
 			// Act 1
-			[ PATHS.quest, 'bark_scroll' ],
-			[ PATHS.scroll, 'deciphered_bark_scroll' ],
+			[ HD_ITEM_PATHS.QUEST, 'bark_scroll' ],
+			[ HD_ITEM_PATHS.SCROLL, 'deciphered_bark_scroll' ],
 			// Act 2
-			[ PATHS.quest, 'book_of_skill' ],
-			[ PATHS.quest, 'scroll_of_horadric_quest_info' ],
-			[ PATHS.quest, 'horadric_cube' ],
-			[ PATHS.amulet, 'viper_amulet' ],
+			[ HD_ITEM_PATHS.QUEST, 'book_of_skill' ],
+			[ HD_ITEM_PATHS.QUEST, 'scroll_of_horadric_quest_info' ],
+			[ HD_ITEM_PATHS.QUEST, 'horadric_cube' ],
+			[ HD_ITEM_PATHS.AMULET, 'viper_amulet' ],
 			// Act 3
-			[ PATHS.quest, 'jade_figurine' ],
-			[ PATHS.quest, 'gold_bird' ],
-			[ PATHS.quest, 'scroll_of_self_resurrect' ],
-			[ PATHS.quest, 'lam_esens_tome' ],
-			[ PATHS.bodyPart, 'eye' ],
-			[ PATHS.bodyPart, 'heart' ],
-			[ PATHS.bodyPart, 'brain' ],
-			[ PATHS.quest, 'mephisto_soul_stone' ],
+			[ HD_ITEM_PATHS.QUEST, 'jade_figurine' ],
+			[ HD_ITEM_PATHS.QUEST, 'gold_bird' ],
+			[ HD_ITEM_PATHS.QUEST, 'scroll_of_self_resurrect' ],
+			[ HD_ITEM_PATHS.QUEST, 'lam_esens_tome' ],
+			[ HD_ITEM_PATHS.BODY_PART, 'eye' ],
+			[ HD_ITEM_PATHS.BODY_PART, 'heart' ],
+			[ HD_ITEM_PATHS.BODY_PART, 'brain' ],
+			[ HD_ITEM_PATHS.QUEST, 'mephisto_soul_stone' ],
 		);
 	}
 
 	if (config.questEndgame.questWeapons) {
 		questItems.push(
 			// Act 1
-			[ PATHS.club, 'wirts_leg' ],
-			[ PATHS.hammer, 'horadric_malus' ],
+			[ HD_ITEM_PATHS.CLUB, 'wirts_leg' ],
+			[ HD_ITEM_PATHS.HAMMER, 'horadric_malus' ],
 			// Act 2
-			[ PATHS.staff, 'staff_of_the_kings' ],
-			[ PATHS.staff, 'horadric_staff' ],
+			[ HD_ITEM_PATHS.STAFF, 'staff_of_the_kings' ],
+			[ HD_ITEM_PATHS.STAFF, 'horadric_staff' ],
 			// Act 3
-			[ PATHS.knife, 'gidbinn' ],
-			[ PATHS.mace, 'khalim_flail' ],
-			[ PATHS.mace, 'super_khalim_flail' ],
+			[ HD_ITEM_PATHS.KNIFE, 'gidbinn' ],
+			[ HD_ITEM_PATHS.MACE, 'khalim_flail' ],
+			[ HD_ITEM_PATHS.MACE, 'super_khalim_flail' ],
 			// Act 4
-			[ PATHS.hammer, 'hellforge_hammer' ],
+			[ HD_ITEM_PATHS.HAMMER, 'hellforge_hammer' ],
 		);
 	}
 
-	questItems.forEach(([ path, item ]) => {
+	for (const [ path, item ] of questItems)
 		applyToFile(path, item);
-	});
 }
 
 /**
@@ -308,7 +314,7 @@ function applyToEssences(config: LightPillarsConfig): void {
 		'twisted_essence_of_suffering',
 	];
 
-	applyToFiles(PATHS.quest, essences);
+	applyToFiles(HD_ITEM_PATHS.QUEST, essences);
 }
 
 /**
@@ -318,7 +324,7 @@ function applyToToken(config: LightPillarsConfig): void {
 	if (!config.questEndgame.tokens)
 		return;
 
-	applyToFile(PATHS.quest, 'token_of_absolution');
+	applyToFile(HD_ITEM_PATHS.QUEST, 'token_of_absolution');
 }
 
 /**
@@ -329,14 +335,14 @@ function applyToKeys(config: LightPillarsConfig): void {
 		return;
 
 	// Keys use a shared model, so we read once and write to all 3 variants
-	const basePath = `${ PATHS.key }mephisto_key`;
-	const itemData = D2RMM.readJson(`${ basePath }.json`);
+	const basePath = `${ HD_ITEM_PATHS.KEY }mephisto_key`;
+	const itemData = readHdItem(`${ basePath }.json`);
 	const modified = addLightPillarToItem(itemData);
 
 	// Write to all 3 key types (mephisto_key, mephisto_key2, mephisto_key3)
-	D2RMM.writeJson(`${ basePath }.json`, modified);
-	D2RMM.writeJson(`${ basePath }2.json`, modified);
-	D2RMM.writeJson(`${ basePath }3.json`, modified);
+	writeHdItem(`${ basePath }.json`, modified);
+	writeHdItem(`${ basePath }2.json`, modified);
+	writeHdItem(`${ basePath }3.json`, modified);
 }
 
 /**
@@ -346,12 +352,12 @@ function applyToOrgans(config: LightPillarsConfig): void {
 	if (!config.questEndgame.organs)
 		return;
 
-	applyToFile(PATHS.bodyPart, 'horn');
+	applyToFile(HD_ITEM_PATHS.BODY_PART, 'horn');
 
 	// Don't duplicate eye/brain if quest items are already enabled
 	if (!config.questEndgame.questItems) {
-		applyToFile(PATHS.bodyPart, 'eye');
-		applyToFile(PATHS.bodyPart, 'brain');
+		applyToFile(HD_ITEM_PATHS.BODY_PART, 'eye');
+		applyToFile(HD_ITEM_PATHS.BODY_PART, 'brain');
 	}
 }
 
@@ -362,33 +368,5 @@ function applyToStandard(config: LightPillarsConfig): void {
 	if (!config.questEndgame.standard)
 		return;
 
-	applyToFile(PATHS.bodyPart, 'flag');
-}
-
-// ============================================================================
-// Main Entry Point
-// ============================================================================
-
-/**
- * Apply all light pillar modifications.
- *
- * Clear, linear flow showing exactly what gets modified:
- * 1. Check if enabled
- * 2. Apply to each category based on configuration
- */
-export function applyLightPillars(config: LightPillarsConfig): void {
-	if (!config.enabled)
-		return;
-
-
-	applyToRunes(config);
-	applyToJewelry(config);
-	applyToGemsAndJewels(config);
-	applyToCharms(config);
-	applyToQuestItems(config);
-	applyToEssences(config);
-	applyToToken(config);
-	applyToKeys(config);
-	applyToOrgans(config);
-	applyToStandard(config);
+	applyToFile(HD_ITEM_PATHS.BODY_PART, 'flag');
 }

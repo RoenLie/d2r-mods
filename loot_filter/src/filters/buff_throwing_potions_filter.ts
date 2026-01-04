@@ -1,4 +1,4 @@
-import { COLOR } from '../constants/colors.ts';
+import { COLOR } from '../constants/colors';
 import { readItemNames, writeItemNames } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';

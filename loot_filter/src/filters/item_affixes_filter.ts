@@ -10,6 +10,7 @@
  */
 
 import { COLOR } from '../constants/colors';
+import { GemAffixCodes } from '../constants/gems';
 import { readItemNameAffixes, writeItemNameAffixes } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';
@@ -43,6 +44,7 @@ export function applyItemAffixesFilter(config: FilterConfig): void {
 	if (modified)
 		writeItemNameAffixes(affixes);
 }
+
 
 /**
  * Shorten Superior and Inferior prefixes.
@@ -115,40 +117,8 @@ function applySuperiorInferiorPrefixes(
  * gem-filter.ts handles item-names.json, this handles item-nameaffixes.json.
  */
 function hideGemAffixes(affixes: FileTypes.ItemNameAffixes.File, mode: FilterConfig['gems']['mode']): void {
-	// Gem quality affixes that need hiding
-	const gemQualityAffixes = [
-		'gcha', // Chipped Amethyst
-		'gcv',  // Chipped Diamond
-		'gce',  // Chipped Emerald
-		'gcr',  // Chipped Ruby
-		'gcs',  // Chipped Sapphire
-		'gct',  // Chipped Topaz
-		'gcy',  // Chipped Skull
-		'gfha', // Flawed Amethyst
-		'gfv',  // Flawed Diamond
-		'gfe',  // Flawed Emerald
-		'gfr',  // Flawed Ruby
-		'gfs',  // Flawed Sapphire
-		'gft',  // Flawed Topaz
-		'gfy',  // Flawed Skull
-		'gla',  // Amethyst (regular)
-		'glv',  // Diamond (regular)
-		'gle',  // Emerald (regular)
-		'glr',  // Ruby (regular)
-		'gls',  // Sapphire (regular)
-		'glt',  // Topaz (regular)
-		'gly',  // Skull (regular)
-		'gzha', // Flawless Amethyst
-		'gzv',  // Flawless Diamond
-		'gze',  // Flawless Emerald
-		'gzr',  // Flawless Ruby
-		'gzs',  // Flawless Sapphire
-		'gzt',  // Flawless Topaz
-		'gzy',  // Flawless Skull
-	];
-
 	// Hide affixes based on mode
-	for (const affixKey of gemQualityAffixes) {
+	for (const affixKey of GemAffixCodes) {
 		const affix = affixes.find(key => key.Key === affixKey);
 		if (!affix)
 			continue;

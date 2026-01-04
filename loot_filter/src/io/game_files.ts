@@ -25,6 +25,33 @@ const filePaths = {
 	PROFILE_HD:        'global\\ui\\layouts\\_profilehd.json',
 } as const;
 
+// HD item paths (for models/effects)
+export const HD_ITEM_PATHS = {
+	MISC:      'hd\\items\\misc\\',
+	WEAPON:    'hd\\items\\weapon\\',
+	BODY_PART: 'hd\\items\\misc\\body_part\\',
+	QUEST:     'hd\\items\\misc\\quest\\',
+	SCROLL:    'hd\\items\\misc\\scroll\\',
+	AMULET:    'hd\\items\\misc\\amulet\\',
+	RING:      'hd\\items\\misc\\ring\\',
+	RUNE:      'hd\\items\\misc\\rune\\',
+	GEM:       'hd\\items\\misc\\gem\\',
+	KEY:       'hd\\items\\misc\\key\\',
+	HAMMER:    'hd\\items\\weapon\\hammer\\',
+	CLUB:      'hd\\items\\weapon\\club\\',
+	MACE:      'hd\\items\\weapon\\mace\\',
+	KNIFE:     'hd\\items\\weapon\\knife\\',
+	STAFF:     'hd\\items\\weapon\\staff\\',
+	CHARM:     'hd\\items\\weapon\\charm\\',
+} as const;
+
+// VFX particle paths
+export const VFX_PATHS = {
+	HORADRIC_LIGHT:     'data/hd/vfx/particles/overlays/object/horadric_light/fx_horadric_light.particles',
+	PALADIN_FANATICISM: 'data/hd/vfx/particles/overlays/paladin/aura_fanatic/aura_fanatic.particles',
+	VALKYRIE_START:     'data/hd/vfx/particles/overlays/common/valkyriestart/valkriestart_overlay.particles',
+} as const;
+
 
 // Cache for file data - stores the last written data for each file path
 const fileCache: Map<string, object | object[]> = new Map();
@@ -166,6 +193,17 @@ export function readUi(): FileTypes.UI.File {
 export function writeUi(data: FileTypes.UI.File): void {
 	writeAndCache(filePaths.UI, data,
 		d => D2RMM.writeJson(filePaths.UI, d as any));
+}
+
+// Items (hd/items/*.json)
+export function readHdItem(path: string): FileTypes.HDItem.File {
+	return getCachedOrRead(path,
+		() => D2RMM.readJson(path) as any);
+}
+
+export function writeHdItem(path: string, data: FileTypes.HDItem.File): void {
+	writeAndCache(path, data,
+		d => D2RMM.writeJson(path, d as any));
 }
 
 

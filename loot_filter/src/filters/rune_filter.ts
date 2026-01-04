@@ -1,4 +1,5 @@
 import { COLOR, COLOR_NAME_MAP } from '../constants/colors';
+import { HIGH_RUNES, LOW_MID_RUNES, LOW_RUNES, MID_RUNES, RUNE_AFFIXES, type RuneData } from '../constants/runes';
 import { readItemRunes, writeItemRunes } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
 import { applyBigTooltip } from '../utils/big_tooltip';
@@ -7,7 +8,7 @@ import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils'
 
 interface RuneTier {
 	name:        string;
-	runes:       { id: RuneId; name: string; }[];
+	runes:       RuneData[];
 	isVisible:   boolean;
 	nameColor:   string | null;
 	numberColor: string | null;
@@ -15,32 +16,6 @@ interface RuneTier {
 	bigTooltip?: string;
 }
 
-
-// Rune IDs (El=1 to Zod=33)
-enum RuneId {
-	EL = 1,  ELD = 2,   TIR = 3,   NEF = 4,  ETH = 5,    ITH = 6,  TAL = 7, RAL = 8,
-	ORT = 9, THUL = 10, AMN = 11,  SOL = 12, SHAEL = 13, DOL = 14, HEL = 15,
-	IO = 16, LUM = 17,  KO = 18,   FAL = 19, LEM = 20,   PUL = 21, UM = 22,
-	MAL = 23, IST = 24, GUL = 25,  VEX = 26, OHM = 27,   LO = 28,  SUR = 29,
-	BER = 30, JAH = 31, CHAM = 32, ZOD = 33,
-}
-
-
-// Translated rune affixes that should be stripped when shouldHideAffix is enabled
-// These are prefixes and suffixes that appear in various localizations
-const RUNE_AFFIXES = [
-	// prefixes
-	'Rune ',
-	'Runa ',
-	'Руна ',
-	'符文：',
-	// suffixes
-	' Rune',
-	'-Rune',
-	' 룬',
-	'・ルーン',
-	'符文',
-];
 
 /**
  * Removes rune affix from a localized rune name
@@ -76,59 +51,10 @@ export function applyRuneFilter(config: FilterConfig): void {
  * Builds the rune tier configuration based on settings
  */
 function buildRuneTiers(runeConfig: FilterConfig['runes']): RuneTier[] {
-	// Low tier: El(1) to Dol(14), except Ral(8)
-	const lowRunes = [
-		{ id: RuneId.EL,    name: 'El'    },
-		{ id: RuneId.ELD,   name: 'Eld'   },
-		{ id: RuneId.TIR,   name: 'Tir'   },
-		{ id: RuneId.NEF,   name: 'Nef'   },
-		{ id: RuneId.ETH,   name: 'Eth'   },
-		{ id: RuneId.ITH,   name: 'Ith'   },
-		{ id: RuneId.TAL,   name: 'Tal'   },
-		{ id: RuneId.ORT,   name: 'Ort'   },
-		{ id: RuneId.THUL,  name: 'Thul'  },
-		{ id: RuneId.AMN,   name: 'Amn'   },
-		{ id: RuneId.SOL,   name: 'Sol'   },
-		{ id: RuneId.SHAEL, name: 'Shael' },
-		{ id: RuneId.DOL,   name: 'Dol'   },
-	];
-
-	// Low-Mid tier: Ral(8), Hel(15) to Fal(19)
-	const lowMidRunes = [
-		{ id: RuneId.RAL, name: 'Ral' },
-		{ id: RuneId.HEL, name: 'Hel' },
-		{ id: RuneId.IO,  name: 'Io' },
-		{ id: RuneId.LUM, name: 'Lum' },
-		{ id: RuneId.KO,  name: 'Ko' },
-		{ id: RuneId.FAL, name: 'Fal' },
-	];
-
-	// Mid tier: Lem(20) to Gul(25)
-	const midRunes = [
-		{ id: RuneId.LEM, name: 'Lem' },
-		{ id: RuneId.PUL, name: 'Pul' },
-		{ id: RuneId.UM,  name: 'Um' },
-		{ id: RuneId.MAL, name: 'Mal' },
-		{ id: RuneId.IST, name: 'Ist' },
-		{ id: RuneId.GUL, name: 'Gul' },
-	];
-
-	// High tier: Vex(26) to Zod(33)
-	const highRunes = [
-		{ id: RuneId.VEX,  name: 'Vex' },
-		{ id: RuneId.OHM,  name: 'Ohm' },
-		{ id: RuneId.LO,   name: 'Lo' },
-		{ id: RuneId.SUR,  name: 'Sur' },
-		{ id: RuneId.BER,  name: 'Ber' },
-		{ id: RuneId.JAH,  name: 'Jah' },
-		{ id: RuneId.CHAM, name: 'Cham' },
-		{ id: RuneId.ZOD,  name: 'Zod' },
-	];
-
 	return [
 		{
 			name:        'low',
-			runes:       lowRunes,
+			runes:       LOW_RUNES,
 			isVisible:   runeConfig.low.isVisible,
 			nameColor:   parseColorCode(runeConfig.low.nameColor),
 			numberColor: parseColorCode(runeConfig.low.numberColor),
@@ -141,7 +67,7 @@ function buildRuneTiers(runeConfig: FilterConfig['runes']): RuneTier[] {
 		},
 		{
 			name:        'lowMid',
-			runes:       lowMidRunes,
+			runes:       LOW_MID_RUNES,
 			isVisible:   runeConfig.lowMid.isVisible,
 			nameColor:   parseColorCode(runeConfig.lowMid.nameColor),
 			numberColor: parseColorCode(runeConfig.lowMid.numberColor),
@@ -154,7 +80,7 @@ function buildRuneTiers(runeConfig: FilterConfig['runes']): RuneTier[] {
 		},
 		{
 			name:        'mid',
-			runes:       midRunes,
+			runes:       MID_RUNES,
 			isVisible:   runeConfig.mid.isVisible,
 			nameColor:   parseColorCode(runeConfig.mid.nameColor),
 			numberColor: parseColorCode(runeConfig.mid.numberColor),
@@ -167,7 +93,7 @@ function buildRuneTiers(runeConfig: FilterConfig['runes']): RuneTier[] {
 		},
 		{
 			name:        'high',
-			runes:       highRunes,
+			runes:       HIGH_RUNES,
 			isVisible:   runeConfig.high.isVisible,
 			nameColor:   parseColorCode(runeConfig.high.nameColor),
 			numberColor: parseColorCode(runeConfig.high.numberColor),
@@ -325,7 +251,7 @@ function parseHighlightSetting(
 	let useColor = true;
 	if (highlightMode === '5' && bigTooltipMode !== '0') {
 		effectiveMode = '4'; // Downgrade from EXTRA_EXTRA_LARGE to EXTRA_LARGE
-		useColor = false; // V1 doesn't apply color codes in this case
+		useColor = false;    // V1 doesn't apply color codes in this case
 	}
 
 	// Parse color - defaults to red when "none"/null for modes 1-4

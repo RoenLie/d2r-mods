@@ -5,9 +5,9 @@
  * Simple feature: set ShowLevel flag to '1' for relevant items.
  */
 
+import { QuestItemIds } from '../constants/item_ids';
 import { readArmor, readMisc, readWeapons, writeArmor, writeMisc, writeWeapons } from '../io/game_files';
 import { ItemLevelConfig } from '../io/mod_config';
-import { QuestItemIds } from '../constants/item_ids';
 
 // ============================================================================
 // Constants

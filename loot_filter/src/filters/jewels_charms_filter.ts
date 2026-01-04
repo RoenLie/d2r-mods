@@ -1,4 +1,5 @@
-import { COLOR, SUNDER_COLOR } from '../constants/colors';
+import { CharmCodes, CharmSizes, JewelCodes, LodUniqueCharms, SunderCharms } from '../constants/charms';
+import { COLOR } from '../constants/colors';
 import { readItemNames, writeItemNames } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
 import { transformAllLanguages } from '../utils/entry_utils';
@@ -24,9 +25,6 @@ export function applyJewelsCharmsFilter(config: FilterConfig): void {
 	writeItemNames(itemNames);
 }
 
-// ============================================================================
-// Jewels (Rainbow Facets)
-// ============================================================================
 
 function applyJewelsToData(
 	itemNames: FileTypes.ItemNames.File,
@@ -35,12 +33,9 @@ function applyJewelsToData(
 	if (jewelConfig.highlight === 'none')
 		return;
 
-	// Rainbow Facet is a unique jewel
-	const facetKey = 'Rainbow Facet';
-
 	for (const entry of itemNames) {
 		const key = entry.Key;
-		if (key !== facetKey)
+		if (key !== JewelCodes.RAINBOW_FACET)
 			continue;
 
 		// Apply highlight based on config
@@ -70,9 +65,6 @@ function applyJewelsToData(
 	}
 }
 
-// ============================================================================
-// Charms
-// ============================================================================
 
 function applyCharmsToData(
 	itemNames: FileTypes.ItemNames.File,
@@ -93,9 +85,9 @@ function applyCharmsToData(
  */
 function applyUnidentifiedCharmHighlights(itemNames: FileTypes.ItemNames.File): void {
 	const charms = [
-		{ key: 'cm1', size: 'Small' },
-		{ key: 'cm2', size: 'Large' },
-		{ key: 'cm3', size: 'Grand' },
+		{ key: CharmCodes.SMALL, size: CharmSizes[CharmCodes.SMALL] },
+		{ key: CharmCodes.LARGE, size: CharmSizes[CharmCodes.LARGE] },
+		{ key: CharmCodes.GRAND, size: CharmSizes[CharmCodes.GRAND] },
 	];
 
 	itemNames.forEach(entry => {
@@ -117,26 +109,9 @@ function applyUniqueCharmHighlights(
 	itemNames: FileTypes.ItemNames.File,
 	mode: FilterConfig['charms']['highlightUnique'],
 ): void {
-	// LoD unique charms
-	const lodUniques = [
-		'Annihilus',
-		'Hellfire Torch',
-		"Gheed's Fortune",
-	];
-
-	// Sunder charms with colors for alternate highlighting
-	const sunderCharms = [
-		{ id: 'Black Cleft',          color: SUNDER_COLOR.MAGIC },     // Magic - gray
-		{ id: 'Bone Break',           color: SUNDER_COLOR.PHYSICAL },  // Physical - white
-		{ id: 'Cold Rupture',         color: SUNDER_COLOR.COLD },      // Cold - sky blue
-		{ id: 'Crack of the Heavens', color: SUNDER_COLOR.LIGHTNING }, // Lightning - yellow
-		{ id: 'Flame Rift',           color: SUNDER_COLOR.FIRE },      // Fire - red
-		{ id: 'Rotting Fissure',      color: SUNDER_COLOR.POISON },    // Poison - green
-	];
-
 	const allUniqueCharms = [
-		...lodUniques,
-		...sunderCharms.map(s => s.id),
+		...LodUniqueCharms,
+		...SunderCharms.map(s => s.id),
 	];
 
 	itemNames.forEach(entry => {
@@ -145,11 +120,12 @@ function applyUniqueCharmHighlights(
 			return;
 
 		// Determine highlight color
-		let highlightColor: string = COLOR.RED; // Default: red
+		// Default: red
+		let highlightColor: typeof COLOR[keyof typeof COLOR] = COLOR.RED;
 
 		if (mode === 'hl-sa') {
 			// Alternate mode: sunder charms get their element colors
-			const sunder = sunderCharms.find(s => s.id === key);
+			const sunder = SunderCharms.find(s => s.id === key);
 			if (sunder)
 				highlightColor = sunder.color;
 		}

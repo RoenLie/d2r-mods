@@ -8,170 +8,170 @@ import type { ModConfig as GeneratedModConfig } from '../generated_types';
 
 // Drop sounds configuration
 export interface DropSoundsConfig {
-	enabled:          boolean;
-	excludeForHidden: boolean;
+	enabled:          GeneratedModConfig['IsDropSoundsEnabled'];
+	excludeForHidden: GeneratedModConfig['ShouldExcludeHiddenItemsForDs'];
 	runes: {
-		low:    string;
-		lowMid: string;
-		mid:    string;
-		high:   string;
+		low:    GeneratedModConfig['DropSoundRunesLow'];
+		lowMid: GeneratedModConfig['DropSoundRunesLowMid'];
+		mid:    GeneratedModConfig['DropSoundRunesMid'];
+		high:   GeneratedModConfig['DropSoundRunesHigh'];
 	};
 	questEndgame: {
-		questItems: string;
-		essences:   string;
-		tokens:     string;
-		keys:       string;
-		organs:     string;
-		standard:   string;
+		questItems: GeneratedModConfig['DropSoundQuest'];
+		essences:   GeneratedModConfig['DropSoundEssences'];
+		tokens:     GeneratedModConfig['DropSoundToken'];
+		keys:       GeneratedModConfig['DropSoundKeys'];
+		organs:     GeneratedModConfig['DropSoundOrgans'];
+		standard:   GeneratedModConfig['DropSoundStandard'];
 	};
 }
 
 // Light pillars configuration
 export interface LightPillarsConfig {
-	enabled:          boolean;
-	excludeForHidden: boolean;
+	enabled:          GeneratedModConfig['IsLightPillarsEnabled'];
+	excludeForHidden: GeneratedModConfig['ShouldExcludeHiddenItemsForLp'];
 	runes: {
-		low:    boolean;
-		lowMid: boolean;
-		mid:    boolean;
-		high:   boolean;
+		low:    GeneratedModConfig['ShouldAddLightPillarRunesLow'];
+		lowMid: GeneratedModConfig['ShouldAddLightPillarRunesLowMid'];
+		mid:    GeneratedModConfig['ShouldAddLightPillarRunesMid'];
+		high:   GeneratedModConfig['ShouldAddLightPillarRunesHigh'];
 	};
 	jewelry: {
-		rings:      boolean;
-		amulets:    boolean;
-		gemsJewels: boolean;
-		charms:     boolean;
+		rings:      GeneratedModConfig['ShouldAddLightPillarRings'];
+		amulets:    GeneratedModConfig['ShouldAddLightPillarAmulets'];
+		gemsJewels: GeneratedModConfig['ShouldAddLightPillarGemsJewels'];
+		charms:     GeneratedModConfig['ShouldAddLightPillarCharms'];
 	};
 	questEndgame: {
-		questItems:   boolean;
-		questWeapons: boolean;
-		essences:     boolean;
-		tokens:       boolean;
-		keys:         boolean;
-		organs:       boolean;
-		standard:     boolean;
+		questItems:   GeneratedModConfig['ShouldAddLightPillarQuestItems'];
+		questWeapons: GeneratedModConfig['ShouldAddLightPillarQuestWeapons'];
+		essences:     GeneratedModConfig['ShouldAddLightPillarEssences'];
+		tokens:       GeneratedModConfig['ShouldAddLightPillarTokens'];
+		keys:         GeneratedModConfig['ShouldAddLightPillarKeys'];
+		organs:       GeneratedModConfig['ShouldAddLightPillarOrgans'];
+		standard:     GeneratedModConfig['ShouldAddLightPillarStandard'];
 	};
 }
 
 // Item level configuration
 export interface ItemLevelConfig {
-	enabled:           boolean;
-	hideOnBigTooltips: boolean;
+	enabled:           GeneratedModConfig['IsShowItemLevelEnabled'];
+	hideOnBigTooltips: GeneratedModConfig['IsHideIlvlOnBttEnabled'];
 }
 
 // ProfileHD configuration (_profilehd.json)
 export interface ProfileHdConfig {
-	enabled:       boolean;
+	enabled:       GeneratedModConfig['IsTooltipModsEnabled'];
 	etherealColor: {
-		enabled: boolean;
-		color:   string;
+		enabled: GeneratedModConfig['IsEthItemsColorEnabled'];
+		color:   GeneratedModConfig['EthItemsColor'];
 	};
-	goldColor:      string;
-	tooltipOpacity: number;
-	tooltipSize:    number;
+	goldColor:      GeneratedModConfig['GoldTooltipColors'];
+	tooltipOpacity: GeneratedModConfig['TooltipOpacity'];
+	tooltipSize:    GeneratedModConfig['TooltipSize'];
 }
 
 // Filter configuration
 export interface FilterConfig {
-	enabled: boolean;
+	enabled: GeneratedModConfig['IsFilterEnabled'];
 	gems: {
-		mode:             'all' | 'flawless' | 'perfect' | 'hide';
-		enableHighlight:  boolean;
+		mode:             GeneratedModConfig['JewelryGemsFilter'];
+		enableHighlight:  GeneratedModConfig['JewelryGemsHighlight'];
 		enableBigTooltip: boolean;
 	};
 	potions: {
-		mode: 'none' | 'all' | 'hide3' | 'hide4' | 'hide3sr' | 'hide4sr' | 'sfr' | 'fr' | 'hide';
+		mode: GeneratedModConfig['HealingPotions'];
 	};
 	runes: {
-		isEnabled:       boolean;
-		shouldHideAffix: boolean;
-		shouldAddNumber: boolean;
+		isEnabled:       GeneratedModConfig['IsRunesSectionEnabled'];
+		shouldHideAffix: GeneratedModConfig['ShouldHideRuneAffix'];
+		shouldAddNumber: GeneratedModConfig['ShouldAddRuneNumbers'];
 		low: {
-			isVisible:      boolean;
-			highlight:      string;
-			highlightColor: string;
-			nameColor:      string;
-			numberColor:    string;
-			bigTooltip:     string;
+			isVisible:      GeneratedModConfig['ShouldShowRunesLow'];
+			highlight:      GeneratedModConfig['RunesLowHighlight'];
+			highlightColor: GeneratedModConfig['RunesLowColorHighlight'];
+			nameColor:      GeneratedModConfig['RunesLowColorName'];
+			numberColor:    GeneratedModConfig['RunesLowColorNumber'];
+			bigTooltip:     GeneratedModConfig['RunesLowBigTooltip'];
 		};
 		lowMid: {
-			isVisible:      boolean;
-			highlight:      string;
-			highlightColor: string;
-			nameColor:      string;
-			numberColor:    string;
-			bigTooltip:     string;
+			isVisible:      GeneratedModConfig['ShouldShowRunesLowMid'];
+			highlight:      GeneratedModConfig['RunesLowMidHighlight'];
+			highlightColor: GeneratedModConfig['RunesLowMidColorHighlight'];
+			nameColor:      GeneratedModConfig['RunesLowMidColorName'];
+			numberColor:    GeneratedModConfig['RunesLowMidColorNumber'];
+			bigTooltip:     GeneratedModConfig['RunesLowMidBigTooltip'];
 		};
 		mid: {
-			isVisible:      boolean;
-			highlight:      string;
-			highlightColor: string;
-			nameColor:      string;
-			numberColor:    string;
-			bigTooltip:     string;
+			isVisible:      GeneratedModConfig['ShouldShowRunesMid'];
+			highlight:      GeneratedModConfig['RunesMidHighlight'];
+			highlightColor: GeneratedModConfig['RunesMidColorHighlight'];
+			nameColor:      GeneratedModConfig['RunesMidColorName'];
+			numberColor:    GeneratedModConfig['RunesMidColorNumber'];
+			bigTooltip:     GeneratedModConfig['RunesMidBigTooltip'];
 		};
 		high: {
-			isVisible:      boolean;
-			highlight:      string;
-			highlightColor: string;
-			nameColor:      string;
-			numberColor:    string;
-			bigTooltip:     string;
+			isVisible:      GeneratedModConfig['ShouldShowRunesHigh'];
+			highlight:      GeneratedModConfig['RunesHighHighlight'];
+			highlightColor: GeneratedModConfig['RunesHighColorHighlight'];
+			nameColor:      GeneratedModConfig['RunesHighColorName'];
+			numberColor:    GeneratedModConfig['RunesHighColorNumber'];
+			bigTooltip:     GeneratedModConfig['RunesHighBigTooltip'];
 		};
 	};
 	scrollsKeys: {
-		scrollsTomes: 'none' | 'all' | 'hide';
-		arrowsBolts:  'none' | 'all' | 'arw' | 'blt' | 'hide';
-		keys:         'none' | 'hide';
+		scrollsTomes: GeneratedModConfig['ScrollsTomes'];
+		arrowsBolts:  GeneratedModConfig['ArrowsBolts'];
+		keys:         GeneratedModConfig['Keys'];
 	};
 	gold: {
-		suffix:        'none' | 'g' | 'hide';
-		tooltipColors: 'none' | 'wg' | 'gw' | 'g';
+		suffix:        GeneratedModConfig['GoldSuffix'];
+		tooltipColors: GeneratedModConfig['GoldTooltipColors'];
 	};
-	buffPotions:     'none' | 'all' | 'hide';
-	throwingPotions: 'none' | 'all' | 'hide';
+	buffPotions:     GeneratedModConfig['BuffPotions'];
+	throwingPotions: GeneratedModConfig['ThrowingPotions'];
 	jewels: {
-		highlight: 'none' | 'rainbow' | 'highlight';
+		highlight: GeneratedModConfig['FacetsHighlights'];
 	};
 	charms: {
-		highlightMagic:  boolean;
-		highlightUnique: 'none' | 'hl' | 'hl-sa';
+		highlightMagic:  GeneratedModConfig['JewelryCharmsMagicHighlight'];
+		highlightUnique: GeneratedModConfig['JewelryCharmsUniqueHighlight'];
 	};
 	questEndgame: {
-		cubeHighlight:     boolean;
-		questHighlight:    string;
-		showEssences:      boolean;
-		essencesHighlight: string;
-		tokenHighlight:    string;
-		keysHighlight:     string;
-		organsHighlight:   string;
-		showStandard:      boolean;
-		standardHighlight: string;
-		bigTooltips:       {
-			questItems: string;
-			essences:   string;
-			tokens:     string;
-			keys:       string;
-			organs:     string;
-			standard:   string;
+		cubeHighlight:     GeneratedModConfig['IsCubeHighlightExcluded'];
+		questHighlight:    GeneratedModConfig['QuestEndgameHighlightsQuest'];
+		showEssences:      GeneratedModConfig['IsEssencesVisible'];
+		essencesHighlight: GeneratedModConfig['QuestEndgameHighlightsEssences'];
+		tokenHighlight:    GeneratedModConfig['QuestEndgameHighlightsTokens'];
+		keysHighlight:     GeneratedModConfig['QuestEndgameHighlightsKeys'];
+		organsHighlight:   GeneratedModConfig['QuestEndgameHighlightsOrgans'];
+		showStandard:      GeneratedModConfig['IsStandardOfHeroesVisible'];
+		standardHighlight: GeneratedModConfig['QuestEndgameHighlightsStandard'];
+		bigTooltips: {
+			questItems: GeneratedModConfig['BigTooltipQuestItems'];
+			essences:   GeneratedModConfig['BigTooltipEssences'];
+			tokens:     GeneratedModConfig['BigTooltipTokens'];
+			keys:       GeneratedModConfig['BigTooltipKeys'];
+			organs:     GeneratedModConfig['BigTooltipOrgans'];
+			standard:   GeneratedModConfig['BigTooltipStandard'];
 		};
 	};
 	equipmentQuality: {
-		enabled:           boolean;
-		style:             'lowercase' | 'uppercase' | 'custom';
-		brackets:          'square' | 'round' | 'curly' | 'angle' | 'none';
-		placement:         'prefix' | 'suffix' | 'both';
-		customNormal:      string;
-		customExceptional: string;
-		customElite:       string;
+		enabled:           GeneratedModConfig['IsShowItemQualityEnabled'];
+		style:             GeneratedModConfig['ItemQualityStyleSingle'];
+		brackets:          GeneratedModConfig['ItemQualityBrackets'];
+		placement:         GeneratedModConfig['ItemQualityPlacement'];
+		customNormal:      GeneratedModConfig['ItemQualityCustomNormal'];
+		customExceptional: GeneratedModConfig['ItemQualityCustomExceptional'];
+		customElite:       GeneratedModConfig['ItemQualityCustomElite'];
 	};
 	itemAffixes: {
-		enabled:       boolean;
-		style:         'plusminus' | 'supinf';
-		inferiorColor: string;
+		enabled:       GeneratedModConfig['IsSupInferiorPrefixesEnabled'];
+		style:         GeneratedModConfig['SupInfPrefixesStyle'];
+		inferiorColor: GeneratedModConfig['InferiorItemsColor'];
 	};
 	customFilterList: {
-		enabled: boolean;
+		enabled: GeneratedModConfig['IsCustomFilterListEnabled'];
 	};
 }
 

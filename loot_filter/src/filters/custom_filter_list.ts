@@ -60,13 +60,17 @@ export function applyCustomFilterList(config: FilterConfig): void {
 	}
 }
 
+
 /**
  * Apply custom names to item-names.json or item-runes.json
  */
 function applyCustomNames(data: FileTypes.ItemNames.File, customList: [string, string][]): void {
-	for (const [ key, newName ] of customList) {
-		const entry = data.find(k => k.Key === key);
+	const dataEntries: Map<string, FileTypes.ItemNames.Entry> = new Map(
+		data.map(entry => [ entry.Key, entry ]),
+	);
 
+	for (const [ key, newName ] of customList) {
+		const entry = dataEntries.get(key);
 		if (entry)
 			updateAllLanguages(entry, newName);
 	}
@@ -84,15 +88,8 @@ function applyCustomModifiers(data: FileTypes.ItemNames.File, customList: [strin
  * Apply custom names to ui.json (localized strings file)
  */
 function applyCustomUi(uiStrings: FileTypes.ItemNames.File, customList: [string, string][]): void {
-	for (const [ key, newName ] of customList) {
-		// UI strings use standard item-names structure with Key/enUS
-		const numericKey = uiStrings.find(
-			(k, i) => k.Key === key,
-		);
-
-		if (numericKey)
-			updateAllLanguages(numericKey, newName);
-	}
+	// Same as applyCustomNames - they use the same structure
+	applyCustomNames(uiStrings, customList);
 }
 
 //----------------------------------------------//
