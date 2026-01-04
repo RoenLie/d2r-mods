@@ -48,18 +48,17 @@ export abstract class BaseItemWriter implements IItemWriter {
 			return;
 
 		const file = D2RMM.readJson(this.target);
+		if (typeof file !== 'object')
+			return;
 
 		mergedCollection.getEntries().forEach(filterEntry => {
 			Object.entries(file).forEach(([ index, _ ]) => {
-				if (typeof file !== 'object' || Array.isArray(file))
-					return;
-
-				const fileEntry = file[index];
+				const fileEntry = (file as Record<string, unknown>)[index];
 				if (typeof fileEntry !== 'object' || Array.isArray(fileEntry))
 					return;
 
-				if (fileEntry[FileConstants.key] === filterEntry.key)
-					this.writeCustomNamesForEntry(fileEntry, filterEntry);
+				if ((fileEntry as Record<string, unknown>)[FileConstants.key] === filterEntry.key)
+					this.writeCustomNamesForEntry(fileEntry as JSONData, filterEntry);
 			});
 		});
 

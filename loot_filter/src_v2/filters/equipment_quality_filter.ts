@@ -85,7 +85,7 @@ function getQualityIndicator(
 function formatQualityTag(
 	indicator: string,
 	brackets: 'square' | 'round' | 'curly' | 'angle' | 'none',
-	placement: 'prefix' | 'suffix',
+	placement: 'suffix' | 'prefix' | 'both',
 ): string {
 	const bracketMap: Record<string, [string, string]> = {
 		square: [ '[', ']' ],

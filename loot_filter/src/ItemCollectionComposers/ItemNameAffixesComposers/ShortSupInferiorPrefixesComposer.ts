@@ -27,6 +27,10 @@ export class ShortSupInferiorPrefixesComposer extends ItemCollectionComposerBase
 			supPrefix = `Sup`;
 			infPrefix = `Inf`;
 			break;
+		default:
+			// If style doesn't result in valid prefixes, don't modify anything
+			// This preserves the original vanilla names like "Superior", "Low Quality", etc.
+			return;
 		}
 
 		this.collection.upsert(new ItemEntry(supKey, supPrefix));

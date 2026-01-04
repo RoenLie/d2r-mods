@@ -7,6 +7,7 @@
 
 import { readItemNameAffixes, readItemNames, writeItemNameAffixes, writeItemNames } from '../io/game_files';
 import { FilterConfig } from '../io/mod_config';
+import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
 // ============================================================================
 // Constants
@@ -36,7 +37,11 @@ const GEM_CODES = {
 		'gsv', // Amethyst
 		'gsy', // Topaz
 		'sku', // Skull
-		// Note: Diamond, Emerald, Ruby, Sapphire are in item-nameaffixes.json
+		// Regular gems that are in item-nameaffixes.json (due to naming conflicts)
+		'gsw', // Diamond
+		'gsg', // Emerald
+		'gsr', // Ruby
+		'gsb', // Sapphire
 	],
 	flawless: [
 		'gzv', // Flawless Amethyst
@@ -127,6 +132,9 @@ const GEM_CODE_TO_COLOR: Record<string, string> = {
 const HIGHLIGHT_CHAR = 'o';
 const HIGHLIGHT_PADDING = ' ';
 
+// Default name color (white)
+const DEFAULT_NAME_COLOR = 'ÿc0';
+
 // Hidden item name (spaces to maintain tooltip width)
 const HIDDEN_NAME = '                    '; // 20 spaces
 
@@ -135,12 +143,44 @@ const HIDDEN_NAME = '                    '; // 20 spaces
 // ============================================================================
 
 /**
+ * Strip redundant color codes from a display name.
+ * Removes adjacent duplicate colors.
+ * For the specific case of white highlight (ÿc0o ÿc0Name), simplifies to (o Name).
+ */
+function stripRedundantColors(name: string): string {
+	let result = name;
+
+	// Special case: if pattern is "ÿc0o ÿc0Name", simplify to "o Name"
+	// This handles white-highlighted gems (Diamond, Skull)
+	// Must do this BEFORE removing adjacent duplicates
+	if (result.startsWith('ÿc0o ÿc0')) {
+		// Remove both the leading "ÿc0" and the "ÿc0" after the space
+		result = result.replace(/^ÿc0o ÿc0/, 'o ');
+	}
+
+	// Remove adjacent duplicate color codes (e.g., ÿc0ÿc0 -> ÿc0)
+	let prevResult = '';
+	while (result !== prevResult) {
+		prevResult = result;
+		// Match any color code followed by the same color code
+		result = result.replace(/(ÿc.)\1/g, '$1');
+	}
+
+	return result;
+}
+
+/**
  * Apply highlight pattern to a gem name
  */
 function applyHighlight(name: string, gemCode: string): string {
-	const color = GEM_CODE_TO_COLOR[gemCode] || 'ÿc0';
+	const highlightColor = GEM_CODE_TO_COLOR[gemCode] || DEFAULT_NAME_COLOR;
+	const nameColor = DEFAULT_NAME_COLOR;
 
-	return `${ color }${ HIGHLIGHT_CHAR }${ HIGHLIGHT_PADDING }${ name }`;
+	// Pattern: {highlightColor}{o}{space}{nameColor}{name}
+	// Then strip redundant colors (removes leading white, adjacent duplicates)
+	const raw = `${ highlightColor }${ HIGHLIGHT_CHAR }${ HIGHLIGHT_PADDING }${ nameColor }${ name }`;
+
+	return stripRedundantColors(raw);
 }
 
 /**
@@ -215,39 +255,31 @@ function applyGemFilterToData(
 	hiddenGems: string[],
 	enableHighlight: boolean,
 ): JSONData {
-	if (typeof data !== 'object' || Array.isArray(data))
+	if (typeof data !== 'object' || data === null)
 		return data;
 
+	// Handle both array format (actual JSON) and object format
+	const entries = Array.isArray(data) ? data : Object.values(data);
+
 	// Process each entry in the file
-	Object.keys(data).forEach(index => {
-		const entry = data[index];
-		if (typeof entry !== 'object' || Array.isArray(entry))
-			return;
+	for (const entry of entries) {
+		if (typeof entry !== 'object' || entry === null || Array.isArray(entry))
+			continue;
 
 		const key = entry['Key'];
 		if (typeof key !== 'string')
-			return;
+			continue;
 
 		// Check if this is a gem we should modify
 		if (hiddenGems.includes(key)) {
 			// Hide this gem
-			Object.keys(entry).forEach(lang => {
-				if (lang === 'id' || lang === 'Key')
-					return;
-				if (typeof entry[lang] === 'string')
-					entry[lang] = hideGem();
-			});
+			updateAllLanguages(entry, hideGem());
 		}
 		else if (visibleGems.includes(key) && enableHighlight) {
 			// Apply highlight to this gem
-			Object.keys(entry).forEach(lang => {
-				if (lang === 'id' || lang === 'Key')
-					return;
-				if (typeof entry[lang] === 'string' && entry[lang].trim() !== '')
-					entry[lang] = applyHighlight(entry[lang], key);
-			});
+			transformAllLanguages(entry, name => applyHighlight(name, key));
 		}
-	});
+	}
 
 	return data;
 }

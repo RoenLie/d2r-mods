@@ -1,5 +1,6 @@
 import { readItemNames, writeItemNames } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
+import { transformAllLanguages } from '../utils/entry_utils';
 
 /**
  * Jewels and Charms Filter
@@ -29,7 +30,7 @@ function applyJewelsToData(
 	itemNames: JSONData,
 	jewelConfig: FilterConfig['jewels'],
 ): void {
-	if (jewelConfig.highlight === 'disabled')
+	if (jewelConfig.highlight === 'none')
 		return;
 
 	// Rainbow Facet is a unique jewel
@@ -40,24 +41,26 @@ function applyJewelsToData(
 		if (typeof entry !== 'object' || Array.isArray(entry))
 			return;
 
-		const key = entry['*ID'];
+		const key = entry.Key as string;
 		if (key !== facetKey)
 			return;
 
 		// Apply highlight based on config
 		if (jewelConfig.highlight === 'rainbow') {
-			// Rainbow highlight (cycling colors)
-			entry['ÿc1*'] = '';
-			entry['ÿc8*'] = '';
-			entry['ÿc9*'] = '';
-			entry['ÿc2*'] = '';
-			entry['ÿc3*'] = '';
-			entry['ÿc;*'] = '';
+			// Rainbow highlight (cycling colors) - 5 asterisks per color
+			transformAllLanguages(entry, originalName => {
+				// OLD pattern uses ÿc1, ÿc9, ÿc3, ÿc2, ÿc4 with trailing color codes
+				const leadingSpaces = '      ';
+				const padding = '   ';
+
+				return `${ leadingSpaces }ÿc1***** ÿc9***** ÿc3***** ÿc2*****ÿc4${ padding }ÿcD${ originalName }${ padding }ÿc2***** ÿc3***** ÿc9***** ÿc1*****ÿc4ÿcD`;
+			});
 		}
 		else if (jewelConfig.highlight === 'highlight') {
 			// Large red highlight
-			entry['ÿc1*'] = '';
-			entry['  ÿc1*'] = '';
+			transformAllLanguages(entry, originalName => {
+				return `ÿc1**********     ${ originalName }     ÿc1**********`;
+			});
 		}
 	});
 }
@@ -75,7 +78,7 @@ function applyCharmsToData(
 		applyUnidentifiedCharmHighlights(itemNames);
 
 	// Apply unique charm highlighting
-	if (charmConfig.highlightUnique !== 'disabled')
+	if (charmConfig.highlightUnique !== 'none')
 		applyUniqueCharmHighlights(itemNames, charmConfig.highlightUnique);
 }
 
@@ -95,13 +98,13 @@ function applyUnidentifiedCharmHighlights(itemNames: JSONData): void {
 		if (typeof entry !== 'object' || Array.isArray(entry))
 			return;
 
-		const code = entry.code as string;
-		const charm = charms.find(c => c.key === code);
+		const key = entry.Key as string;
+		const charm = charms.find(c => c.key === key);
 		if (!charm)
 			return;
 
-		// Set name to "Small/Large/Grand ÿc1Charmÿc3" (red "Charm" in magic blue text)
-		entry['*ID'] = `${ charm.size } ÿc1Charmÿc3`;
+		// Set name to "Small/Large/Grand ÿc1Charmÿc3" using transformAllLanguages
+		transformAllLanguages(entry, () => `${ charm.size } ÿc1CharmÿcB`);
 	});
 }
 
@@ -124,7 +127,7 @@ function applyUniqueCharmHighlights(
 	const sunderCharms = [
 		{ id: 'Black Cleft', color: 'ÿc5' },   // Magic - gray
 		{ id: 'Bone Break', color: 'ÿc0' },    // Physical - white
-		{ id: 'Cold Rupture', color: 'ÿc3' },  // Cold - light blue
+		{ id: 'Cold Rupture', color: 'ÿcT' },  // Cold - sky blue
 		{ id: 'Crack of the Heavens', color: 'ÿc9' }, // Lightning - yellow
 		{ id: 'Flame Rift', color: 'ÿc1' },    // Fire - red
 		{ id: 'Rotting Fissure', color: 'ÿc2' }, // Poison - green
@@ -137,29 +140,30 @@ function applyUniqueCharmHighlights(
 		if (typeof entry !== 'object' || Array.isArray(entry))
 			return;
 
-		const name = entry['*ID'] as string;
-		if (!allUniqueCharms.includes(name))
+		const key = entry.Key as string;
+		if (!allUniqueCharms.includes(key))
 			return;
 
-		// Apply highlight based on mode
-		if (mode === 'hl-default') {
-			// Default: large red highlight for all unique charms
-			entry['ÿc1*'] = '';
-			entry['  ÿc1*'] = '';
+		// Determine highlight color
+		let highlightColor = 'ÿc1'; // Default: red
+
+		if (mode === 'hl-sa') {
+			// Alternate mode: sunder charms get their element colors
+			const sunder = sunderCharms.find(s => s.id === key);
+			if (sunder)
+				highlightColor = sunder.color;
 		}
-		else if (mode === 'hl-sa') {
-			// Alternate: sunder charms get colored highlights
-			const sunder = sunderCharms.find(s => s.id === name);
-			if (sunder) {
-				// Colored highlight for sunder charms
-				entry[`${ sunder.color }*`] = '';
-				entry[`  ${ sunder.color }*`] = '';
-			}
-			else {
-				// Default red highlight for LoD uniques
-				entry['ÿc1*'] = '';
-				entry['  ÿc1*'] = '';
-			}
-		}
+
+		// Apply transformations to all languages
+		transformAllLanguages(entry, originalName => {
+			// Pattern: 6 spaces + {highlightColor}**********     {goldColor}{name}     {highlightColor}**********{goldColor}
+			// Gold color (ÿcD) is used for unique item names
+			const nameColor = 'ÿcD';
+			const padding = '     '; // 5 spaces
+			const stars = '**********'; // 10 asterisks
+			const leadingSpaces = '      '; // 6 spaces
+
+			return `${ leadingSpaces }${ highlightColor }${ stars }${ padding }${ nameColor }${ originalName }${ padding }${ highlightColor }${ stars }${ nameColor }`;
+		});
 	});
 }

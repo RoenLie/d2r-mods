@@ -117,8 +117,8 @@ export abstract class RawSettings {
 			},
 			shortSupInfPrefixes: {
 				isEnabled:          config.IsSupInferiorPrefixesEnabled   as boolean,
-				style:              config.SupInfPrefixesStyle            as string,
-				inferiorItemsColor: config.InferiorItemsColor as string as ED2ColorCode,
+				style:              (config.SupInfPrefixesStyle) as string,
+				inferiorItemsColor: (config.InferiorItemsColor) as string as ED2ColorCode,
 			},
 			ethColor: {
 				isEnabled: config.IsEthItemsColorEnabled     as boolean,

@@ -11,34 +11,53 @@
 
 import { readItemModifiers, readItemNameAffixes, readItemNames, readItemRunes, readUi, writeItemModifiers, writeItemNameAffixes, writeItemNames, writeItemRunes, writeUi } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
+import { updateAllLanguages } from '../utils/entry_utils';
 
 /**
  * Apply custom item name overrides from user-defined lists.
+ * Only writes files that have actual customizations to avoid overwriting other filter changes.
  */
 export function applyCustomFilterList(config: FilterConfig): void {
 	if (!config.customFilterList.enabled)
 		return;
 
-	// Load all data files
-	const itemNames = readItemNames();
-	const itemRunes = readItemRunes();
-	const itemNameAffixes = readItemNameAffixes();
-	const itemModifiers = readItemModifiers();
-	const uiStrings = readUi();
+	// Get custom lists first to check if any modifications are needed
+	const itemNamesCustomList = getItemNamesCustomList();
+	const itemRunesCustomList = getItemRunesCustomList();
+	const itemNameAffixesCustomList = getItemNameAffixesCustomList();
+	const itemModifiersCustomList = getItemModifiersCustomList();
+	const uiCustomList = getUiCustomList();
 
-	// Apply custom names to each file
-	applyCustomNames(itemNames, getItemNamesCustomList());
-	applyCustomNames(itemRunes, getItemRunesCustomList());
-	applyCustomNames(itemNameAffixes, getItemNameAffixesCustomList());
-	applyCustomModifiers(itemModifiers, getItemModifiersCustomList());
-	applyCustomUi(uiStrings, getUiCustomList());
+	// Only load and write files that have actual customizations
+	if (itemNamesCustomList.length > 0) {
+		const itemNames = readItemNames();
+		applyCustomNames(itemNames, itemNamesCustomList);
+		writeItemNames(itemNames);
+	}
 
-	// Save all modified files
-	writeItemNames(itemNames);
-	writeItemRunes(itemRunes);
-	writeItemNameAffixes(itemNameAffixes);
-	writeItemModifiers(itemModifiers);
-	writeUi(uiStrings);
+	if (itemRunesCustomList.length > 0) {
+		const itemRunes = readItemRunes();
+		applyCustomNames(itemRunes, itemRunesCustomList);
+		writeItemRunes(itemRunes);
+	}
+
+	if (itemNameAffixesCustomList.length > 0) {
+		const itemNameAffixes = readItemNameAffixes();
+		applyCustomNames(itemNameAffixes, itemNameAffixesCustomList);
+		writeItemNameAffixes(itemNameAffixes);
+	}
+
+	if (itemModifiersCustomList.length > 0) {
+		const itemModifiers = readItemModifiers();
+		applyCustomModifiers(itemModifiers, itemModifiersCustomList);
+		writeItemModifiers(itemModifiers);
+	}
+
+	if (uiCustomList.length > 0) {
+		const uiStrings = readUi();
+		applyCustomUi(uiStrings, uiCustomList);
+		writeUi(uiStrings);
+	}
 }
 
 /**
@@ -50,7 +69,7 @@ function applyCustomNames(data: JSONData, customList: [string, string][]): void 
 			k => (data as any)[k].Key === key,
 		);
 		if (numericKey)
-			(data as any)[numericKey].enUS = newName;
+			updateAllLanguages((data as any)[numericKey], newName);
 	}
 }
 
@@ -71,8 +90,9 @@ function applyCustomUi(uiStrings: any, customList: [string, string][]): void {
 		const numericKey = Object.keys(uiStrings).find(
 			k => (uiStrings as any)[k].Key === key,
 		);
+
 		if (numericKey)
-			(uiStrings as any)[numericKey].enUS = newName;
+			updateAllLanguages((uiStrings as any)[numericKey], newName);
 	}
 }
 
@@ -222,7 +242,7 @@ function getItemNamesCustomList(): [string, string][] {
 
 		// Endgame Items
 		// [ "tes", "Twisted Essence of Suffering" ],
-		// [ "ceh", "Charged Essense of Hatred" ],
+		// [ "ceh", "Charged Essence of Hatred" ],
 		// [ "bet", "Burning Essence of Terror" ],
 		// [ "fed", "Festering Essence of Destruction" ],
 		// [ "toa", "Token of Absolution" ],

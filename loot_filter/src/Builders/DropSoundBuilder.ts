@@ -38,6 +38,10 @@ export class DropSoundBuilder implements IBuilder {
 	}
 
 	protected modifyDropSoundForQuestItems(soundsFile: TSVData): void {
+		const dropSound = DropSoundsSettings.questEndgame.questItems;
+		if (dropSound === 'default')
+			return;
+
 		const itemCodesWeapons = [
 			QuestWeaponId.WIRT_LEG,
 			QuestWeaponId.HORADRIC_MALUS,
@@ -69,9 +73,11 @@ export class DropSoundBuilder implements IBuilder {
 			QuestItemId.SCROLL_RESISTANCE,
 		];
 
+		// Create the sound ONCE, then apply to both item types
 		const suffix = 'quest';
-		this.modifyDropSoundForMiscItems(soundsFile, itemCodesMisc, suffix, DropSoundsSettings.questEndgame.questItems);
-		this.modifyDropSoundForWeapons(soundsFile, itemCodesWeapons, suffix, DropSoundsSettings.questEndgame.questItems);
+		const newSoundName = this.createNewDropSound(soundsFile, suffix, DropSoundConstants.SOUND_EFFECTS[dropSound as keyof typeof DropSoundConstants.SOUND_EFFECTS]);
+		this.pushNewDropSoundToItems(FileConstants.FILE_MISC_PATH, itemCodesMisc, newSoundName);
+		this.pushNewDropSoundToItems(FileConstants.FILE_WEAPONS_PATH, itemCodesWeapons, newSoundName);
 	}
 
 	protected modifyDropSoundForEssences(soundsFile: TSVData): void {

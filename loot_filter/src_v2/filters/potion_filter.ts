@@ -7,6 +7,7 @@
 
 import { readItemNames, writeItemNames } from '../io/game_files';
 import { FilterConfig } from '../io/mod_config';
+import { updateAllLanguages } from '../utils/entry_utils';
 
 // ============================================================================
 // Constants
@@ -270,40 +271,32 @@ function applyPotionFilterToData(
 	data: JSONData,
 	visibility: ReturnType<typeof getPotionVisibility>,
 ): JSONData {
-	if (typeof data !== 'object' || Array.isArray(data))
+	if (typeof data !== 'object' || data === null)
 		return data;
 
+	// Handle both array format (actual JSON) and object format
+	const entries = Array.isArray(data) ? data : Object.values(data);
+
 	// Process each entry
-	Object.keys(data).forEach(index => {
-		const entry = data[index];
-		if (typeof entry !== 'object' || Array.isArray(entry))
-			return;
+	for (const entry of entries) {
+		if (typeof entry !== 'object' || entry === null || Array.isArray(entry))
+			continue;
 
 		const key = entry['Key'];
 		if (typeof key !== 'string')
-			return;
+			continue;
 
 		// Check if this is a potion we should modify
 		if (visibility.hidden.includes(key)) {
 			// Hide this potion
-			Object.keys(entry).forEach(lang => {
-				if (lang === 'id' || lang === 'Key')
-					return;
-				if (typeof entry[lang] === 'string')
-					entry[lang] = HIDDEN;
-			});
+			updateAllLanguages(entry, HIDDEN);
 		}
 		else if (key in visibility.customNames) {
-			// Apply custom name
+			// Apply custom name (abbreviated codes like "HP5", "MP3" - same for all languages)
 			const customName = visibility.customNames[key];
-			Object.keys(entry).forEach(lang => {
-				if (lang === 'id' || lang === 'Key')
-					return;
-				if (typeof entry[lang] === 'string' && entry[lang].trim() !== '')
-					entry[lang] = customName;
-			});
+			updateAllLanguages(entry, customName);
 		}
-	});
+	}
 
 	return data;
 }
@@ -322,7 +315,7 @@ function applyPotionFilterToData(
  * 4. Save modified data
  */
 export function applyPotionFilter(config: FilterConfig): void {
-	if (!config.enabled || config.potions.mode === 'disabled')
+	if (!config.enabled || config.potions.mode === 'none')
 		return;
 
 	const visibility = getPotionVisibility(config.potions.mode);

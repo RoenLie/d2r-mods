@@ -55,28 +55,31 @@ export interface ItemEntry {
 // Quest item IDs (codes from D2R game files)
 export const QuestItemIds = {
 	// Quest Weapons
-	WIRT_LEG:           'leg',
-	HORADRIC_MALUS:     'hdm',
-	STAFF_OF_KINGS:     'msf',
-	HORADRIC_STAFF:     'hst',
-	GIDBINN:            'g33',
-	KHALIM_FLAIL:       'qf1',
-	KHALIM_WILL:        'qf2',
-	HELL_FORGE_HAMMER:  'hfh',
+	WIRT_LEG:                  'leg',
+	HORADRIC_MALUS:            'hdm',
+	STAFF_OF_KINGS:            'msf',
+	HORADRIC_STAFF:            'hst',
+	GIDBINN:                   'g33',
+	KHALIM_FLAIL:              'qf1',
+	KHALIM_WILL:               'qf2',
+	HELL_FORGE_HAMMER:         'hfh',
 	// Quest Items (non-weapon)
-	SCROLL_INIFUSS:     'bks',
-	HORADRIC_CUBE:      'box',
-	AMULET_VIPER:       'vip',
-	JADE_FIGURINE:      'j34',
-	GOLDEN_BIRD:        'g34',
-	POTION_OF_LIFE:     'xyz',  // Fixed: was 'bkd' (that's Scroll of Inifuss deciphered)
-	LAM_ESEN_TOME:      'bbb',  // Fixed: was 'tr1' (that's Horadric Scroll)
-	KHALIM_EYE:         'qey',  // Fixed: was 'eyz' (generic Eye organ)
-	KHALIM_HEART:       'qhr',  // Fixed: was 'hrt' (generic Heart organ)
-	KHALIM_BRAIN:       'qbr',  // Fixed: was 'bbb' (that's Lam Esen's Tome)
-	MEPHISTO_SOULSTONE: 'mss',  // Fixed: was 'msf' (that's Staff of Kings!)
-	MALAH_POTION:       'ice',  // Fixed: was 'xyz' (that's Potion of Life)
-	SCROLL_RESISTANCE:  'tr2',  // Fixed: was 'ass' (that's Book of Skill)
+	SCROLL_INIFUSS:            'bks',
+	SCROLL_INIFUSS_DECIPHERED: 'bkd',
+	HORADRIC_SCROLL:           'tr1',
+	BOOK_OF_SKILL:             'ass',
+	HORADRIC_CUBE:             'box',
+	AMULET_VIPER:              'vip',
+	JADE_FIGURINE:             'j34',
+	GOLDEN_BIRD:               'g34',
+	POTION_OF_LIFE:            'xyz',  // Fixed: was 'bkd' (that's Scroll of Inifuss deciphered)
+	LAM_ESEN_TOME:             'bbb',  // Fixed: was 'tr1' (that's Horadric Scroll)
+	KHALIM_EYE:                'qey',  // Fixed: was 'eyz' (generic Eye organ)
+	KHALIM_HEART:              'qhr',  // Fixed: was 'hrt' (generic Heart organ)
+	KHALIM_BRAIN:              'qbr',  // Fixed: was 'bbb' (that's Lam Esen's Tome)
+	MEPHISTO_SOULSTONE:        'mss',  // Fixed: was 'msf' (that's Staff of Kings!)
+	MALAH_POTION:              'ice',  // Fixed: was 'xyz' (that's Potion of Life)
+	SCROLL_RESISTANCE:         'tr2',  // Fixed: was 'ass' (that's Book of Skill)
 } as const;
 
 // Endgame item IDs (codes from D2R game files)

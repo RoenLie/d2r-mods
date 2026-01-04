@@ -1,5 +1,7 @@
-import { readItemNames, readUi, writeItemNames, writeUi } from '../io/game_files';
+import { readItemModifiers, readItemNames, readUi, writeItemModifiers, writeItemNames, writeUi } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
+import { applyBigTooltip } from '../utils/big_tooltip';
+import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
 /**
  * Quest and Endgame Items Filter
@@ -27,6 +29,11 @@ export function applyQuestEndgameFilter(config: FilterConfig): void {
 	applyEndgameItemsToData(itemNames, config.questEndgame);
 	writeItemNames(itemNames);
 
+	// Handle Act 5 quest items that are in item-modifiers.json
+	const itemModifiers = readItemModifiers();
+	applyQuestItemsToData(itemModifiers, config.questEndgame, QUEST_ITEMS_MODIFIERS);
+	writeItemModifiers(itemModifiers);
+
 	// Handle quest item exceptions that are in ui.json
 	applyQuestItemExceptions(config.questEndgame);
 }
@@ -42,7 +49,7 @@ const QUEST_ITEMS = [
 	'bkd', // Scroll of Inifuss (deciphered)
 	// Act 2
 	'tr1', // Horadric Scroll
-	'vip', // Amulet of the Viper
+	'vip', // Top of the Horadric Staff (reassigned in D2R)
 	// Act 3
 	'j34', // Jade Figurine
 	'g34', // Golden Bird
@@ -52,24 +59,35 @@ const QUEST_ITEMS = [
 	'qhr', // Khalim's Heart
 	'qbr', // Khalim's Brain
 	'mss', // Mephisto's Soulstone
-	// Act 5
-	'ass', // Book of Skill
-	'xyz', // Potion of Life
+	// Act 5 (Book of Skill and Potion of Life are in ui.json, not here)
+];
+
+// Act 5 quest items that are in item-modifiers.json (special handling)
+const QUEST_ITEMS_MODIFIERS = [
 	'ice', // Malah's Potion
 	'tr2', // Scroll of Resistance
 ];
 
-// Quest weapons (these show item level)
+// Quest weapons (these show item level and need trailing color code)
 const QUEST_WEAPONS = [
+	// Act 1
 	'leg', // Wirt's Leg
-	'hfh', // Horadric Malus
-	'msf', // Staff of Kings
-	'qf1', // Horadric Staff
-	'qf2', // Horadric Staff (alt)
-	'g33', // Gidbinn
-	'qf1', // Khalim's Flail
-	'qf2', // Khalim's Will
-	'hfh', // Hell Forge Hammer
+	'hdm', // Horadric Malus
+	// Act 2
+	'Amulet of the Viper', // Amulet of the Viper
+	'msf',                // Staff of Kings
+	'Staff of Kings',     // Staff of Kings (alternate)
+	'hst',                // Horadric Staff
+	'Horadric Staff',     // Horadric Staff (alternate)
+	// Act 3
+	'g33',                // The Gidbinn
+	'qf1',                // Khalim's Flail
+	'KhalimFlail',        // Khalim's Flail (alternate)
+	'qf2',                // Khalim's Will
+	'SuperKhalimFlail',   // Khalim's Will (alternate)
+	// Act 4
+	'hfh',                // Hell Forge Hammer
+	'Hell Forge Hammer',  // Hell Forge Hammer (alternate)
 ];
 
 const HORADRIC_CUBE = 'box';
@@ -77,11 +95,9 @@ const HORADRIC_CUBE = 'box';
 function applyQuestItemsToData(
 	itemNames: JSONData,
 	questConfig: FilterConfig['questEndgame'],
+	itemCodes: string[] | null = null,
 ): void {
-	if (questConfig.questHighlight === 'disabled')
-		return;
-
-	const allQuestItems = [ ...QUEST_ITEMS ];
+	const allQuestItems = itemCodes ?? [ ...QUEST_ITEMS, ...QUEST_WEAPONS ];
 
 	// Add Horadric Cube if enabled
 	if (questConfig.cubeHighlight)
@@ -92,29 +108,62 @@ function applyQuestItemsToData(
 		if (typeof entry !== 'object' || Array.isArray(entry))
 			return;
 
-		const code = entry.code as string;
-
-		// Check if this is a quest item or weapon
-		const isQuestItem = allQuestItems.includes(code);
-		const isQuestWeapon = QUEST_WEAPONS.includes(code);
-
-		if (!isQuestItem && !isQuestWeapon)
+		const key = entry.Key as string;
+		if (!allQuestItems.includes(key))
 			return;
 
-		// Apply quest highlight
-		if (questConfig.questHighlight === 'small') {
-			entry['ÿc1*'] = ''; // Small red highlight
-		}
-		else if (questConfig.questHighlight === 'large') {
-			entry['ÿc1*'] = '';
-			entry['  ÿc1*'] = ''; // Large red highlight
-		}
-		else if (questConfig.questHighlight === 'xl') {
-			entry['ÿc1*'] = '';
-			entry['  ÿc1*'] = '';
-			entry['    ÿc1*'] = ''; // XL red highlight
-		}
+		// Quest weapons need trailing color code for iLvl display alignment
+		const isQuestWeapon = QUEST_WEAPONS.includes(key);
+
+		// Apply transformations to all languages
+		transformAllLanguages(entry, originalName => {
+			// Step 1: Apply name color (gold for quest items)
+			let displayName = `ÿc4${ originalName }`;
+
+			// Step 2: Apply highlight pattern if enabled
+			if (questConfig.questHighlight !== '0') {
+				const highlightPattern = getHighlightPattern(questConfig.questHighlight);
+				if (highlightPattern)
+					displayName = `${ highlightPattern.prefix }${ displayName }${ highlightPattern.suffix }`;
+			}
+
+			// Step 3: Apply Big Tooltip if enabled
+			displayName = applyBigTooltip(displayName, questConfig.bigTooltips.questItems);
+
+			// Step 4: Quest weapons need trailing nameColor for iLvl alignment
+			if (isQuestWeapon)
+				displayName = `${ displayName }ÿc4`;
+
+			return displayName;
+		});
 	});
+}
+
+/**
+ * Get highlight pattern for quest/endgame items
+ * Returns prefix and suffix patterns based on highlight mode
+ */
+function getHighlightPattern(mode: string): { prefix: string; suffix: string; } | null {
+	const red = 'ÿc1';
+	const stars = '**********';
+
+	// Mode values: "1" = Small, "2" = Medium, "3" = Large, "4" = Extra Large, "5" = Extra Extra Large
+	switch (mode) {
+	case '0': // Disabled
+		return null;
+	case '1': // Small
+		return { prefix: `${ red }*  `, suffix: `  ${ red }*` };
+	case '2': // Medium
+		return { prefix: `${ red }**  `, suffix: `  ${ red }**` };
+	case '3': // Large
+		return { prefix: `${ red }*****  `, suffix: `  ${ red }*****` };
+	case '4': // Extra Large
+		return { prefix: `${ red }${ stars }  `, suffix: `  ${ red }${ stars }` };
+	case '5': // Extra Extra Large
+		return { prefix: `${ red }${ stars }  ${ stars }     `, suffix: `     ${ red }${ stars }  ${ stars }` };
+	default:
+		return null;
+	}
 }
 
 // ============================================================================
@@ -129,50 +178,115 @@ const ESSENCES = [
 	'fed', // Festering Essence of Destruction
 ];
 
-// Pandemonium keys
+// Standard of Heroes
+const STANDARD_OF_HEROES = 'std';
+
+// Token of Absolution (crafted from 4 essences)
+const TOKEN_OF_ABSOLUTION = 'toa';
+
+// Pandemonium Keys
 const PANDEMONIUM_KEYS = [
 	'pk1', // Key of Terror
 	'pk2', // Key of Hate
 	'pk3', // Key of Destruction
 ];
 
-// Pandemonium organs
+// Pandemonium Organs
 const PANDEMONIUM_ORGANS = [
 	'dhn', // Diablo's Horn
 	'bey', // Baal's Eye
 	'mbr', // Mephisto's Brain
 ];
 
-const TOKEN_OF_ABSOLUTION = 'toa';
-const STANDARD_OF_HEROES = 'std';
-
 function applyEndgameItemsToData(
 	itemNames: JSONData,
 	endgameConfig: FilterConfig['questEndgame'],
 ): void {
 	// Handle essences
-	if (!endgameConfig.showEssences)
-		hideItems(itemNames, ESSENCES);
-	else if (endgameConfig.essencesHighlight !== 'disabled')
-		applyHighlightToItems(itemNames, ESSENCES, endgameConfig.essencesHighlight);
+	if (!endgameConfig.showEssences) { hideItems(itemNames, ESSENCES); }
+	else {
+		applyEndgameItemFormat(
+			itemNames,
+			ESSENCES,
+			endgameConfig.essencesHighlight,
+			endgameConfig.bigTooltips.essences,
+		);
+	}
 
 	// Handle Standard of Heroes
-	if (!endgameConfig.showStandard)
-		hideItems(itemNames, [ STANDARD_OF_HEROES ]);
-	else if (endgameConfig.standardHighlight !== 'disabled')
-		applyHighlightToItems(itemNames, [ STANDARD_OF_HEROES ], endgameConfig.standardHighlight);
+	if (!endgameConfig.showStandard) { hideItems(itemNames, [ STANDARD_OF_HEROES ]); }
+	else {
+		applyEndgameItemFormat(
+			itemNames,
+			[ STANDARD_OF_HEROES ],
+			endgameConfig.standardHighlight,
+			endgameConfig.bigTooltips.standard,
+		);
+	}
 
 	// Handle Token of Absolution
-	if (endgameConfig.tokenHighlight !== 'disabled')
-		applyHighlightToItems(itemNames, [ TOKEN_OF_ABSOLUTION ], endgameConfig.tokenHighlight);
+	applyEndgameItemFormat(
+		itemNames,
+		[ TOKEN_OF_ABSOLUTION ],
+		endgameConfig.tokenHighlight,
+		endgameConfig.bigTooltips.tokens,
+	);
 
 	// Handle Pandemonium keys
-	if (endgameConfig.keysHighlight !== 'disabled')
-		applyHighlightToItems(itemNames, PANDEMONIUM_KEYS, endgameConfig.keysHighlight);
+	applyEndgameItemFormat(
+		itemNames,
+		PANDEMONIUM_KEYS,
+		endgameConfig.keysHighlight,
+		endgameConfig.bigTooltips.keys,
+	);
 
 	// Handle Pandemonium organs
-	if (endgameConfig.organsHighlight !== 'disabled')
-		applyHighlightToItems(itemNames, PANDEMONIUM_ORGANS, endgameConfig.organsHighlight);
+	applyEndgameItemFormat(
+		itemNames,
+		PANDEMONIUM_ORGANS,
+		endgameConfig.organsHighlight,
+		endgameConfig.bigTooltips.organs,
+	);
+}
+
+/**
+ * Apply formatting (highlight + Big Tooltip) to endgame items
+ */
+function applyEndgameItemFormat(
+	itemNames: JSONData,
+	itemCodes: string[],
+	highlightMode: string,
+	bigTooltipMode: string,
+): void {
+	Object.keys(itemNames).forEach(index => {
+		const entry = (itemNames as any)[index];
+		if (typeof entry !== 'object' || Array.isArray(entry))
+			return;
+
+		const key = entry.Key as string;
+		if (!itemCodes.includes(key))
+			return;
+
+		// Apply transformations to all languages
+		transformAllLanguages(entry, originalName => {
+			let displayName = originalName;
+
+			// Apply highlight pattern if enabled (includes color)
+			if (highlightMode !== '0') {
+				// Add orange color for endgame items when highlighting
+				displayName = `ÿc8${ displayName }`;
+
+				const highlightPattern = getHighlightPattern(highlightMode);
+				if (highlightPattern)
+					displayName = `${ highlightPattern.prefix }${ displayName }${ highlightPattern.suffix }`;
+			}
+
+			// Apply Big Tooltip if enabled
+			displayName = applyBigTooltip(displayName, bigTooltipMode);
+
+			return displayName;
+		});
+	});
 }
 
 /**
@@ -184,56 +298,12 @@ function hideItems(itemNames: JSONData, itemCodes: string[]): void {
 		if (typeof entry !== 'object' || Array.isArray(entry))
 			return;
 
-		const code = entry.code as string;
-		if (!itemCodes.includes(code))
+		const key = entry.Key as string;
+		if (!itemCodes.includes(key))
 			return;
 
 		// Hide by setting all language entries to spaces
-		Object.keys(entry).forEach(key => {
-			if (key === 'id' || key === 'Key' || key === 'code' || key === '*eol')
-				return;
-			if (typeof entry[key] === 'string')
-				entry[key] = '                    '; // 20 spaces
-		});
-	});
-}
-
-/**
- * Apply highlight to items based on mode
- */
-function applyHighlightToItems(
-	itemNames: JSONData,
-	itemCodes: string[],
-	mode: 'disabled' | 'small' | 'large' | 'xl',
-): void {
-	if (mode === 'disabled')
-		return;
-
-	Object.keys(itemNames).forEach(index => {
-		const entry = (itemNames as any)[index];
-		if (typeof entry !== 'object' || Array.isArray(entry))
-			return;
-
-		const code = entry.code as string;
-		if (!itemCodes.includes(code))
-			return;
-
-		// Apply orange color to name
-		entry['*ID'] = `ÿc8${ entry['*ID'] || '' }`;
-
-		// Apply highlight based on mode
-		if (mode === 'small') {
-			entry['ÿc1*'] = ''; // Small red highlight
-		}
-		else if (mode === 'large') {
-			entry['ÿc1*'] = '';
-			entry['  ÿc1*'] = ''; // Large red highlight
-		}
-		else if (mode === 'xl') {
-			entry['ÿc1*'] = '';
-			entry['  ÿc1*'] = '';
-			entry['    ÿc1*'] = ''; // XL red highlight
-		}
+		updateAllLanguages(entry, '                    '); // 20 spaces
 	});
 }
 
@@ -243,9 +313,10 @@ function applyHighlightToItems(
 
 // These quest items have their display names in ui.json instead of item-names.json
 // They need special handling to apply highlights
+// Note: These use item CODES as keys in ui.json, not text strings
 const QUEST_ITEM_EXCEPTIONS = [
-	'BookofSkill',   // Book of Skill (Act 2) - key is the UI string key, not item code
-	'PotionofLife',  // Potion of Life (Act 3)
+	'ass',  // Book of Skill (Act 2)
+	'xyz',  // Potion of Life (Act 3)
 ];
 
 /**
@@ -255,9 +326,6 @@ const QUEST_ITEM_EXCEPTIONS = [
 function applyQuestItemExceptions(
 	questConfig: FilterConfig['questEndgame'],
 ): void {
-	if (questConfig.questHighlight === 'disabled')
-		return;
-
 	const uiStrings = readUi();
 
 	Object.keys(uiStrings).forEach(index => {
@@ -269,25 +337,23 @@ function applyQuestItemExceptions(
 		if (!QUEST_ITEM_EXCEPTIONS.includes(key))
 			return;
 
-		// Get the original name
-		const originalName = entry.enUS || '';
-		if (!originalName)
-			return;
+		// Apply transformations to all languages
+		transformAllLanguages(entry, originalName => {
+			// Step 1: Apply gold color
+			let displayName = `ÿc4${ originalName }`;
 
-		// Apply orange color and highlight based on mode
-		// Using ÿc8 (orange) for quest item names
-		let highlightedName = `ÿc8${ originalName }`;
+			// Step 2: Apply highlight pattern if enabled
+			if (questConfig.questHighlight !== '0') {
+				const highlightPattern = getHighlightPattern(questConfig.questHighlight);
+				if (highlightPattern)
+					displayName = `${ highlightPattern.prefix }${ displayName }${ highlightPattern.suffix }`;
+			}
 
-		// Add highlight pattern
-		if (questConfig.questHighlight === 'small')
-			highlightedName = `ÿc1*  ${ highlightedName }`;
-		else if (questConfig.questHighlight === 'large')
-			highlightedName = `ÿc1*  ${ highlightedName }  ÿc1*`;
-		else if (questConfig.questHighlight === 'xl')
-			highlightedName = `ÿc1* ÿc1*  ${ highlightedName }  ÿc1* ÿc1*`;
+			// Step 3: Apply Big Tooltip if enabled
+			displayName = applyBigTooltip(displayName, questConfig.bigTooltips.questItems);
 
-
-		entry.enUS = highlightedName;
+			return displayName;
+		});
 	});
 
 	writeUi(uiStrings);

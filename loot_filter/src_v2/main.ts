@@ -16,7 +16,6 @@ import { applyBuffThrowingPotionsFilter } from './filters/buff_throwing_potions_
 import { applyCustomFilterList } from './filters/custom_filter_list';
 import { applyEquipmentQualityFilter } from './filters/equipment_quality_filter';
 import { applyGemFilter } from './filters/gem_filter';
-import { applyGoldFilter } from './filters/gold_filter';
 import { applyItemAffixesFilter } from './filters/item_affixes_filter';
 import { applyJewelsCharmsFilter } from './filters/jewels_charms_filter';
 import { applyPotionFilter } from './filters/potion_filter';
@@ -47,12 +46,11 @@ export function main(): void {
 	applyPotionFilter(config.filter);
 	applyRuneFilter(config.filter);
 	applyScrollsKeysFilter(config.filter);
-	applyGoldFilter(config.filter);
 	applyBuffThrowingPotionsFilter(config.filter);
 	applyJewelsCharmsFilter(config.filter);
 	applyQuestEndgameFilter(config.filter);
 	applyEquipmentQualityFilter(config.filter);
-	applyItemAffixesFilter(config.filter);
+	applyItemAffixesFilter(config.filter); // Includes gold customization
 
 	// Apply custom overrides last (power-user feature)
 	applyCustomFilterList(config.filter);

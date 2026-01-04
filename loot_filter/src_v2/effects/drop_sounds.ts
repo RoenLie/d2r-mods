@@ -21,28 +21,28 @@ const CHANNEL_ITEMS_HD = 'sfx/items_hd';
 // Sound effect definitions
 const SOUND_EFFECTS: Record<string, SoundEffectPair> = {
 	hostile: {
-		sd: 'cursor\\hostile',
-		hd: 'cursor\\cursor_hostile_1_hd',
+		sd: 'cursor\\hostile.flac',
+		hd: 'cursor\\cursor_hostile_1_hd.flac',
 	},
 	hf_place: {
-		sd: 'object\\hellforgeplace',
-		hd: 'object\\object_hellforgeplace_hd',
+		sd: 'object\\hellforgeplace.flac',
+		hd: 'object\\object_hellforgeplace_hd.flac',
 	},
 	hf_smash: {
-		sd: 'object\\hellforgesmash',
-		hd: 'object\\object_hellforgesmash_hd',
+		sd: 'object\\hellforgesmash.flac',
+		hd: 'object\\object_hellforgesmash_hd.flac',
 	},
 	cairn_success: {
-		sd: 'object\\cairnsuccess',
-		hd: 'object\\object_cairnsuccess_hd',
+		sd: 'object\\cairnsuccess.flac',
+		hd: 'object\\object_cairnsuccess_hd.flac',
 	},
 	portal_open: {
-		sd: 'object\\portalopen',
-		hd: 'object\\object_portalopen_hd',
+		sd: 'object\\portalopen.flac',
+		hd: 'object\\object_portalopen_hd.flac',
 	},
 	quest_done: {
-		sd: 'cursor\\questdone',
-		hd: 'cursor\\cursor_questdone_1_hd',
+		sd: 'cursor\\questdone.flac',
+		hd: 'cursor\\cursor_questdone_1_hd.flac',
 	},
 	none: {
 		sd: 'none.flac',
@@ -221,7 +221,10 @@ function applyQuestItemDropSounds(
 	// Quest misc items
 	const questMisc = [
 		QuestItemIds.SCROLL_INIFUSS,
-		QuestItemIds.HORADRIC_CUBE,
+		QuestItemIds.SCROLL_INIFUSS_DECIPHERED,
+		QuestItemIds.HORADRIC_SCROLL,
+		QuestItemIds.BOOK_OF_SKILL,
+		// QuestItemIds.HORADRIC_CUBE, // [CSTM_DSBOX] - Horadric Cube uses default sound
 		QuestItemIds.AMULET_VIPER,
 		QuestItemIds.JADE_FIGURINE,
 		QuestItemIds.GOLDEN_BIRD,

@@ -1,8 +1,9 @@
 import { readItemNames, writeItemNames } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
+import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
 /**
- * Applies scrolls, tomes, keys, and arrows/bolts filtering
+ * Applies scrolls, tomes, keys, arrows/bolts, and buff/throwing potions filtering
  * Simple show/hide logic for common junk items
  */
 export function applyScrollsKeysFilter(config: FilterConfig): void {
@@ -10,68 +11,99 @@ export function applyScrollsKeysFilter(config: FilterConfig): void {
 		return;
 
 	const itemNames = readItemNames();
-	applyScrollsKeysFilterToData(itemNames, config.scrollsKeys);
+	applyScrollsKeysFilterToData(itemNames, config);
 	writeItemNames(itemNames);
 }
 
 /**
- * Apply scrolls/keys/arrows filtering to item names data
+ * Apply scrolls/keys/arrows/potions filtering to item names data
  */
 function applyScrollsKeysFilterToData(
 	data: JSONData,
-	scrollsKeysConfig: FilterConfig['scrollsKeys'],
+	config: FilterConfig,
 ): void {
-	if (typeof data !== 'object' || Array.isArray(data))
+	if (typeof data !== 'object' || data === null)
 		return;
 
+	// Handle both array format (actual JSON) and object format
+	const entries = Array.isArray(data) ? data : Object.values(data);
+
 	// Process each entry in the file
-	Object.keys(data).forEach(index => {
-		const entry = data[index];
-		if (typeof entry !== 'object' || Array.isArray(entry))
-			return;
+	for (const entry of entries) {
+		if (typeof entry !== 'object' || entry === null || Array.isArray(entry))
+			continue;
 
 		const key = entry['Key'];
 		if (typeof key !== 'string')
-			return;
+			continue;
 
 		// Scrolls and Tomes
 		if (key === 'isc' || key === 'tsc' || key === 'ibk' || key === 'tbk')
-			applyScrollsTomesFilter(entry, scrollsKeysConfig.scrollsTomes);
+			applyScrollsTomesFilter(entry, config.scrollsKeys.scrollsTomes);
+
+		// Note: Buff Potions and Throwing Potions are handled by buff_throwing_potions_filter.ts
 
 		// Arrows and Bolts (quivers)
 		if (key === 'aqv' || key === 'cqv')
-			applyArrowsBoltsFilter(entry, key, scrollsKeysConfig.arrowsBolts);
+			applyArrowsBoltsFilter(entry, key, config.scrollsKeys.arrowsBolts);
 
 		// Keys
 		if (key === 'key')
-			applyKeysFilter(entry, scrollsKeysConfig.keys);
-	});
+			applyKeysFilter(entry, config.scrollsKeys.keys);
+	}
 }
 
 /**
  * Apply scrolls/tomes filter
- * Modes: disabled, all (show with highlight), hide
+ * Modes: none (no change), all (show with shortened names and colors), hide
  */
 function applyScrollsTomesFilter(
 	entry: Record<string, any>,
 	mode: string,
 ): void {
+	const key = entry['Key'];
+
 	switch (mode) {
-	case 'disabled':
+	case 'none':
 		// No change
 		break;
-	case 'all':
-		// Show with green highlight
-		if (typeof entry['enUS'] === 'string' && entry['enUS'].trim() !== '') {
-			const currentName = entry['enUS'];
-			// Add green circle highlight
-			entry['enUS'] = `ÿc2oÿc0  ${ currentName }`;
+	case 'all': {
+		// Shorten names and add color highlights
+		let newName = '';
+		let color = '';
+
+		if (key === 'tsc') {
+			// Scroll of Town Portal
+			newName = 'TP';
+			color = 'ÿc2'; // Green
+		}
+		else if (key === 'tbk') {
+			// Tome of Town Portal
+			newName = 'TP Tome';
+			color = 'ÿcA'; // Light green
+		}
+		else if (key === 'isc') {
+			// Scroll of Identify
+			newName = 'ID';
+			color = 'ÿc2'; // Green
+		}
+		else if (key === 'ibk') {
+			// Tome of Identify
+			newName = 'ID Tome';
+			color = 'ÿcA'; // Light green
+		}
+
+		if (newName && color) {
+			// Set to the same value for all languages (these are shortened codes)
+			const displayName = `${ color }+ÿc0${ newName }`;
+			updateAllLanguages(entry, displayName);
 		}
 
 		break;
+	}
 	case 'hide':
 		// Hide by clearing name
-		entry['enUS'] = '';
+		updateAllLanguages(entry, '');
 
 		break;
 	}
@@ -94,44 +126,34 @@ function applyArrowsBoltsFilter(
 		// No change
 		break;
 	case 'all':
-		// Show with gray highlight
-		if (typeof entry['enUS'] === 'string' && entry['enUS'].trim() !== '') {
-			const currentName = entry['enUS'];
-			entry['enUS'] = `ÿc5oÿc0  ${ currentName }`;
-		}
-
+		// Show with gray highlight - pattern: {color}o {resetColor}{name}
+		transformAllLanguages(entry, currentName => `ÿc5o ÿc0${ currentName }`);
 		break;
 	case 'arw':
 		if (isArrow) {
 			// Show arrows with highlight
-			if (typeof entry['enUS'] === 'string' && entry['enUS'].trim() !== '') {
-				const currentName = entry['enUS'];
-				entry['enUS'] = `ÿc5oÿc0  ${ currentName }`;
-			}
+			transformAllLanguages(entry, currentName => `ÿc5o ÿc0${ currentName }`);
 		}
 		else if (isBolt) {
 			// Hide bolts
-			entry['enUS'] = '';
+			updateAllLanguages(entry, '');
 		}
 
 		break;
 	case 'blt':
 		if (isBolt) {
 			// Show bolts with highlight
-			if (typeof entry['enUS'] === 'string' && entry['enUS'].trim() !== '') {
-				const currentName = entry['enUS'];
-				entry['enUS'] = `ÿc5oÿc0  ${ currentName }`;
-			}
+			transformAllLanguages(entry, currentName => `ÿc5o ÿc0${ currentName }`);
 		}
 		else if (isArrow) {
 			// Hide arrows
-			entry['enUS'] = '';
+			updateAllLanguages(entry, '');
 		}
 
 		break;
 	case 'hide':
 		// Hide both
-		entry['enUS'] = '';
+		updateAllLanguages(entry, '');
 
 		break;
 	}
@@ -146,5 +168,5 @@ function applyKeysFilter(
 	mode: string,
 ): void {
 	if (mode === 'hide')
-		entry['enUS'] = '';
+		updateAllLanguages(entry, '');
 }

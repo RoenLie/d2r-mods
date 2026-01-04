@@ -11,29 +11,36 @@
 
 import { readItemNameAffixes, writeItemNameAffixes } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
+import { updateAllLanguages } from '../utils/entry_utils';
 
 /**
  * Apply item affix modifications.
- * Shortens Superior/Inferior prefixes and hides gem affixes.
+ * Shortens Superior/Inferior prefixes, hides gem affixes, and applies gold customization.
  */
 export function applyItemAffixesFilter(config: FilterConfig): void {
-	if (!config.itemAffixes.enabled && config.gems.mode === 'all')
-		return; // Nothing to do
-
-
 	const affixes = readItemNameAffixes();
+	let modified = false;
 
 	// Apply Superior/Inferior prefix shortening
-	if (config.itemAffixes.enabled)
+	if (config.itemAffixes.enabled) {
 		applySuperiorInferiorPrefixes(affixes, config.itemAffixes);
-
+		modified = true;
+	}
 
 	// Hide gem affixes based on gem filter settings
-	if (config.gems.mode !== 'all')
+	if (config.gems.mode !== 'all') {
 		hideGemAffixes(affixes, config.gems.mode);
+		modified = true;
+	}
 
+	// Apply gold customization
+	if (config.gold.suffix !== 'none' || config.gold.tooltipColors !== 'none') {
+		applyGoldCustomization(affixes, config.gold);
+		modified = true;
+	}
 
-	writeItemNameAffixes(affixes);
+	if (modified)
+		writeItemNameAffixes(affixes);
 }
 
 /**
@@ -79,7 +86,7 @@ function applySuperiorInferiorPrefixes(
 		key => (affixes as any)[key].Key === superiorKey,
 	);
 	if (superiorKey_numeric)
-		(affixes as any)[superiorKey_numeric].enUS = superiorPrefix;
+		updateAllLanguages((affixes as any)[superiorKey_numeric], superiorPrefix);
 
 
 	// Apply Inferior prefix with optional color
@@ -92,7 +99,7 @@ function applySuperiorInferiorPrefixes(
 			key => (affixes as any)[key].Key === inferiorKey,
 		);
 		if (key_numeric)
-			(affixes as any)[key_numeric].enUS = fullInferiorPrefix;
+			updateAllLanguages((affixes as any)[key_numeric], fullInferiorPrefix);
 	}
 }
 
@@ -149,7 +156,7 @@ function hideGemAffixes(affixes: JSONData, mode: FilterConfig['gems']['mode']): 
 
 		const shouldHide = shouldHideGemAffix(affixKey, mode);
 		if (shouldHide)
-			(affixes as any)[key_numeric].enUS = '';
+			updateAllLanguages((affixes as any)[key_numeric], '');
 	}
 }
 
@@ -176,4 +183,81 @@ function shouldHideGemAffix(affixKey: string, mode: FilterConfig['gems']['mode']
 	}
 
 	return false;
+}
+
+// ==================== Gold Customization ====================
+
+/**
+ * Apply gold suffix customization.
+ * Modifies the 'gld' affix that displays after gold amounts.
+ */
+function applyGoldCustomization(
+	data: JSONData,
+	goldConfig: FilterConfig['gold'],
+): void {
+	if (typeof data !== 'object' || data === null)
+		return;
+
+	// Handle both array format (actual JSON) and object format
+	const entries = Array.isArray(data) ? data : Object.values(data);
+
+	for (const entry of entries) {
+		if (typeof entry !== 'object' || entry === null || Array.isArray(entry))
+			continue;
+
+		const key = entry['Key'];
+		if (key !== 'gld')
+			continue;
+
+		// Apply gold suffix customization
+		const goldText = getGoldText(goldConfig);
+		if (goldText !== null)
+			updateAllLanguages(entry, goldText);
+
+		break; // Only one 'gld' entry exists
+	}
+}
+
+/**
+ * Get the gold suffix text based on configuration.
+ */
+function getGoldText(goldConfig: FilterConfig['gold']): string | null {
+	const color = getGoldColor(goldConfig.tooltipColors);
+
+	switch (goldConfig.suffix) {
+	case 'none':
+		// Default: "1234 Gold"
+		if (color != null)
+			return `${ color }Gold`;
+
+		return null; // No change needed
+	case 'g':
+		// Shortened: "1234 G"
+		return `${ color ?? '' }G`;
+	case 'hide':
+		// Hidden: "1234" (no suffix)
+		return '';
+	default:
+		return null;
+	}
+}
+
+/**
+ * Get the gold color code based on tooltip color setting.
+ */
+function getGoldColor(tooltipColors: string): string | null {
+	switch (tooltipColors) {
+	case 'wg':
+		// White stacks, Gold suffix
+		return 'ÿc4'; // Gold color
+	case 'gw':
+		// Gold stacks, White suffix
+		return 'ÿc0'; // White color
+	case 'g':
+		// All gold
+		return 'ÿc4'; // Gold color
+	case 'none':
+	default:
+		return null; // No color change
+	}
 }

@@ -79,6 +79,7 @@ export interface FilterConfig {
 			highlightColor: string;
 			nameColor:      string;
 			numberColor:    string;
+			bigTooltip:     string;
 		};
 		lowMid: {
 			isVisible:      boolean;
@@ -86,6 +87,7 @@ export interface FilterConfig {
 			highlightColor: string;
 			nameColor:      string;
 			numberColor:    string;
+			bigTooltip:     string;
 		};
 		mid: {
 			isVisible:      boolean;
@@ -93,6 +95,7 @@ export interface FilterConfig {
 			highlightColor: string;
 			nameColor:      string;
 			numberColor:    string;
+			bigTooltip:     string;
 		};
 		high: {
 			isVisible:      boolean;
@@ -100,6 +103,7 @@ export interface FilterConfig {
 			highlightColor: string;
 			nameColor:      string;
 			numberColor:    string;
+			bigTooltip:     string;
 		};
 	};
 	scrollsKeys: {
@@ -130,6 +134,14 @@ export interface FilterConfig {
 		organsHighlight:   string;
 		showStandard:      boolean;
 		standardHighlight: string;
+		bigTooltips:       {
+			questItems: string;
+			essences:   string;
+			tokens:     string;
+			keys:       string;
+			organs:     string;
+			standard:   string;
+		};
 	};
 	equipmentQuality: {
 		enabled:   boolean;
@@ -230,6 +242,7 @@ export function loadConfig(): ModConfig {
 					highlightColor: typedConfig.RunesLowColorHighlight,
 					nameColor:      typedConfig.RunesLowColorName,
 					numberColor:    typedConfig.RunesLowColorNumber,
+					bigTooltip:     typedConfig.RunesLowBigTooltip || '0',
 				},
 				lowMid: {
 					isVisible:      typedConfig.ShouldShowRunesLowMid,
@@ -237,6 +250,7 @@ export function loadConfig(): ModConfig {
 					highlightColor: typedConfig.RunesLowMidColorHighlight,
 					nameColor:      typedConfig.RunesLowMidColorName,
 					numberColor:    typedConfig.RunesLowMidColorNumber,
+					bigTooltip:     typedConfig.RunesLowMidBigTooltip || '0',
 				},
 				mid: {
 					isVisible:      typedConfig.ShouldShowRunesMid,
@@ -244,6 +258,7 @@ export function loadConfig(): ModConfig {
 					highlightColor: typedConfig.RunesMidColorHighlight,
 					nameColor:      typedConfig.RunesMidColorName,
 					numberColor:    typedConfig.RunesMidColorNumber,
+					bigTooltip:     typedConfig.RunesMidBigTooltip || '0',
 				},
 				high: {
 					isVisible:      typedConfig.ShouldShowRunesHigh,
@@ -251,6 +266,7 @@ export function loadConfig(): ModConfig {
 					highlightColor: typedConfig.RunesHighColorHighlight,
 					nameColor:      typedConfig.RunesHighColorName,
 					numberColor:    typedConfig.RunesHighColorNumber,
+					bigTooltip:     typedConfig.RunesHighBigTooltip || '0',
 				},
 			},
 			scrollsKeys: {
@@ -281,6 +297,14 @@ export function loadConfig(): ModConfig {
 				organsHighlight:   typedConfig.QuestEndgameHighlightsOrgans,
 				showStandard:      typedConfig.IsStandardOfHeroesVisible,
 				standardHighlight: typedConfig.QuestEndgameHighlightsStandard,
+				bigTooltips:       {
+					questItems: typedConfig.BigTooltipQuestItems || '0',
+					essences:   typedConfig.BigTooltipEssences || '0',
+					tokens:     typedConfig.BigTooltipTokens || '0',
+					keys:       typedConfig.BigTooltipKeys || '0',
+					organs:     typedConfig.BigTooltipOrgans || '0',
+					standard:   typedConfig.BigTooltipStandard || '0',
+				},
 			},
 			equipmentQuality: {
 				enabled:   typedConfig.IsShowItemQualityEnabled,

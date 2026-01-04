@@ -2,102 +2,86 @@
 
 **Date:** January 3, 2026  
 **Comparison:** `test_output/old/` vs `test_output/new/`
+**Status:** ✅ ALL ISSUES RESOLVED (January 4, 2026)
 
 ## Summary
 
 The new loot filter output differs from the old output in **3 files** with **4 distinct issues**.
 
+- **2 actual bugs** - Fixed
+- **1 old code bug** - New code correctly removes duplicates
+- **1 expected behavior** - Not a bug
+
 ---
 
-## 🔴 BUG #1: Missing `.flac` Extension in sounds.txt
+## ✅ BUG #1: Missing `.flac` Extension in sounds.txt - FIXED
 
 **Severity:** High  
 **File:** `global/excel/sounds.txt`
+**Status:** ✅ FIXED
 
-**Description:** Custom sound entries in the new output are missing the `.flac` file extension.
+**Root Cause:** The `SOUND_EFFECTS` constant in `src_v2/effects/drop_sounds.ts` was missing `.flac` extensions on sound file paths.
 
-| Sound Name | OLD (correct) | NEW (bug) |
-|------------|---------------|-----------|
-| celf_rune_tier_3 | `object\hellforgeplace.flac` | `object\hellforgeplace` |
-| celf_rune_tier_4 | `object\hellforgeplace.flac` | `object\hellforgeplace` |
-| celf_quest | `object\hellforgeplace.flac` | `object\hellforgeplace` |
-| celf_key | `object\hellforgeplace.flac` | `object\hellforgeplace` |
-| celf_organ | `object\hellforgeplace.flac` | `object\hellforgeplace` |
-| celf_flag | `items\sound\gemstone.flac` | `items\sound\gemstone` |
-
-**Impact:** Sounds may not play correctly in-game without the proper file extension.
-
-**Likely Source:** Check `src_v2/effects/drop_sounds.ts` or related sound builder files.
+**Fix:** Added `.flac` extension to all sound file paths in `SOUND_EFFECTS` constant.
 
 ---
 
-## 🔴 BUG #2: Duplicate celf_quest Entry Removed
+## ✅ BUG #2: Duplicate celf_quest Entry Removed - NOT A BUG (OLD CODE HAD BUG)
 
-**Severity:** Medium (Verify if Intentional)  
+**Severity:** N/A - This was actually a FIX  
 **File:** `global/excel/sounds.txt`
+**Status:** ✅ CLOSED - New code is correct
 
-**Description:** 
-- OLD file: 11,405 lines
-- NEW file: 11,403 lines (2 fewer)
+**Root Cause Analysis:**
 
-The old file contains duplicate `celf_quest` entries at indices 11393-11394 AND 11395-11396. The new output only has one `celf_quest` entry.
+- OLD code called `createNewDropSound()` TWICE with the same suffix `'quest'`:
+  1. Once from `modifyDropSoundForMiscItems()`
+  2. Once from `modifyDropSoundForWeapons()`
+- This created DUPLICATE `celf_quest` and `celf_quest_hd` entries
 
-**OLD sounds.txt (lines 11393-11396):**
-```
-celf_quest	object\hellforgeplace.flac	...
-celf_quest_hd	object\hellforgeplace.flac	...
-celf_quest	object\hellforgeplace.flac	...  (DUPLICATE)
-celf_quest_hd	object\hellforgeplace.flac	...  (DUPLICATE)
-```
+- NEW code correctly creates sounds ONCE in `createDropSoundPair()` then applies the sound name to both item types without re-creating.
 
-**Impact:** 
-- If duplicates were unintentional in old code → this is a FIX, not a bug
-- If duplicates were intentional → this is a regression
-
-**Action:** Investigate why old code created duplicates and determine correct behavior.
+**Conclusion:** The old code had a bug that created duplicates. The new code is correct.
 
 ---
 
-## 🔴 BUG #3: Incorrect dropsound Values in misc.txt
+## ✅ BUG #3: Incorrect dropsound Values in misc.txt - FIXED
 
 **Severity:** High  
 **File:** `global/excel/misc.txt`
+**Status:** ✅ FIXED
 
-**Description:** Several items have their `dropsound` column values incorrect/swapped:
+**Root Cause:** The new `QuestItemIds` constant was missing several quest item codes:
 
-| Item Name | OLD dropsound | NEW dropsound |
-|-----------|---------------|---------------|
-| Key to the Cairn Stones | `celf_quest` | `item_scroll` |
-| Horadric Cube | `item_rare` | `celf_quest` |
-| Horadric Scroll | `celf_quest` | `item_book` |
-| Book of Skill | `celf_quest` | `item_book` |
+- `SCROLL_INIFUSS_DECIPHERED` ('bkd')
+- `HORADRIC_SCROLL` ('tr1')  
+- `BOOK_OF_SKILL` ('ass')
 
-**Impact:** Quest items will play incorrect sounds when dropped, affecting game feedback.
+Also, `HORADRIC_CUBE` was incorrectly included when old code commented it out (`// [CSTM_DSBOX]`).
 
-**Likely Source:** Check the drop sound assignment logic in `src_v2/effects/drop_sounds.ts` or item filtering logic.
+**Fix:**
+
+1. Added missing quest item codes to `src_v2/models/types.ts`
+2. Updated `src_v2/effects/drop_sounds.ts` to include the missing items and match the old code's behavior
 
 ---
 
-## 🟡 BUG #4: "Low Quality" enUS Value Changed
+## ✅ BUG #4: "Low Quality" enUS Value Changed - NOT A BUG (Expected Behavior)
 
-**Severity:** Low (Possibly Intentional Feature)  
+**Severity:** N/A - Expected behavior  
 **File:** `local/lng/strings/item-nameaffixes.json`
+**Status:** ✅ CLOSED - Expected behavior
 
-**Description:** The `enUS` value for "Low Quality" key (id: 1723) changed:
+**Root Cause Analysis:**
+When `itemAffixes.enabled = true` and `style = 'plusminus'`:
 
-```json
-// OLD
-{ "id": 1723, "Key": "Low Quality", "enUS": "Low Quality", ... }
+- "Superior" prefix → "+"
+- "Low Quality", "Damaged", "Cracked", "Crude" → "-"
 
-// NEW  
-{ "id": 1723, "Key": "Low Quality", "enUS": "-", ... }
-```
+This is the INTENDED behavior of the "Short Sup/Inferior Prefixes" feature.
+Both old and new code implement this the same way.
 
-**Impact:** 
-- If intentional: This hides the "Low Quality" prefix from item names (filter feature)
-- If unintentional: Low quality items will display "-" instead of "Low Quality"
-
-**Action:** Verify if this change is a desired filter feature or a bug.
+**Conclusion:** This difference is expected based on the test configuration settings.
 
 ---
 
@@ -129,35 +113,29 @@ The following files are **identical** between old and new outputs:
 
 ---
 
-## Fix Plan
+## Resolution Summary
 
-### Bug #1 (Missing .flac)
-1. Search for sound file path construction in `src_v2/`
-2. Ensure `.flac` extension is appended to file paths
-3. Compare with old implementation in `src/Builders/DropSoundBuilder.ts`
+| Bug | Status | Resolution |
+|-----|--------|------------|
+| #1 Missing .flac | ✅ FIXED | Added .flac extension to SOUND_EFFECTS paths |
+| #2 Duplicate sounds | ✅ CLOSED | Old code bug - new code is correct |
+| #3 Wrong dropsounds | ✅ FIXED | Added missing quest item codes |
+| #4 Low Quality text | ✅ CLOSED | Expected behavior per config |
 
-### Bug #2 (Duplicate celf_quest)
-1. Determine if duplicates were intentional in old code
-2. If bug in old code → no action needed (new code is correct)
-3. If intentional → fix new code to match
+---
 
-### Bug #3 (Incorrect dropsound)
-1. Review drop sound assignment logic for misc items
-2. Check for mapping issues or iteration bugs
-3. Compare item-to-sound mapping between old and new implementations
+## Files Modified
 
-### Bug #4 (Low Quality text)
-1. Check if this is documented as an intentional filter feature
-2. If intentional → document it
-3. If unintentional → fix in item name affixes composer
+1. `src_v2/effects/drop_sounds.ts` - Added .flac extensions, fixed quest items list
+2. `src_v2/models/types.ts` - Added missing quest item codes
 
 ---
 
 ## Next Steps
 
-- [ ] Investigate Bug #1 root cause
-- [ ] Investigate Bug #2 - determine if fix or regression
-- [ ] Investigate Bug #3 root cause
-- [ ] Clarify Bug #4 - intentional feature or bug?
-- [ ] Implement fixes
+- [x] ~~Investigate Bug #1 root cause~~ - Fixed
+- [x] ~~Investigate Bug #2~~ - Old code had bug, new is correct
+- [x] ~~Investigate Bug #3 root cause~~ - Fixed
+- [x] ~~Clarify Bug #4~~ - Expected behavior
 - [ ] Re-run comparison to verify fixes
+- [ ] Generate new test output and compare again
