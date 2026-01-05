@@ -5,9 +5,9 @@
  * This is a pure functional implementation - no classes, clear data flow.
  */
 
+import { EndgameItemIds, QuestItemIds } from '../constants/item_ids';
 import { readMisc, readSounds, readWeapons, writeMisc, writeSounds, writeWeapons } from '../io/game_files';
 import { DropSoundsConfig } from '../io/mod_config';
-import { EndgameItemIds, QuestItemIds } from '../constants/item_ids';
 
 
 export interface SoundEffectPair {
