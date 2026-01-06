@@ -1,1 +1,1 @@
-import './file-types';
+import './src/file-types';

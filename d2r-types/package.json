@@ -1,0 +1,9 @@
+{
+	"name": "d2r-types",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"generate-types": "node ./src/generate_mod_json.ts"
+	}
+}
