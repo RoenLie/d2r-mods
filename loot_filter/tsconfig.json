@@ -14,8 +14,6 @@
 	},
 	"include": [
 		"src/**/*.ts",
-		"src_v2/**/*.ts",
-		"mod.ts",
-		"generate_mod_json.ts"
+		"mod.ts"
 	]
 }

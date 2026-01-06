@@ -175,15 +175,14 @@ function applyGemFilterToData(
 	enableHighlight: boolean,
 ): FileTypes.ItemNames.File {
 	for (const entry of data) {
-		const key = entry['Key'];
 		// Check if this is a gem we should modify
-		if (hiddenGems.includes(key)) {
+		if (hiddenGems.includes(entry.Key)) {
 			// Hide this gem
 			updateAllLanguages(entry, hideGem());
 		}
-		else if (visibleGems.includes(key) && enableHighlight) {
+		else if (visibleGems.includes(entry.Key) && enableHighlight) {
 			// Apply highlight to this gem
-			transformAllLanguages(entry, name => applyHighlight(name, key));
+			transformAllLanguages(entry, name => applyHighlight(name, entry.Key));
 		}
 	}
 

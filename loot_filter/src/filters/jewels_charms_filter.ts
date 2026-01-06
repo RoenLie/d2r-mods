@@ -34,8 +34,7 @@ function applyJewelsToData(
 		return;
 
 	for (const entry of itemNames) {
-		const key = entry.Key;
-		if (key !== JewelCodes.RAINBOW_FACET)
+		if (entry.Key !== JewelCodes.RAINBOW_FACET)
 			continue;
 
 		// Apply highlight based on config
@@ -51,15 +50,16 @@ function applyJewelsToData(
 				const rainbowEnd = `${ pad3 }${ COLOR.GREEN }${ pad4 } ${ COLOR.BLUE }${ pad4 }`
 				+ ` ${ COLOR.YELLOW }${ pad4 } ${ COLOR.RED }${ pad4 }${ COLOR.GOLD }${ COLOR.SET }`;
 
-				return rainbowStart + `${ COLOR.SET }${ originalName }` + rainbowEnd;
+				return rainbowStart + COLOR.SET + originalName + rainbowEnd;
 			});
 		}
 		else if (jewelConfig.highlight === 'highlight') {
+			const pad5  = ' '.repeat(5);
 			const pad10 = ' '.repeat(10);
 
 			// Large red highlight
 			transformAllLanguages(entry, originalName => {
-				return `${ COLOR.RED }${ pad10 }     ${ originalName }     ${ COLOR.RED }${ pad10 }`;
+				return COLOR.RED + pad10 + pad5 + originalName + pad5 + COLOR.RED + pad10;
 			});
 		}
 	}
@@ -84,21 +84,20 @@ function applyCharmsToData(
  * Adds red "Charm" text to magic-quality charms
  */
 function applyUnidentifiedCharmHighlights(itemNames: FileTypes.ItemNames.File): void {
-	const charms = [
-		{ key: CharmCodes.SMALL, size: CharmSizes[CharmCodes.SMALL] },
-		{ key: CharmCodes.LARGE, size: CharmSizes[CharmCodes.LARGE] },
-		{ key: CharmCodes.GRAND, size: CharmSizes[CharmCodes.GRAND] },
-	];
+	const charms: Map<string, string> = new Map([
+		[ CharmCodes.SMALL, CharmSizes[CharmCodes.SMALL] ],
+		[ CharmCodes.LARGE, CharmSizes[CharmCodes.LARGE] ],
+		[ CharmCodes.GRAND, CharmSizes[CharmCodes.GRAND] ],
+	]);
 
-	itemNames.forEach(entry => {
-		const key = entry.Key;
-		const charm = charms.find(c => c.key === key);
-		if (!charm)
-			return;
+	for (const entry of itemNames) {
+		const size = charms.get(entry.Key);
+		if (!size)
+			continue;
 
 		// Set name to "Small/Large/Grand {RED}Charm{LIGHT_BLUE}" using transformAllLanguages
-		transformAllLanguages(entry, () => `${ charm.size } ${ COLOR.RED }Charm${ COLOR.LIGHT_BLUE }`);
-	});
+		transformAllLanguages(entry, () => `${ size } ${ COLOR.RED }Charm${ COLOR.LIGHT_BLUE }`);
+	};
 }
 
 /**
@@ -114,10 +113,10 @@ function applyUniqueCharmHighlights(
 		...SunderCharms.map(s => s.id),
 	];
 
-	itemNames.forEach(entry => {
+	for (const entry of itemNames) {
 		const key = entry.Key;
 		if (!allUniqueCharms.includes(key))
-			return;
+			continue;
 
 		// Determine highlight color
 		// Default: red
@@ -145,5 +144,5 @@ function applyUniqueCharmHighlights(
 				+ nameColor     + originalName
 				+ padding       + highlightColor + stars + nameColor;
 		});
-	});
+	};
 }

@@ -6,35 +6,11 @@
  */
 
 import { COLOR, SEMANTIC_COLOR } from '../constants/colors';
+import { HealingPotionCodes, ManaPotionCodes, RejuvPotionCodes } from '../constants/potions';
 import { readItemNames, writeItemNames } from '../io/game_files';
 import { FilterConfig } from '../io/mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';
 
-
-// ============================================================================
-// Constants
-// ============================================================================
-
-// Potion item codes
-const POTIONS = {
-	// Healing potions
-	hp1: 'hp1', // Minor Healing Potion
-	hp2: 'hp2', // Light Healing Potion
-	hp3: 'hp3', // Healing Potion
-	hp4: 'hp4', // Greater Healing Potion
-	hp5: 'hp5', // Super Healing Potion
-
-	// Mana potions
-	mp1: 'mp1', // Minor Mana Potion
-	mp2: 'mp2', // Light Mana Potion
-	mp3: 'mp3', // Mana Potion
-	mp4: 'mp4', // Greater Mana Potion
-	mp5: 'mp5', // Super Mana Potion
-
-	// Rejuvenation potions
-	rvs: 'rvs', // Rejuvenation Potion (small)
-	rvl: 'rvl', // Full Rejuvenation Potion
-};
 
 // Highlight character
 const HIGHLIGHT = '+';
@@ -65,10 +41,6 @@ export function applyPotionFilter(config: FilterConfig): void {
 }
 
 
-// ============================================================================
-// Pure Functions
-// ============================================================================
-
 /**
  * Create a potion display name with highlight and color
  */
@@ -84,7 +56,11 @@ function getPotionVisibility(mode: string): {
 	hidden:      string[];
 	customNames: Record<string, string>;
 } {
-	const allPotions = Object.values(POTIONS);
+	const allPotions = [
+		...Object.values(HealingPotionCodes),
+		...Object.values(ManaPotionCodes),
+		...Object.values(RejuvPotionCodes),
+	];
 
 	switch (mode) {
 	case 'disabled':
@@ -96,18 +72,18 @@ function getPotionVisibility(mode: string): {
 			visible:     allPotions,
 			hidden:      [],
 			customNames: {
-				[POTIONS.hp1]: createPotionName('HP1', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.hp2]: createPotionName('HP2', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.hp3]: createPotionName('HP3', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.hp4]: createPotionName('HP4', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.hp5]: createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.mp1]: createPotionName('MP1', SEMANTIC_COLOR.MANA),
-				[POTIONS.mp2]: createPotionName('MP2', SEMANTIC_COLOR.MANA),
-				[POTIONS.mp3]: createPotionName('MP3', SEMANTIC_COLOR.MANA),
-				[POTIONS.mp4]: createPotionName('MP4', SEMANTIC_COLOR.MANA),
-				[POTIONS.mp5]: createPotionName('MP5', SEMANTIC_COLOR.MANA),
-				[POTIONS.rvs]: createPotionName('RPS', SEMANTIC_COLOR.REJUV),
-				[POTIONS.rvl]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
+				[HealingPotionCodes.MINOR]:   createPotionName('HP1', SEMANTIC_COLOR.HEALTH),
+				[HealingPotionCodes.LIGHT]:   createPotionName('HP2', SEMANTIC_COLOR.HEALTH),
+				[HealingPotionCodes.NORMAL]:  createPotionName('HP3', SEMANTIC_COLOR.HEALTH),
+				[HealingPotionCodes.GREATER]: createPotionName('HP4', SEMANTIC_COLOR.HEALTH),
+				[HealingPotionCodes.SUPER]:   createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
+				[ManaPotionCodes.MINOR]:      createPotionName('MP1', SEMANTIC_COLOR.MANA),
+				[ManaPotionCodes.LIGHT]:      createPotionName('MP2', SEMANTIC_COLOR.MANA),
+				[ManaPotionCodes.NORMAL]:     createPotionName('MP3', SEMANTIC_COLOR.MANA),
+				[ManaPotionCodes.GREATER]:    createPotionName('MP4', SEMANTIC_COLOR.MANA),
+				[ManaPotionCodes.SUPER]:      createPotionName('MP5', SEMANTIC_COLOR.MANA),
+				[RejuvPotionCodes.SMALL]:     createPotionName('RPS', SEMANTIC_COLOR.REJUV),
+				[RejuvPotionCodes.FULL]:      createPotionName('RPF', SEMANTIC_COLOR.REJUV),
 			},
 		};
 
@@ -115,28 +91,28 @@ function getPotionVisibility(mode: string): {
 		// Hide lvl 1-3, show 4-5 and rejuvs
 		return {
 			visible: [
-				POTIONS.hp4,
-				POTIONS.hp5,
-				POTIONS.mp4,
-				POTIONS.mp5,
-				POTIONS.rvs,
-				POTIONS.rvl,
+				HealingPotionCodes.GREATER,
+				HealingPotionCodes.SUPER,
+				ManaPotionCodes.GREATER,
+				ManaPotionCodes.SUPER,
+				RejuvPotionCodes.SMALL,
+				RejuvPotionCodes.FULL,
 			],
 			hidden: [
-				POTIONS.hp1,
-				POTIONS.hp2,
-				POTIONS.hp3,
-				POTIONS.mp1,
-				POTIONS.mp2,
-				POTIONS.mp3,
+				HealingPotionCodes.MINOR,
+				HealingPotionCodes.LIGHT,
+				HealingPotionCodes.NORMAL,
+				ManaPotionCodes.MINOR,
+				ManaPotionCodes.LIGHT,
+				ManaPotionCodes.NORMAL,
 			],
 			customNames: {
-				[POTIONS.hp4]: createPotionName('HP4', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.hp5]: createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.mp4]: createPotionName('MP4', SEMANTIC_COLOR.MANA),
-				[POTIONS.mp5]: createPotionName('MP5', SEMANTIC_COLOR.MANA),
-				[POTIONS.rvs]: createPotionName('RPS', SEMANTIC_COLOR.REJUV),
-				[POTIONS.rvl]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
+				[HealingPotionCodes.GREATER]: createPotionName('HP4', SEMANTIC_COLOR.HEALTH),
+				[HealingPotionCodes.SUPER]:   createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
+				[ManaPotionCodes.GREATER]:    createPotionName('MP4', SEMANTIC_COLOR.MANA),
+				[ManaPotionCodes.SUPER]:      createPotionName('MP5', SEMANTIC_COLOR.MANA),
+				[RejuvPotionCodes.SMALL]:     createPotionName('RPS', SEMANTIC_COLOR.REJUV),
+				[RejuvPotionCodes.FULL]:      createPotionName('RPF', SEMANTIC_COLOR.REJUV),
 			},
 		};
 
@@ -144,26 +120,26 @@ function getPotionVisibility(mode: string): {
 		// Hide lvl 1-4, show 5 and rejuvs
 		return {
 			visible: [
-				POTIONS.hp5,
-				POTIONS.mp5,
-				POTIONS.rvs,
-				POTIONS.rvl,
+				HealingPotionCodes.SUPER,
+				ManaPotionCodes.SUPER,
+				RejuvPotionCodes.SMALL,
+				RejuvPotionCodes.FULL,
 			],
 			hidden: [
-				POTIONS.hp1,
-				POTIONS.hp2,
-				POTIONS.hp3,
-				POTIONS.hp4,
-				POTIONS.mp1,
-				POTIONS.mp2,
-				POTIONS.mp3,
-				POTIONS.mp4,
+				HealingPotionCodes.MINOR,
+				HealingPotionCodes.LIGHT,
+				HealingPotionCodes.NORMAL,
+				HealingPotionCodes.GREATER,
+				ManaPotionCodes.MINOR,
+				ManaPotionCodes.LIGHT,
+				ManaPotionCodes.NORMAL,
+				ManaPotionCodes.GREATER,
 			],
 			customNames: {
-				[POTIONS.hp5]: createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.mp5]: createPotionName('MP5', SEMANTIC_COLOR.MANA),
-				[POTIONS.rvs]: createPotionName('RPS', SEMANTIC_COLOR.REJUV),
-				[POTIONS.rvl]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
+				[HealingPotionCodes.SUPER]: createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
+				[ManaPotionCodes.SUPER]:    createPotionName('MP5', SEMANTIC_COLOR.MANA),
+				[RejuvPotionCodes.SMALL]:   createPotionName('RPS', SEMANTIC_COLOR.REJUV),
+				[RejuvPotionCodes.FULL]:    createPotionName('RPF', SEMANTIC_COLOR.REJUV),
 			},
 		};
 
@@ -171,27 +147,27 @@ function getPotionVisibility(mode: string): {
 		// Hide lvl 1-3 and small rejuv, show 4-5 and full rejuv
 		return {
 			visible: [
-				POTIONS.hp4,
-				POTIONS.hp5,
-				POTIONS.mp4,
-				POTIONS.mp5,
-				POTIONS.rvl,
+				HealingPotionCodes.GREATER,
+				HealingPotionCodes.SUPER,
+				ManaPotionCodes.GREATER,
+				ManaPotionCodes.SUPER,
+				RejuvPotionCodes.FULL,
 			],
 			hidden: [
-				POTIONS.hp1,
-				POTIONS.hp2,
-				POTIONS.hp3,
-				POTIONS.mp1,
-				POTIONS.mp2,
-				POTIONS.mp3,
-				POTIONS.rvs,
+				HealingPotionCodes.MINOR,
+				HealingPotionCodes.LIGHT,
+				HealingPotionCodes.NORMAL,
+				ManaPotionCodes.MINOR,
+				ManaPotionCodes.LIGHT,
+				ManaPotionCodes.NORMAL,
+				RejuvPotionCodes.SMALL,
 			],
 			customNames: {
-				[POTIONS.hp4]: createPotionName('HP4', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.hp5]: createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.mp4]: createPotionName('MP4', SEMANTIC_COLOR.MANA),
-				[POTIONS.mp5]: createPotionName('MP5', SEMANTIC_COLOR.MANA),
-				[POTIONS.rvl]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
+				[HealingPotionCodes.GREATER]: createPotionName('HP4', SEMANTIC_COLOR.HEALTH),
+				[HealingPotionCodes.SUPER]:   createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
+				[ManaPotionCodes.GREATER]:    createPotionName('MP4', SEMANTIC_COLOR.MANA),
+				[ManaPotionCodes.SUPER]:      createPotionName('MP5', SEMANTIC_COLOR.MANA),
+				[RejuvPotionCodes.FULL]:      createPotionName('RPF', SEMANTIC_COLOR.REJUV),
 			},
 		};
 
@@ -199,25 +175,25 @@ function getPotionVisibility(mode: string): {
 		// Hide lvl 1-4 and small rejuv, show 5 and full rejuv
 		return {
 			visible: [
-				POTIONS.hp5,
-				POTIONS.mp5,
-				POTIONS.rvl,
+				HealingPotionCodes.SUPER,
+				ManaPotionCodes.SUPER,
+				RejuvPotionCodes.FULL,
 			],
 			hidden: [
-				POTIONS.hp1,
-				POTIONS.hp2,
-				POTIONS.hp3,
-				POTIONS.hp4,
-				POTIONS.mp1,
-				POTIONS.mp2,
-				POTIONS.mp3,
-				POTIONS.mp4,
-				POTIONS.rvs,
+				HealingPotionCodes.MINOR,
+				HealingPotionCodes.LIGHT,
+				HealingPotionCodes.NORMAL,
+				HealingPotionCodes.GREATER,
+				ManaPotionCodes.MINOR,
+				ManaPotionCodes.LIGHT,
+				ManaPotionCodes.NORMAL,
+				ManaPotionCodes.GREATER,
+				RejuvPotionCodes.SMALL,
 			],
 			customNames: {
-				[POTIONS.hp5]: createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
-				[POTIONS.mp5]: createPotionName('MP5', SEMANTIC_COLOR.MANA),
-				[POTIONS.rvl]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
+				[HealingPotionCodes.SUPER]: createPotionName('HP5', SEMANTIC_COLOR.HEALTH),
+				[ManaPotionCodes.SUPER]:    createPotionName('MP5', SEMANTIC_COLOR.MANA),
+				[RejuvPotionCodes.FULL]:    createPotionName('RPF', SEMANTIC_COLOR.REJUV),
 			},
 		};
 
@@ -225,46 +201,46 @@ function getPotionVisibility(mode: string): {
 		// Show only rejuvs (small and full)
 		return {
 			visible: [
-				POTIONS.rvs,
-				POTIONS.rvl,
+				RejuvPotionCodes.SMALL,
+				RejuvPotionCodes.FULL,
 			],
 			hidden: [
-				POTIONS.hp1,
-				POTIONS.hp2,
-				POTIONS.hp3,
-				POTIONS.hp4,
-				POTIONS.hp5,
-				POTIONS.mp1,
-				POTIONS.mp2,
-				POTIONS.mp3,
-				POTIONS.mp4,
-				POTIONS.mp5,
+				HealingPotionCodes.MINOR,
+				HealingPotionCodes.LIGHT,
+				HealingPotionCodes.NORMAL,
+				HealingPotionCodes.GREATER,
+				HealingPotionCodes.SUPER,
+				ManaPotionCodes.MINOR,
+				ManaPotionCodes.LIGHT,
+				ManaPotionCodes.NORMAL,
+				ManaPotionCodes.GREATER,
+				ManaPotionCodes.SUPER,
 			],
 			customNames: {
-				[POTIONS.rvs]: createPotionName('RPS', SEMANTIC_COLOR.REJUV),
-				[POTIONS.rvl]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
+				[RejuvPotionCodes.SMALL]: createPotionName('RPS', SEMANTIC_COLOR.REJUV),
+				[RejuvPotionCodes.FULL]:  createPotionName('RPF', SEMANTIC_COLOR.REJUV),
 			},
 		};
 
 	case 'fr':
 		// Show only full rejuvs
 		return {
-			visible: [ POTIONS.rvl ],
+			visible: [ RejuvPotionCodes.FULL ],
 			hidden:  [
-				POTIONS.hp1,
-				POTIONS.hp2,
-				POTIONS.hp3,
-				POTIONS.hp4,
-				POTIONS.hp5,
-				POTIONS.mp1,
-				POTIONS.mp2,
-				POTIONS.mp3,
-				POTIONS.mp4,
-				POTIONS.mp5,
-				POTIONS.rvs,
+				HealingPotionCodes.MINOR,
+				HealingPotionCodes.LIGHT,
+				HealingPotionCodes.NORMAL,
+				HealingPotionCodes.GREATER,
+				HealingPotionCodes.SUPER,
+				ManaPotionCodes.MINOR,
+				ManaPotionCodes.LIGHT,
+				ManaPotionCodes.NORMAL,
+				ManaPotionCodes.GREATER,
+				ManaPotionCodes.SUPER,
+				RejuvPotionCodes.SMALL,
 			],
 			customNames: {
-				[POTIONS.rvl]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
+				[RejuvPotionCodes.FULL]: createPotionName('RPF', SEMANTIC_COLOR.REJUV),
 			},
 		};
 	case 'hide':

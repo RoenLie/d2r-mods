@@ -1,4 +1,5 @@
 import { COLOR } from '../constants/colors';
+import { BuffPotionCodes, ThrowingPotionCodes } from '../constants/potions';
 import { readItemNames, writeItemNames } from '../io/game_files';
 import type { FilterConfig } from '../io/mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';
@@ -35,25 +36,15 @@ function applyBuffPotionsToData(
 		return;
 
 	const buffPotions = [
-		{ key: 'yps', name: 'Antidote' }, // Antidote Potion
-		{ key: 'wms', name: 'Thawing' },  // Thawing Potion
-		{ key: 'vps', name: 'Stamina' },  // Stamina Potion
+		{ key: BuffPotionCodes.ANTIDOTE, name: 'Antidote' },
+		{ key: BuffPotionCodes.THAWING,  name: 'Thawing' },
+		{ key: BuffPotionCodes.STAMINA,  name: 'Stamina' },
 	];
 
-	const potionKeys = buffPotions.map(p => p.key);
-
-	Object.keys(itemNames).forEach(index => {
-		const entry = (itemNames as any)[index];
-		if (typeof entry !== 'object' || Array.isArray(entry))
-			return;
-
-		const key = entry.Key as string;
-		if (!potionKeys.includes(key))
-			return;
-
-		const potion = buffPotions.find(p => p.key === key);
+	for (const entry of itemNames) {
+		const potion = buffPotions.find(p => p.key ===  entry.Key);
 		if (!potion)
-			return;
+			continue;
 
 		if (mode === 'all') {
 			// Generate display name: {GREEN}+{WHITE}{name} (green + no-space reset name)
@@ -64,7 +55,7 @@ function applyBuffPotionsToData(
 			// Hide by setting to spaces
 			updateAllLanguages(entry, ' '.repeat(20));
 		}
-	});
+	}
 }
 
 function applyThrowingPotionsToData(
@@ -77,24 +68,18 @@ function applyThrowingPotionsToData(
 	// Throwing potions with their highlight colors
 	// Format: highlightColor + 'o' + space + resetColor + name
 	const throwingPotions = [
-		{ key: 'gpl', name: 'Gas 1', highlightColor: COLOR.LIGHT_GREEN }, // Strangling Gas Potion
-		{ key: 'gpm', name: 'Gas 2', highlightColor: COLOR.LIGHT_GREEN }, // Choking Gas Potion
-		{ key: 'gps', name: 'Gas 3', highlightColor: COLOR.LIGHT_GREEN }, // Rancid Gas Potion
-		{ key: 'opl', name: 'Oil 1', highlightColor: COLOR.ORANGE },      // Fulminating Potion
-		{ key: 'opm', name: 'Oil 2', highlightColor: COLOR.ORANGE },      // Exploding Potion
-		{ key: 'ops', name: 'Oil 3', highlightColor: COLOR.ORANGE },      // Oil Potion
+		{ key: ThrowingPotionCodes.STRANGLING_GAS, name: 'Gas 1', highlightColor: COLOR.LIGHT_GREEN },
+		{ key: ThrowingPotionCodes.CHOKING_GAS,    name: 'Gas 2', highlightColor: COLOR.LIGHT_GREEN },
+		{ key: ThrowingPotionCodes.RANCID_GAS,     name: 'Gas 3', highlightColor: COLOR.LIGHT_GREEN },
+		{ key: ThrowingPotionCodes.FULMINATING,    name: 'Oil 1', highlightColor: COLOR.ORANGE },
+		{ key: ThrowingPotionCodes.EXPLODING,      name: 'Oil 2', highlightColor: COLOR.ORANGE },
+		{ key: ThrowingPotionCodes.OIL,            name: 'Oil 3', highlightColor: COLOR.ORANGE },
 	];
 
-	const potionKeys = throwingPotions.map(p => p.key);
-
-	itemNames.forEach(entry => {
-		const key = entry.Key;
-		if (!potionKeys.includes(key))
-			return;
-
-		const potion = throwingPotions.find(p => p.key === key);
+	for (const entry of itemNames) {
+		const potion = throwingPotions.find(p => p.key === entry.Key);
 		if (!potion)
-			return;
+			continue;
 
 		if (mode === 'all') {
 			// Generate display name: highlightColor + 'o' + space + resetColor + name
@@ -105,5 +90,5 @@ function applyThrowingPotionsToData(
 			// Hide the item by setting name to spaces
 			updateAllLanguages(entry, ' '.repeat(20));
 		}
-	});
+	}
 }
