@@ -7,8 +7,7 @@
 
 import { COLOR } from '../constants/colors';
 import { GemCodes, GemCodeToColor, GemExceptions } from '../constants/gems';
-import { readItemNameAffixes, readItemNames, writeItemNameAffixes, writeItemNames } from '../io/game_files';
-import { FilterConfig } from '../io/mod_config';
+import { FilterConfig } from '../mod_config';
 import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
 
@@ -38,7 +37,7 @@ export function applyGemFilter(config: FilterConfig): void {
 	const hiddenGems = getHiddenGems(config.gems.mode);
 
 	// Apply to item-names.json (most gems)
-	const itemNames = readItemNames();
+	const itemNames = gameFiles.itemNames.read();
 	const modifiedItemNames = applyGemFilterToData(
 		itemNames,
 		visibleGems,
@@ -46,10 +45,10 @@ export function applyGemFilter(config: FilterConfig): void {
 		config.gems.enableHighlight,
 	);
 
-	writeItemNames(modifiedItemNames);
+	gameFiles.itemNames.write(modifiedItemNames);
 
 	// Apply to item-nameaffixes.json (gem exceptions: diamond, emerald, ruby, sapphire)
-	const itemNameAffixes = readItemNameAffixes();
+	const itemNameAffixes = gameFiles.itemNameAffixes.read();
 	const modifiedAffixes = applyGemFilterToData(
 		itemNameAffixes,
 		GemExceptions.filter(code => visibleGems.includes(code)),
@@ -57,7 +56,7 @@ export function applyGemFilter(config: FilterConfig): void {
 		config.gems.enableHighlight,
 	);
 
-	writeItemNameAffixes(modifiedAffixes);
+	gameFiles.itemNameAffixes.write(modifiedAffixes);
 }
 
 

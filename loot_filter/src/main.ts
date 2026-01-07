@@ -9,6 +9,7 @@
  * No builders, no composers, no writers - just functions doing what they say.
  */
 
+import { verifyD2RMMVersion } from '../../d2r-types/src/verify_version';
 import { applyDropSounds } from './effects/drop_sounds';
 import { applyItemLevels } from './effects/item_levels';
 import { applyLightPillars } from './effects/light_pillars';
@@ -23,8 +24,7 @@ import { applyPotionFilter } from './filters/potion_filter';
 import { applyQuestEndgameFilter } from './filters/quest_endgame_filter';
 import { applyRuneFilter } from './filters/rune_filter';
 import { applyScrollsKeysFilter } from './filters/scrolls_keys_filter';
-import { loadConfig } from './io/mod_config';
-import { verifyD2RMMVersion } from './utils/verify_version';
+import { loadConfig } from './mod_config';
 
 
 /**

@@ -15,5 +15,6 @@
 	"include": [
 		"src/**/*.ts",
 		"mod.ts",
+		"../d2r-types/src/verify_version.ts",
 	]
 }

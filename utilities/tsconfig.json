@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"allowImportingTsExtensions": true,
+		"types": [
+			"node"
+		],
+		"noEmit": true
+	},
+	"include": [
+		"*.ts",
+		"**/*.ts"
+	]
+}

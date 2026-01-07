@@ -1,7 +1,6 @@
 import { COLOR, COLOR_NAME_MAP } from '../constants/colors';
 import { HIGH_RUNES, LOW_MID_RUNES, LOW_RUNES, MID_RUNES, RUNE_AFFIXES, type RuneData } from '../constants/runes';
-import { readItemRunes, writeItemRunes } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 import { applyBigTooltip } from '../utils/big_tooltip';
 import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
@@ -38,9 +37,9 @@ export function applyRuneFilter(config: FilterConfig): void {
 		return;
 
 	const tiers = buildRuneTiers(config.runes);
-	const itemRunes = readItemRunes();
+	const itemRunes = gameFiles.itemRunes.read();
 	const modifiedRunes = applyRuneFilterToNames(itemRunes, tiers, config.runes);
-	writeItemRunes(modifiedRunes);
+	gameFiles.itemRunes.write(modifiedRunes);
 
 	// Note: We do NOT modify item-nameaffixes.json for rune affixes.
 	// Instead, we remove the " Rune" suffix from each rune name during transformation.

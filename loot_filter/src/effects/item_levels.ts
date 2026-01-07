@@ -6,8 +6,7 @@
  */
 
 import { QuestItemIds } from '../constants/item_ids';
-import { readArmor, readMisc, readWeapons, writeArmor, writeMisc, writeWeapons } from '../io/game_files';
-import { ItemLevelConfig } from '../io/mod_config';
+import { ItemLevelConfig } from '../mod_config';
 
 // ============================================================================
 // Constants
@@ -79,7 +78,7 @@ function enableShowLevelFor(data: FileTypes.Misc.File, inclusions: string[]): Fi
  * Enable iLvl display on weapons (except excluded items)
  */
 function enableForWeapons(config: ItemLevelConfig): void {
-	const weaponsData = readWeapons();
+	const weaponsData = gameFiles.weapons.read();
 
 	// Build exclusion list
 	const exclusions = [ ...WEAPON_EXCLUSIONS ];
@@ -90,30 +89,30 @@ function enableForWeapons(config: ItemLevelConfig): void {
 		exclusions.push(...QUEST_WEAPONS);
 
 	enableShowLevelExcept(weaponsData, exclusions);
-	writeWeapons(weaponsData);
+	gameFiles.weapons.write(weaponsData);
 }
 
 /**
  * Enable iLvl display on armor (no exclusions)
  */
 function enableForArmor(): void {
-	const armorData = readArmor();
+	const armorData = gameFiles.armor.read();
 	enableShowLevelExcept(armorData, []);
-	writeArmor(armorData);
+	gameFiles.armor.write(armorData);
 }
 
 /**
  * Enable iLvl display on specific misc items (jewelry, charms)
  */
 function enableForMiscItems(config: ItemLevelConfig): void {
-	const miscData = readMisc();
+	const miscData = gameFiles.misc.read();
 
 	// Only enable for jewelry and charms
 	// If hideOnBigTooltips is enabled, we might want to exclude some items,
 	// but for now we'll keep it simple - the original code has a TODO about this
 	enableShowLevelFor(miscData, ILVL_MISC_ITEMS);
 
-	writeMisc(miscData);
+	gameFiles.misc.write(miscData);
 }
 
 // ============================================================================

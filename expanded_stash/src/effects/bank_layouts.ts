@@ -4,38 +4,28 @@
  */
 
 import { EXPANDED_GRID, TAB_COUNT } from '../constants/layout';
-import {
-	readBankExpansionLayout,
-	readBankExpansionLayoutHd,
-	readBankOriginalLayout,
-	readBankOriginalLayoutHd,
-	writeBankExpansionLayout,
-	writeBankExpansionLayoutHd,
-	writeBankOriginalLayout,
-	writeBankOriginalLayoutHd,
-} from '../io/game_files';
-import { getTabNames, type StashConfig } from '../io/mod_config';
+import { getTabNames, type StashConfig } from '../mod_config';
 
 
 /**
  * Apply changes to standard (non-HD) bank original layout
  */
 export function applyBankOriginalLayout(): void {
-	const layout = readBankOriginalLayout();
+	const layout = gameFiles.bankOriginalLayout.read();
 
 	layout.children.forEach(child => {
 		if (child.type === 'InventoryGridWidget')
 			child.fields.cellCount = EXPANDED_GRID;
 	});
 
-	writeBankOriginalLayout(layout);
+	gameFiles.bankOriginalLayout.write(layout);
 }
 
 /**
  * Apply changes to standard (non-HD) bank expansion layout
  */
 export function applyBankExpansionLayout(config: StashConfig): void {
-	const layout = readBankExpansionLayout();
+	const layout = gameFiles.bankExpansionLayout.read();
 	const tabNames = getTabNames(config);
 
 	layout.children = layout.children.map((child) => {
@@ -59,14 +49,14 @@ export function applyBankExpansionLayout(config: StashConfig): void {
 		return true;
 	});
 
-	writeBankExpansionLayout(layout);
+	gameFiles.bankExpansionLayout.write(layout);
 }
 
 /**
  * Apply changes to HD bank original layout
  */
 export function applyBankOriginalLayoutHd(): void {
-	const layout = readBankOriginalLayoutHd();
+	const layout = gameFiles.bankOriginalLayoutHd.read();
 
 	layout.fields.rect = '$LeftPanelRect_ExpandedStash';
 	layout.children.forEach(child => {
@@ -131,14 +121,14 @@ export function applyBankOriginalLayoutHd(): void {
 		}
 	});
 
-	writeBankOriginalLayoutHd(layout);
+	gameFiles.bankOriginalLayoutHd.write(layout);
 }
 
 /**
  * Apply changes to HD bank expansion layout
  */
 export function applyBankExpansionLayoutHd(config: StashConfig): void {
-	const layout = readBankExpansionLayoutHd();
+	const layout = gameFiles.bankExpansionLayoutHd.read();
 	const tabNames = getTabNames(config);
 
 	delete layout.fields.backgroundFile;
@@ -209,5 +199,5 @@ export function applyBankExpansionLayoutHd(config: StashConfig): void {
 		return true;
 	});
 
-	writeBankExpansionLayoutHd(layout);
+	gameFiles.bankExpansionLayoutHd.write(layout);
 }

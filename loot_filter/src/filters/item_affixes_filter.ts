@@ -11,8 +11,7 @@
 
 import { COLOR } from '../constants/colors';
 import { GemAffixCodes } from '../constants/gems';
-import { readItemNameAffixes, writeItemNameAffixes } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';
 
 /**
@@ -20,7 +19,7 @@ import { updateAllLanguages } from '../utils/entry_utils';
  * Shortens Superior/Inferior prefixes, hides gem affixes, and applies gold customization.
  */
 export function applyItemAffixesFilter(config: FilterConfig): void {
-	const affixes = readItemNameAffixes();
+	const affixes = gameFiles.itemNameAffixes.read();
 	let modified = false;
 
 	// Apply Superior/Inferior prefix shortening
@@ -42,7 +41,7 @@ export function applyItemAffixesFilter(config: FilterConfig): void {
 	}
 
 	if (modified)
-		writeItemNameAffixes(affixes);
+		gameFiles.itemNameAffixes.write(affixes);
 }
 
 

@@ -1,0 +1,8 @@
+{
+  "$schema": "../config-schema.json",
+  "name": "Expanded Inventory",
+  "description": "Increases inventory size to 13x8. Based on https://www.nexusmods.com/diablo2resurrected/mods/172",
+  "author": "roen",
+  "website": "",
+  "version": "1.0.0"
+}

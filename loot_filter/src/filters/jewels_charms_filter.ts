@@ -1,7 +1,6 @@
 import { CharmCodes, CharmSizes, JewelCodes, LodUniqueCharms, SunderCharms } from '../constants/charms';
 import { COLOR } from '../constants/colors';
-import { readItemNames, writeItemNames } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 import { transformAllLanguages } from '../utils/entry_utils';
 
 
@@ -19,10 +18,10 @@ export function applyJewelsCharmsFilter(config: FilterConfig): void {
 	if (!config.enabled)
 		return;
 
-	const itemNames = readItemNames();
+	const itemNames = gameFiles.itemNames.read();
 	applyJewelsToData(itemNames, config.jewels);
 	applyCharmsToData(itemNames, config.charms);
-	writeItemNames(itemNames);
+	gameFiles.itemNames.write(itemNames);
 }
 
 

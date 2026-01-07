@@ -5,9 +5,9 @@
  * Works by modifying item JSON files to include particle effects.
  */
 
+import { HD_ITEM_PATHS, VFX_PATHS } from '../../../d2r-types/src/file_operations';
 import { HIGH_RUNES, LOW_MID_RUNES, LOW_RUNES, MID_RUNES } from '../constants/runes';
-import { HD_ITEM_PATHS, readHdItem, VFX_PATHS, writeHdItem } from '../io/game_files';
-import type { FilterConfig, LightPillarsConfig } from '../io/mod_config';
+import type { FilterConfig, LightPillarsConfig } from '../mod_config';
 
 
 // Light pillar component to inject into items (matches old code structure)
@@ -131,9 +131,9 @@ function addLightPillarToItem(itemData: FileTypes.HDItem.File): FileTypes.HDItem
  */
 function applyToFile(path: string, filename: string): void {
 	const fullPath = `${ path }${ filename }.json`;
-	const itemData = readHdItem(fullPath);
+	const itemData = gameFiles.hdItem.read(fullPath);
 	const modified = addLightPillarToItem(itemData);
-	writeHdItem(fullPath, modified);
+	gameFiles.hdItem.write(fullPath, modified);
 }
 
 /**
@@ -336,13 +336,13 @@ function applyToKeys(config: LightPillarsConfig): void {
 
 	// Keys use a shared model, so we read once and write to all 3 variants
 	const basePath = `${ HD_ITEM_PATHS.KEY }mephisto_key`;
-	const itemData = readHdItem(`${ basePath }.json`);
+	const itemData = gameFiles.hdItem.read(`${ basePath }.json`);
 	const modified = addLightPillarToItem(itemData);
 
 	// Write to all 3 key types (mephisto_key, mephisto_key2, mephisto_key3)
-	writeHdItem(`${ basePath }.json`, modified);
-	writeHdItem(`${ basePath }2.json`, modified);
-	writeHdItem(`${ basePath }3.json`, modified);
+	gameFiles.hdItem.write(`${ basePath }.json`, modified);
+	gameFiles.hdItem.write(`${ basePath }2.json`, modified);
+	gameFiles.hdItem.write(`${ basePath }3.json`, modified);
 }
 
 /**

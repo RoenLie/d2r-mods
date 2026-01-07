@@ -1,5 +1,7 @@
 packages:
   - 'd2r-loot-filter'
+  - 'd2r-vscode-extension'
+  - 'd2r-utilities'
 
 publicHoistPattern:
   - '*eslint*'

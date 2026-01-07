@@ -17,8 +17,7 @@
 
 import { COLOR } from '../constants/colors';
 import { EndgameItemIds, QuestItemIds, QuestItemIdsAlt } from '../constants/item_ids';
-import { readItemModifiers, readItemNames, readUi, writeItemModifiers, writeItemNames, writeUi } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 import { applyBigTooltip } from '../utils/big_tooltip';
 import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
@@ -27,15 +26,15 @@ export function applyQuestEndgameFilter(config: FilterConfig): void {
 	if (!config.enabled)
 		return;
 
-	const itemNames = readItemNames();
+	const itemNames = gameFiles.itemNames.read();
 	applyQuestItemsToData(itemNames, config.questEndgame);
 	applyEndgameItemsToData(itemNames, config.questEndgame);
-	writeItemNames(itemNames);
+	gameFiles.itemNames.write(itemNames);
 
 	// Handle Act 5 quest items that are in item-modifiers.json
-	const itemModifiers = readItemModifiers();
+	const itemModifiers = gameFiles.itemModifiers.read();
 	applyQuestItemsToData(itemModifiers, config.questEndgame, QUEST_ITEMS_MODIFIERS);
-	writeItemModifiers(itemModifiers);
+	gameFiles.itemModifiers.write(itemModifiers);
 
 	// Handle quest item exceptions that are in ui.json
 	applyQuestItemExceptions(config.questEndgame);
@@ -317,7 +316,7 @@ const QUEST_ITEM_EXCEPTIONS: Set<string> = new Set([
  * Some quest items (Book of Skill, Potion of Life) have their strings in ui.json
  */
 function applyQuestItemExceptions(questConfig: FilterConfig['questEndgame']): void {
-	const uiStrings = readUi();
+	const uiStrings = gameFiles.ui.read();
 
 	for (const entry of uiStrings) {
 		const key = entry.Key;
@@ -343,5 +342,5 @@ function applyQuestItemExceptions(questConfig: FilterConfig['questEndgame']): vo
 		});
 	}
 
-	writeUi(uiStrings);
+	gameFiles.ui.write(uiStrings);
 }

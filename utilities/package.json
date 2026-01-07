@@ -1,0 +1,9 @@
+{
+	"name": "d2r-utilities",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"compare-dirs": "node ./src/compare-dirs.ts"
+	}
+}

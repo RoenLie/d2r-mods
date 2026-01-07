@@ -1,0 +1,41 @@
+{
+  "name": "d2r-file-links",
+  "displayName": "D2R File Links",
+  "description": "Provides clickable file links in hover documentation for D2R mod gameFiles properties",
+  "version": "0.0.1",
+  "publisher": "d2r-modding",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:javascript"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "D2R Mod Development",
+      "properties": {
+        "d2r.basePath": {
+          "type": "string",
+          "default": "A:/Program Files/Diablo II Resurrected/mods/D2RMM/D2RMM.mpq/data",
+          "description": "Base path to the D2R game data files"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.x",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.3"
+  }
+}

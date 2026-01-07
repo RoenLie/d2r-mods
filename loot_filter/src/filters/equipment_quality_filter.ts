@@ -1,5 +1,4 @@
-import { readArmor, readWeapons } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 
 
 /**
@@ -18,8 +17,8 @@ export function applyEquipmentQualityFilter(config: FilterConfig): void {
 	if (!config.enabled || !config.equipmentQuality.enabled)
 		return;
 
-	const armor = readArmor();
-	const weapons = readWeapons();
+	const armor = gameFiles.armor.read();
+	const weapons = gameFiles.weapons.read();
 
 	// Filter for items that have quality tiers (have ubercode and ultracode)
 	// This excludes quest items and throwing potions

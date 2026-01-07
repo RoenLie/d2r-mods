@@ -2213,5 +2213,160 @@ declare global {
 
 			type File = TSVData<Keys>;
 		}
+
+		namespace PlayerInventory {
+			namespace Common {
+				interface InventorySlotWidget {
+					type:      'InventorySlotWidget';
+					name:      string;
+					fields?:   InventorySlotWidgetFields;
+					children?: Layout.Common.AnyWidget[];
+				}
+
+				interface InventorySlotWidgetFields {
+					rect?:                   string | Layout.Common.Rect;
+					width?:                  number;
+					height?:                 number;
+					cellSize?:               string | Layout.Common.Point;
+					location?:               string;
+					gemSocketFilename?:      string;
+					backgroundFilename?:     string;
+					backgroundFrame?:        number;
+					backgroundOffset?:       Layout.Common.Point;
+					itemOffset?:             Layout.Common.Point;
+					swappedOffset?:          Layout.Common.Point;
+					navigation?:             NavigationConfig;
+					focusIndicatorFilename?: string;
+					focusIndicatorOffset?:   Layout.Common.Point;
+				}
+
+				interface NavigationConfig {
+					left?:  NavigationTarget;
+					right?: NavigationTarget;
+					up?:    NavigationTarget;
+					down?:  NavigationTarget;
+				}
+
+				interface NavigationTarget {
+					name?:          string;
+					panelBoundary?: number;
+				}
+
+				interface BeltWidget {
+					type:      'BeltWidget';
+					name:      string;
+					fields?:   BeltWidgetFields;
+					children?: Layout.Common.AnyWidget[];
+				}
+
+				interface BeltWidgetFields {
+					rect?:                              string | Layout.Common.Rect;
+					poppedRowFilename?:                 string;
+					poppedCapFilename?:                 string;
+					cellOffsetInRow?:                   Layout.Common.Point;
+					itemOffsetInCell?:                  Layout.Common.Point;
+					cellPadding?:                       Layout.Common.Point;
+					cellSize?:                          string | Layout.Common.Point;
+					controllerDefaultItemTransparency?: number;
+				}
+
+				interface FocusableWidget {
+					type:      'FocusableWidget';
+					name:      string;
+					fields?:   FocusableWidgetFields;
+					children?: Layout.Common.AnyWidget[];
+				}
+
+				interface FocusableWidgetFields {
+					rect?:          string | Layout.Common.Rect;
+					fitToParent?:   number;
+					tooltipStyle?:  string;
+					tooltipString?: string;
+				}
+
+				interface ButtonLegendPreset {
+					action: string;
+				}
+
+				interface ButtonLegendWidgetFields extends Layout.Common.ButtonLegendWidgetFields {
+					presets?: ButtonLegendPreset[];
+				}
+
+				type PlayerInventoryWidget
+					= Layout.Common.ClickCatcherWidget
+					| Layout.Common.ImageWidget
+					| Layout.Common.TextBoxWidget
+					| Layout.Common.ButtonWidget
+					| Layout.Common.InventoryGridWidget
+					| Layout.Common.GridImageWidget
+					| InventorySlotWidget
+					| BeltWidget
+					| FocusableWidget
+					| (Layout.Common.ButtonLegendWidget & { fields?: ButtonLegendWidgetFields; });
+			}
+
+			namespace PlayerInventoryOriginalLayout {
+				interface File {
+					type:   'PlayerInventoryPanel';
+					name:   string;
+					fields:    {
+						rect:   string | Layout.Common.Rect;
+						anchor: string | Layout.Common.Point;
+					};
+					children: Common.PlayerInventoryWidget[];
+				}
+			}
+
+			namespace PlayerInventoryOriginalLayoutHD {
+				interface File {
+					type:   'PlayerInventoryPanel';
+					name:   string;
+					fields:    {
+						rect:   string | Layout.Common.Rect;
+						anchor: string | Layout.Common.Point;
+					};
+					children: Common.PlayerInventoryWidget[];
+				}
+			}
+
+			namespace PlayerInventoryExpansionLayoutHD {
+				interface File {
+					basedOn: string;
+					type:    'PlayerInventoryPanel';
+					name:    string;
+					fields:    {
+						activeWeaponSwapFontColor?:   string;
+						inactiveWeaponSwapFontColor?: string;
+					};
+					children: Common.PlayerInventoryWidget[];
+				}
+			}
+
+			namespace ControllerPlayerInventoryOriginalLayoutHD {
+				interface File {
+					basedOn: string;
+					type:    'PlayerInventoryPanel';
+					name:    string;
+					fields:    {
+						rect:           string | Layout.Common.Rect;
+						defaultWidget?: string;
+					};
+					children: Common.PlayerInventoryWidget[];
+				}
+			}
+
+			namespace ControllerPlayerInventoryExpansionLayoutHD {
+				interface File {
+					basedOn: string;
+					type:    'PlayerInventoryPanel';
+					name:    string;
+					fields:    {
+						activeWeaponSwapFontColor?:   string;
+						inactiveWeaponSwapFontColor?: string;
+					};
+					children: Common.PlayerInventoryWidget[];
+				}
+			}
+		}
 	}
 }

@@ -3,13 +3,12 @@
  * Modifies _profilehd.json and _profilelv.json for expanded stash panel dimensions
  */
 
-import { readProfileHd, readProfileLv, writeProfileHd, writeProfileLv } from '../io/game_files';
 
 /**
  * Apply ProfileHD modifications for expanded stash
  */
 export function applyProfileHd(): void {
-	const profile = readProfileHd();
+	const profile = gameFiles.profileHd.read();
 
 	// Add a property which will be referenced in bank_layouts.ts
 	profile['LeftPanelRect_ExpandedStash'] = {
@@ -30,14 +29,14 @@ export function applyProfileHd(): void {
 	// offset the left hinge so that it doesn't overlap with content of the left panel
 	profile['LeftHingeRect'] = { x: -236 - 25, y: 630 };
 
-	writeProfileHd(profile);
+	gameFiles.profileHd.write(profile);
 }
 
 /**
  * Apply ProfileLV modifications for expanded stash
  */
 export function applyProfileLv(): void {
-	const profile = readProfileLv();
+	const profile = gameFiles.profileLv.read();
 
 	// Add a property which will be referenced in bank_layouts.ts
 	profile['LeftPanelRect_ExpandedStash'] = {
@@ -48,5 +47,5 @@ export function applyProfileLv(): void {
 		scale:  1.16,
 	};
 
-	writeProfileLv(profile);
+	gameFiles.profileLv.write(profile);
 }

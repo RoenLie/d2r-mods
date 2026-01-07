@@ -4,14 +4,13 @@
  */
 
 import { EXPANDED_GRID, STASH_IDS } from '../constants/layout';
-import { readInventory, writeInventory } from '../io/game_files';
 
 
 /**
  * Apply inventory changes to expand stash grid
  */
 export function applyInventoryChanges(): void {
-	const inventory = readInventory();
+	const inventory = gameFiles.inventory.read();
 
 	inventory.rows.forEach(entry => {
 		if (STASH_IDS.has(entry.class)) {
@@ -20,5 +19,5 @@ export function applyInventoryChanges(): void {
 		}
 	});
 
-	writeInventory(inventory);
+	gameFiles.inventory.write(inventory);
 }

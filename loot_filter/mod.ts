@@ -1,11 +1,5 @@
-import { main as mainV2 } from './src/main';
-import { LootFilterMod } from './src_old/LootFilterMod';
+import { installGameFiles } from '../d2r-types/src/file_operations';
+import { main } from './src/main';
 
-// Feature toggle: set to true to use the new V2 implementation
-// Set to false to use the legacy V1 implementation
-const USE_V2 = true;
-
-if (USE_V2)
-	mainV2();
-else
-	new LootFilterMod().build();
+installGameFiles();
+main();

@@ -6,8 +6,7 @@
  */
 
 import { EndgameItemIds, QuestItemIds } from '../constants/item_ids';
-import { readMisc, readSounds, readWeapons, writeMisc, writeSounds, writeWeapons } from '../io/game_files';
-import { DropSoundsConfig } from '../io/mod_config';
+import { DropSoundsConfig } from '../mod_config';
 
 
 export interface SoundEffectPair {
@@ -396,9 +395,9 @@ export function applyDropSounds(config: DropSoundsConfig): void {
 
 
 	// Load all necessary data
-	const soundsData = readSounds();
-	const weaponsData = readWeapons();
-	const miscData = readMisc();
+	const soundsData = gameFiles.sounds.read();
+	const weaponsData = gameFiles.weapons.read();
+	const miscData = gameFiles.misc.read();
 
 	// Apply all modifications
 	applyRuneDropSounds(soundsData, miscData, config);
@@ -410,7 +409,7 @@ export function applyDropSounds(config: DropSoundsConfig): void {
 	applyStandardDropSounds(soundsData, miscData, config);
 
 	// Write everything back
-	writeSounds(soundsData);
-	writeWeapons(weaponsData);
-	writeMisc(miscData);
+	gameFiles.sounds.write(soundsData);
+	gameFiles.weapons.write(weaponsData);
+	gameFiles.misc.write(miscData);
 }

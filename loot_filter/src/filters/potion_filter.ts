@@ -7,8 +7,7 @@
 
 import { COLOR, SEMANTIC_COLOR } from '../constants/colors';
 import { HealingPotionCodes, ManaPotionCodes, RejuvPotionCodes } from '../constants/potions';
-import { readItemNames, writeItemNames } from '../io/game_files';
-import { FilterConfig } from '../io/mod_config';
+import { FilterConfig } from '../mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';
 
 
@@ -35,9 +34,9 @@ export function applyPotionFilter(config: FilterConfig): void {
 	const visibility = getPotionVisibility(config.potions.mode);
 
 	// Apply to item-names.json
-	const itemNames = readItemNames();
+	const itemNames = gameFiles.itemNames.read();
 	const modified = applyPotionFilterToData(itemNames, visibility);
-	writeItemNames(modified);
+	gameFiles.itemNames.write(modified);
 }
 
 

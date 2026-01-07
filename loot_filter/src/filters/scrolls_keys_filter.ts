@@ -1,6 +1,5 @@
 import { COLOR } from '../constants/colors';
-import { readItemNames, writeItemNames } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 import { transformAllLanguages, updateAllLanguages } from '../utils/entry_utils';
 
 
@@ -12,9 +11,9 @@ export function applyScrollsKeysFilter(config: FilterConfig): void {
 	if (!config.enabled)
 		return;
 
-	const itemNames = readItemNames();
+	const itemNames = gameFiles.itemNames.read();
 	applyScrollsKeysFilterToData(itemNames, config);
-	writeItemNames(itemNames);
+	gameFiles.itemNames.write(itemNames);
 }
 
 /**

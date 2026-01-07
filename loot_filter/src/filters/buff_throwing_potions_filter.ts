@@ -1,7 +1,6 @@
 import { COLOR } from '../constants/colors';
 import { BuffPotionCodes, ThrowingPotionCodes } from '../constants/potions';
-import { readItemNames, writeItemNames } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';
 
 /**
@@ -22,10 +21,10 @@ export function applyBuffThrowingPotionsFilter(config: FilterConfig): void {
 	if (!config.enabled)
 		return;
 
-	const itemNames = readItemNames();
+	const itemNames = gameFiles.itemNames.read();
 	applyBuffPotionsToData(itemNames, config.buffPotions);
 	applyThrowingPotionsToData(itemNames, config.throwingPotions);
-	writeItemNames(itemNames);
+	gameFiles.itemNames.write(itemNames);
 }
 
 function applyBuffPotionsToData(

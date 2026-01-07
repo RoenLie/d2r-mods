@@ -7,8 +7,7 @@
  * - Tooltip opacity and size
  */
 
-import { readProfileHd, writeProfileHd } from '../io/game_files';
-import type { ProfileHdConfig } from '../io/mod_config';
+import type { ProfileHdConfig } from '../mod_config';
 
 
 /**
@@ -25,7 +24,7 @@ export function applyProfileHd(config: ProfileHdConfig): void {
 	if (!shouldApplyChanges(config))
 		return;
 
-	const profileHd = readProfileHd();
+	const profileHd = gameFiles.profileHd.read();
 
 	// Apply each modification
 	if (config.etherealColor.enabled)
@@ -39,7 +38,7 @@ export function applyProfileHd(config: ProfileHdConfig): void {
 		applyTooltipSize(profileHd, config.tooltipSize);
 	}
 
-	writeProfileHd(profileHd);
+	gameFiles.profileHd.write(profileHd);
 }
 
 /**

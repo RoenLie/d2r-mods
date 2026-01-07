@@ -4,21 +4,14 @@
  */
 
 import { EXPANDED_GRID, TAB_COUNT } from '../constants/layout';
-import {
-	readBankExpansionControllerLayoutHd,
-	readBankOriginalControllerLayoutHd,
-	readControllerOverlayHd,
-	writeBankExpansionControllerLayoutHd,
-	writeBankOriginalControllerLayoutHd,
-	writeControllerOverlayHd,
-} from '../io/game_files';
-import { getTabNames, type StashConfig } from '../io/mod_config';
+import { getTabNames, type StashConfig } from '../mod_config';
+
 
 /**
  * Apply changes to controller overlay HD layout (cursor bounds)
  */
 export function applyControllerOverlayHd(): void {
-	const layout = readControllerOverlayHd();
+	const layout = gameFiles.controllerOverlayHd.read();
 
 	layout.children.forEach((child) => {
 		if (child.name === 'Anchor' && child.type === 'Widget') {
@@ -38,14 +31,14 @@ export function applyControllerOverlayHd(): void {
 		}
 	});
 
-	writeControllerOverlayHd(layout);
+	gameFiles.controllerOverlayHd.write(layout);
 }
 
 /**
  * Apply changes to controller bank original layout
  */
 export function applyBankOriginalControllerLayoutHd(): void {
-	const layout = readBankOriginalControllerLayoutHd();
+	const layout = gameFiles.controllerBankOriginalLayoutHd.read();
 
 	layout.children.forEach(child => {
 		if (child.name === 'background' && child.type === 'ImageWidget') {
@@ -91,14 +84,14 @@ export function applyBankOriginalControllerLayoutHd(): void {
 		}
 	});
 
-	writeBankOriginalControllerLayoutHd(layout);
+	gameFiles.controllerBankOriginalLayoutHd.write(layout);
 }
 
 /**
  * Apply changes to controller bank expansion layout
  */
 export function applyBankExpansionControllerLayoutHd(config: StashConfig): void {
-	const layout = readBankExpansionControllerLayoutHd();
+	const layout = gameFiles.controllerBankExpansionLayoutHd.read();
 	const tabNames = getTabNames(config);
 
 	delete layout.fields.backgroundFile;
@@ -178,5 +171,5 @@ export function applyBankExpansionControllerLayoutHd(config: StashConfig): void 
 		return true;
 	});
 
-	writeBankExpansionControllerLayoutHd(layout);
+	gameFiles.controllerBankExpansionLayoutHd.write(layout);
 }

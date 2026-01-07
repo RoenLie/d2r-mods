@@ -9,8 +9,7 @@
  * The custom names will be applied to the appropriate game files (item-names, item-runes, item-nameaffixes, item-modifiers, ui).
  */
 
-import { readItemModifiers, readItemNameAffixes, readItemNames, readItemRunes, readUi, writeItemModifiers, writeItemNameAffixes, writeItemNames, writeItemRunes, writeUi } from '../io/game_files';
-import type { FilterConfig } from '../io/mod_config';
+import type { FilterConfig } from '../mod_config';
 import { updateAllLanguages } from '../utils/entry_utils';
 
 /**
@@ -30,33 +29,33 @@ export function applyCustomFilterList(config: FilterConfig): void {
 
 	// Only load and write files that have actual customizations
 	if (itemNamesCustomList.length > 0) {
-		const itemNames = readItemNames();
+		const itemNames = gameFiles.itemNames.read();
 		applyCustomNames(itemNames, itemNamesCustomList);
-		writeItemNames(itemNames);
+		gameFiles.itemNames.write(itemNames);
 	}
 
 	if (itemRunesCustomList.length > 0) {
-		const itemRunes = readItemRunes();
+		const itemRunes = gameFiles.itemRunes.read();
 		applyCustomNames(itemRunes, itemRunesCustomList);
-		writeItemRunes(itemRunes);
+		gameFiles.itemRunes.write(itemRunes);
 	}
 
 	if (itemNameAffixesCustomList.length > 0) {
-		const itemNameAffixes = readItemNameAffixes();
+		const itemNameAffixes = gameFiles.itemNameAffixes.read();
 		applyCustomNames(itemNameAffixes, itemNameAffixesCustomList);
-		writeItemNameAffixes(itemNameAffixes);
+		gameFiles.itemNameAffixes.write(itemNameAffixes);
 	}
 
 	if (itemModifiersCustomList.length > 0) {
-		const itemModifiers = readItemModifiers();
+		const itemModifiers = gameFiles.itemModifiers.read();
 		applyCustomModifiers(itemModifiers, itemModifiersCustomList);
-		writeItemModifiers(itemModifiers);
+		gameFiles.itemModifiers.write(itemModifiers);
 	}
 
 	if (uiCustomList.length > 0) {
-		const uiStrings = readUi();
+		const uiStrings = gameFiles.ui.read();
 		applyCustomUi(uiStrings, uiCustomList);
-		writeUi(uiStrings);
+		gameFiles.ui.write(uiStrings);
 	}
 }
 
