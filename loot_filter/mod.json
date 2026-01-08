@@ -3410,6 +3410,159 @@
 			]
 		},
 		{
+			"id": "RemoveClutterSection",
+			"type": "section",
+			"name": "Loot Table Modifications",
+			"defaultExpanded": false,
+			"children": [
+				{
+					"id": "RemoveClutterAllEnabled",
+					"type": "checkbox",
+					"name": "Remove All Junk Items",
+					"description": "Enable to remove all junk items from drop tables at once. Disable to choose individual categories.",
+					"defaultValue": false
+				},
+				{
+					"id": "RemoveClutterArrowsBolts",
+					"type": "checkbox",
+					"name": "Remove Arrows & Bolts from Drop Tables",
+					"description": "Completely prevent arrows and bolts from dropping by removing them from treasure classes.",
+					"defaultValue": false,
+					"visible": [
+						"neq",
+						[
+							"value",
+							"RemoveClutterAllEnabled"
+						],
+						true
+					]
+				},
+				{
+					"id": "RemoveClutterScrolls",
+					"type": "checkbox",
+					"name": "Remove Scrolls from Drop Tables",
+					"description": "Completely prevent ID and TP scrolls from dropping by removing them from treasure classes.",
+					"defaultValue": false,
+					"visible": [
+						"neq",
+						[
+							"value",
+							"RemoveClutterAllEnabled"
+						],
+						true
+					]
+				},
+				{
+					"id": "RemoveClutterKeys",
+					"type": "checkbox",
+					"name": "Remove Keys from Drop Tables",
+					"description": "Completely prevent regular keys from dropping by removing them from treasure classes.",
+					"defaultValue": false,
+					"visible": [
+						"neq",
+						[
+							"value",
+							"RemoveClutterAllEnabled"
+						],
+						true
+					]
+				},
+				{
+					"id": "RemoveClutterBuffPotions",
+					"type": "checkbox",
+					"name": "Remove Buff Potions from Drop Tables",
+					"description": "Completely prevent Stamina, Thawing, and Antidote potions from dropping by removing them from treasure classes.",
+					"defaultValue": false,
+					"visible": [
+						"neq",
+						[
+							"value",
+							"RemoveClutterAllEnabled"
+						],
+						true
+					]
+				},
+				{
+					"id": "RemoveClutterLowHealingPotions",
+					"type": "checkbox",
+					"name": "Remove Low-Tier Healing Potions from Drop Tables",
+					"description": "Completely prevent Minor, Light, and regular Healing potions from dropping by removing them from treasure classes.",
+					"defaultValue": false,
+					"visible": [
+						"neq",
+						[
+							"value",
+							"RemoveClutterAllEnabled"
+						],
+						true
+					]
+				},
+				{
+					"id": "RemoveClutterLowManaPotions",
+					"type": "checkbox",
+					"name": "Remove Low-Tier Mana Potions from Drop Tables",
+					"description": "Completely prevent Minor, Light, and regular Mana potions from dropping by removing them from treasure classes.",
+					"defaultValue": false,
+					"visible": [
+						"neq",
+						[
+							"value",
+							"RemoveClutterAllEnabled"
+						],
+						true
+					]
+				},
+				{
+					"id": "ForceRejuvenationEnabled",
+					"type": "checkbox",
+					"name": "Force Rejuvenation Potions",
+					"description": "Replace all healing and mana potion drops with rejuvenation potions. Useful for endgame.",
+					"defaultValue": false
+				},
+				{
+					"id": "ForceRejuvenationType",
+					"type": "select",
+					"name": "Rejuvenation Type",
+					"description": "Choose which type of rejuvenation potion to force.",
+					"defaultValue": "full",
+					"visible": [
+						"value",
+						"ForceRejuvenationEnabled"
+					],
+					"options": [
+						{
+							"value": "small",
+							"label": "Small Rejuvenation Potions"
+						},
+						{
+							"value": "full",
+							"label": "Full Rejuvenation Potions"
+						}
+					]
+				},
+				{
+					"id": "ForceRejuvenationDropMultiplier",
+					"type": "number",
+					"name": "Drop Rate Multiplier",
+					"description": "Multiplier for converting potion drops to rejuvs (1.0 = 100%, 0.5 = 50%). Lower values reduce drop frequency.",
+					"defaultValue": 1.0,
+					"minValue": 0.1,
+					"maxValue": 2.0,
+					"visible": [
+						"value",
+						"ForceRejuvenationEnabled"
+					]
+				},
+				{
+					"id": "VendorRejuvenationEnabled",
+					"type": "checkbox",
+					"name": "Enable Vendors to Sell Rejuvenation Potions",
+					"description": "Allows all vendors to stock and sell both small and full rejuvenation potions.",
+					"defaultValue": false
+				}
+			]
+		},
+		{
 			"id": "LightPillarsSection",
 			"type": "section",
 			"name": "Light Pillars",

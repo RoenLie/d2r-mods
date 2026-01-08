@@ -24,6 +24,9 @@ import { applyPotionFilter } from './filters/potion_filter';
 import { applyQuestEndgameFilter } from './filters/quest_endgame_filter';
 import { applyRuneFilter } from './filters/rune_filter';
 import { applyScrollsKeysFilter } from './filters/scrolls_keys_filter';
+import { applyForceRejuvenation } from './loot_modification/force_rejuvenation';
+import { applyRemoveClutterItems } from './loot_modification/remove_clutter';
+import { applyVendorRejuvenation } from './loot_modification/vendor_rejuvenation';
 import { loadConfig } from './mod_config';
 
 
@@ -58,6 +61,11 @@ export function main(): void {
 	applyQuestEndgameFilter(config.filter);
 	applyEquipmentQualityFilter(config.filter);
 	applyItemAffixesFilter(config.filter);
+
+	//// Apply loot table modifications
+	applyRemoveClutterItems(config.filter);
+	applyForceRejuvenation(config.filter);
+	applyVendorRejuvenation(config.filter);
 
 	// Apply custom overrides last (power-user feature)
 	applyCustomFilterList(config.filter);

@@ -136,11 +136,11 @@ export interface ModConfig {
 	/** @default 'lowercase' */
 	ItemQualityStyleSingle: 'lowercase' | 'uppercase' | 'custom';
 	/** @default '[N]' */
-	ItemQualityCustomNormal: any;
+	ItemQualityCustomNormal: string;
 	/** @default '[X]' */
-	ItemQualityCustomExceptional: any;
+	ItemQualityCustomExceptional: string;
 	/** @default '[E]' */
-	ItemQualityCustomElite: any;
+	ItemQualityCustomElite: string;
 	/** @default 'square' */
 	ItemQualityBrackets: 'none' | 'square' | 'round' | 'curly' | 'angle';
 	/** @default 'dashes' */
@@ -163,6 +163,28 @@ export interface ModConfig {
 	HiddenItemTooltipSize: number;
 	/** @default true */
 	IsCustomFilterListEnabled: boolean;
+	/** @default false */
+	RemoveClutterAllEnabled: boolean;
+	/** @default false */
+	RemoveClutterArrowsBolts: boolean;
+	/** @default false */
+	RemoveClutterScrolls: boolean;
+	/** @default false */
+	RemoveClutterKeys: boolean;
+	/** @default false */
+	RemoveClutterBuffPotions: boolean;
+	/** @default false */
+	RemoveClutterLowHealingPotions: boolean;
+	/** @default false */
+	RemoveClutterLowManaPotions: boolean;
+	/** @default false */
+	ForceRejuvenationEnabled: boolean;
+	/** @default 'full' */
+	ForceRejuvenationType: 'small' | 'full';
+	/** @default 1 */
+	ForceRejuvenationDropMultiplier: number;
+	/** @default false */
+	VendorRejuvenationEnabled: boolean;
 	/** @default true */
 	IsLightPillarsEnabled: boolean;
 	/** @default true */

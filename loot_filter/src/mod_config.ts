@@ -173,6 +173,23 @@ export interface FilterConfig {
 	customFilterList: {
 		enabled: GeneratedModConfig['IsCustomFilterListEnabled'];
 	};
+	removeClutter: {
+		all:               GeneratedModConfig['RemoveClutterAllEnabled'];
+		arrowsBolts:       GeneratedModConfig['RemoveClutterArrowsBolts'];
+		scrolls:           GeneratedModConfig['RemoveClutterScrolls'];
+		keys:              GeneratedModConfig['RemoveClutterKeys'];
+		buffPotions:       GeneratedModConfig['RemoveClutterBuffPotions'];
+		lowHealingPotions: GeneratedModConfig['RemoveClutterLowHealingPotions'];
+		lowManaPotions:    GeneratedModConfig['RemoveClutterLowManaPotions'];
+	};
+	forceRejuvenation: {
+		enabled:        GeneratedModConfig['ForceRejuvenationEnabled'];
+		type:           GeneratedModConfig['ForceRejuvenationType'];
+		dropMultiplier: GeneratedModConfig['ForceRejuvenationDropMultiplier'];
+	};
+	vendorRejuvenation: {
+		enabled: GeneratedModConfig['VendorRejuvenationEnabled'];
+	};
 }
 
 // Main configuration
@@ -349,6 +366,23 @@ export function loadConfig(): ModConfig {
 			},
 			customFilterList: {
 				enabled: typedConfig.IsCustomFilterListEnabled,
+			},
+			removeClutter: {
+				all:               typedConfig.RemoveClutterAllEnabled,
+				arrowsBolts:       typedConfig.RemoveClutterArrowsBolts,
+				scrolls:           typedConfig.RemoveClutterScrolls,
+				keys:              typedConfig.RemoveClutterKeys,
+				buffPotions:       typedConfig.RemoveClutterBuffPotions,
+				lowHealingPotions: typedConfig.RemoveClutterLowHealingPotions,
+				lowManaPotions:    typedConfig.RemoveClutterLowManaPotions,
+			},
+			forceRejuvenation: {
+				enabled:        typedConfig.ForceRejuvenationEnabled,
+				type:           typedConfig.ForceRejuvenationType,
+				dropMultiplier: typedConfig.ForceRejuvenationDropMultiplier,
+			},
+			vendorRejuvenation: {
+				enabled: typedConfig.VendorRejuvenationEnabled,
 			},
 		},
 	};
