@@ -1,0 +1,39 @@
+{
+  "name": "Stackable Gems",
+  "description": "Adds another variation of gems that can stack together. Transmute a gem in the Cube to convert it between the two variants. Based on https://www.nexusmods.com/diablo2resurrected/mods/80.",
+  "author": "olegbl",
+  "website": "https://www.nexusmods.com/diablo2resurrected/mods/176",
+  "version": "1.7",
+  "config": [
+    {
+      "id": "default",
+      "type": "checkbox",
+      "name": "Default to Stackable",
+      "description": "Enable to have the stackable variant be the default (e.g. items will drop as stackable).",
+      "defaultValue": true
+    },
+    {
+      "id": "maxStack",
+      "type": "number",
+      "name": "Maximum Stack Size",
+      "description": "The maximum quantity that each stack can have.",
+      "defaultValue": 256,
+      "minValue": 2,
+      "maxValue": 256
+    },
+    {
+      "id": "convertWhenDestacking",
+      "type": "checkbox",
+      "name": "Convert When Destacking",
+      "description": "Enable to have the split off gem automatically convert to a non-stackable variant when splitting a stack. Warning: this adds 15k+ cube recipes which slows down the game's startup.",
+      "defaultValue": false
+    },
+    {
+      "id": "bulkUpgrade",
+      "type": "checkbox",
+      "name": "Bulk Upgrade Recipe",
+      "description": "Enable to add 30 to 10 bulk upgrade recipes (stack of 30 gems + 1 id scroll = stack of 10 gems of the next highest tier). Warning: this adds 6k+ cube recipes which slows down the game's startup.",
+      "defaultValue": false
+    }
+  ]
+}

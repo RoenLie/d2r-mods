@@ -1,0 +1,39 @@
+{
+  "name": "Stackable Runes",
+  "description": "Adds another variation of runes that can stack together. Transmute a rune in the Cube to convert it between the two variants. Based on https://www.nexusmods.com/diablo2resurrected/mods/80 and https://www.nexusmods.com/diablo2resurrected/mods/77.",
+  "author": "olegbl",
+  "website": "https://www.nexusmods.com/diablo2resurrected/mods/170",
+  "version": "1.9",
+  "config": [
+    {
+      "id": "default",
+      "type": "checkbox",
+      "name": "Default to Stackable",
+      "description": "Enable to have the stackable variant be the default (e.g. items will drop as stackable).",
+      "defaultValue": true
+    },
+    {
+      "id": "maxStack",
+      "type": "number",
+      "name": "Maximum Stack Size",
+      "description": "The maximum quantity that each stack can have.",
+      "defaultValue": 256,
+      "minValue": 2,
+      "maxValue": 256
+    },
+    {
+      "id": "usenewsprites",
+      "type": "checkbox",
+      "name": "Better Rune Visibility",
+      "description": "Enable to use new rune sprites with rune name and number on the picture. Disable to use classic sprites.",
+      "defaultValue": true
+    },
+    {
+      "id": "convertWhenDestacking",
+      "type": "checkbox",
+      "name": "Convert When Destacking",
+      "description": "Enable to have the split off rune automatically convert to a non-stackable variant when splitting a stack. Warning: this adds 15k+ cube recipes which slows down the game's startup.",
+      "defaultValue": false
+    }
+  ]
+}
