@@ -9,6 +9,10 @@ import type { FilterConfig } from '../mod_config';
 
 
 function enableRejuvAtVendors(misc: TSVData): void {
+	// Get the price of the lowest level potion (Minor Healing Potion) for reference
+	const minorHealingPotion = misc.rows.find(row => row.name === 'Minor Healing Potion');
+	const lowestPotionCost = minorHealingPotion?.cost ?? '30';
+
 	const potions = [ 'Rejuvenation Potion', 'Full Rejuvenation Potion' ]
 		.map(name => misc.rows.find(row => row.name === name))
 		.filter(row => row !== undefined);
@@ -27,6 +31,8 @@ function enableRejuvAtVendors(misc: TSVData): void {
 		potion.MalahMax = '1';
 		potion.JamellaMin = '1';
 		potion.JamellaMax = '1';
+		// Set the cost to match the lowest level potion to make it affordable
+		potion.cost = lowestPotionCost;
 	});
 }
 

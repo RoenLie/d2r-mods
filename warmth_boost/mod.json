@@ -1,0 +1,26 @@
+{
+  "name": "Warmth Boost",
+  "description": "Makes Warmth skill useful",
+  "author": "Penoplast",
+  "version": "1.0",
+    "config": [
+      {
+      "id": "baseregen",
+      "type": "number",
+      "name": "Base skill mana regen",
+      "description": "Game Default: 30, mod: 40",
+      "defaultValue": 40,
+      "minValue": -200,
+      "maxValue": 500
+    },
+    {
+      "id": "lvlregen",
+      "type": "number",
+      "name": "Mana regen per skill level",
+      "description": "Game Default: 12, mod: 20",
+      "defaultValue": 20,
+      "minValue": -200,
+      "maxValue": 500
+    }
+  ]
+}
